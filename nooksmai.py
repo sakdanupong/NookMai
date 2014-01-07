@@ -1,7 +1,10 @@
 from google.appengine.api import users
+from google.appengine.api import urlfetch
+
 
 import webapp2
 import cgi
+import json
 
 MAIN_PAGE_HTML = """\
 <html>
@@ -20,13 +23,12 @@ class MainPage(webapp2.RequestHandler):
 
     def get(self):
         self.response.write(MAIN_PAGE_HTML)
-        
-        #user = users.get_current_user()
-        #if user:
-            #self.response.headers['Content-Type'] = 'text/plain'
-            #self.response.write('Hello, ' + user.nickname())
-        #else:
-            #self.redirect(users.create_login_url(self.request.uri))
+        url = 'http://apiblind.hlpth.com/api/book/list.json?session_token=165be9522bd0717e8c6f09d3e59abd6a'
+        result = urlfetch.fetch(url)
+#       result = urlfetch.fetch('http://onlinepayment.majorcineplex.com/api/1.0/now_showing?w=320&h=480&x=2&o=0&pf=iOS&mid=iPhone%20Simulator&indent=0&deflate=1&appv=2.6&rev=2')
+#       result = urlfetch.fetch(url='')
+        mJson = json.loads(result.content)
+        self.response.out.write(mJson['success'])
 
 class NookMai(webapp2.RequestHandler):
 
