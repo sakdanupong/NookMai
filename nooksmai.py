@@ -20,6 +20,7 @@ class MainPage(webapp2.RequestHandler):
 
     def get(self):
         self.response.write(MAIN_PAGE_HTML)
+        
         #user = users.get_current_user()
         #if user:
             #self.response.headers['Content-Type'] = 'text/plain'
