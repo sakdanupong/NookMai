@@ -1,10 +1,12 @@
-from google.appengine.api import users
-from google.appengine.api import urlfetch
-
-
 import webapp2
 import cgi
 import json
+import os,sys
+
+sys.path.append(os.path.abspath('models'))
+from google.appengine.api import users
+from google.appengine.api import urlfetch
+from moviemodel import *
 
 MAIN_PAGE_HTML = """\
 <html>
