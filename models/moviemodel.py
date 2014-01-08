@@ -1,15 +1,20 @@
 from google.appengine.ext import db
-from timemodel import *
-from movienamemodel import *
-from moviedetailmodel import *
-from movietrailermodel import *
 
 class MovieModel(db.Model):
     id = db.IntegerProperty()
     ribbon_type = db.IntegerProperty()
-    advande_time = db.ReferenceProperty(TimeModel)
-    name = db.ReferenceProperty(MovieNameModel)
-    detail = db.ReferenceProperty(MovieDetailModel)
-    trailer = db.ReferenceProperty(MovieTrailerModel)
+    adv_time_timestamp = db.IntegerProperty()
+    adv_time_text = db.StringProperty()
+    name_en = db.StringProperty()
+    name_th = db.StringProperty()
+    duration = db.IntegerProperty()
+    rate = db.StringProperty()
+    rateWarning = db.BooleanProperty()
+    image = db.StringProperty()
+    release_time_timestamp = db.IntegerProperty()
+    release_time_text = db.StringProperty()
+    yt_id = db.StringProperty()
+    rtsp = db.StringProperty()
+    thumbnail = db.StringProperty()
     types = db.StringListProperty()
-    cinemas = db.ListProperty(long)
+    cinemas = db.ListProperty(int)
