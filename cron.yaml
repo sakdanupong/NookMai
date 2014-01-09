@@ -1,0 +1,4 @@
+cron:
+- description: pull data every 10 hour
+  url: /refresh_data
+  schedule: every 10 hours

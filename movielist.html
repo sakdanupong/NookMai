@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+<!-- 
+    {% for greeting in greetings %}
+      {% if greeting.author %}
+        <b>{{ greeting.author.nickname() }}</b> wrote:
+      {% else %}
+       An anonymous person wrote:
+      {% endif %}
+      <blockquote>{{ greeting.content }}</blockquote>
+    {% endfor %}
+ -->
+
+    {% for movie in movie_list %}
+		<table border="0">
+			<tr>
+  				<td>
+  					<div>
+						<a href="/nextview?movie_id={{ movie.id }}">
+							<img border="0" src="{{ movie.image }}" width="164" height="248">
+						</a>  						
+  					</div>
+<!-- 					<div id="menu" style="background-color:#FFD700;height:200px;width:100px;float:left;"> -->
+					<div style="text-align:center;">
+  						{{ movie.release_time_text }}
+  					</div>
+  				</td>
+  				<td style="float:left;">
+  					<div>
+	  					<a href="/nextview?movie_id={{ movie.id }}">
+  							<b>{{ movie.name_en }}</b>
+  						</a>
+  						<table border="0">
+  							<tr>
+  							    {% for rate_type in movie.types %}
+  							    	<td>
+  							    		<img border="0" src="{{ rate_type }}" width="70" height="44">
+  							    	</td>
+  							  	{% endfor %}
+  							</tr>
+  							<tr>
+  								<td>
+  							    	<img border="0" src="{{ movie.rate }}" width="70" height="44">
+  							    </td>
+  							</tr>  							
+  						</table>  						
+  					</div>
+  				</td>
+			</tr>
+		</table>
+		<form>
+			
+   		</form>
+    {% endfor %}
+
+	
+<!-- 
+    <form action="/sign?guestbook_name={{ guestbook_name }}" method="post">
+      <div><textarea name="content" rows="3" cols="60"></textarea></div>
+      <div><input type="submit" value="Sign Guestbook"></div>
+    </form>
+
+    <hr>
+
+    <form>Guestbook name:
+      <input value="{{ guestbook_name }}" name="guestbook_name">
+      <input type="submit" value="switch">
+    </form>
+
+    <a href="{{ url|safe }}">{{ url_linktext }}</a>
+ -->
+
+</html>
+{% endautoescape %}

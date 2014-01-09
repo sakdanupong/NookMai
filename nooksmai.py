@@ -2,6 +2,7 @@ import webapp2
 import cgi
 import json
 import os,sys
+import jinja2
 
 sys.path.append(os.path.abspath('models'))
 from google.appengine.api import users
@@ -34,14 +35,20 @@ MAIN_PAGE2_HTML = """\
 </html>
 """
 
+JINJA_ENVIRONMENT = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+    extensions=['jinja2.ext.autoescape'],
+    autoescape=True)
+
 class MainPage(webapp2.RequestHandler):
 
     def get(self):
-        self.response.write(MAIN_PAGE_HTML)
         movie_query = MovieModel.all().order('-release_time_timestamp').fetch(limit=20)
-        for movie in movie_query:
-            self.response.write('<br>')
-            self.response.write(str(movie.id))
+        template_values = {
+             'movie_list': movie_query,
+        }
+        template = JINJA_ENVIRONMENT.get_template('movielist.html')
+        self.response.write(template.render(template_values))
 
 class RefreshData(webapp2.RequestHandler):
     def get(self):
@@ -90,6 +97,7 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
         self.response.write('<html><body>DetailMovie<pre>')
 #         self.response.out.write(mJson)
 #         self.response.write(cgi.escape(self.request.get('content')))
+        movie_id = self.request.get('movie_id')
         self.response.write('</pre></body></html>')
 
 
