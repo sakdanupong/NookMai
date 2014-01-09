@@ -3,6 +3,7 @@ import cgi
 import json
 import urllib
 import os,sys
+import jinja2
 
 sys.path.append(os.path.abspath('models'))
 from google.appengine.api import users
@@ -25,52 +26,30 @@ MAIN_PAGE_HTML = """\
 </html>
 """
 
-MAIN_PAGE2_HTML = """\
-<html>
-  <body>
-    <div>name %s</div>
-    <div>date %s</div>
-    <div>image %s</div>
-  </body>
-</html>
-"""
-
-# <<<<<<< HEAD
-# DEFAULT_MOVIE_NAME = 'no content'
-# 
-# 
-# class MainPage(webapp2.RequestHandler):
-# 
-#     def get(self):
-# #         self.response.write(MAIN_PAGE_HTML)
-#         url = 'http://onlinepayment.majorcineplex.com/api/1.0/now_showing?w=320&h=480&x=2&o=0&pf=iOS&mid=iPhone%20Simulator&indent=0&deflate=1&appv=2.6&rev=2'
-#         result = urlfetch.fetch(url)
-#         mJson = json.loads(result.content)
-# #         self.response.out.write(mJson['success'])
-# 
-#         sign_query_params = urllib.urlencode({'mJson': mJson})
-# 
-#         self.response.write(MAIN_PAGE_HTML % (sign_query_params))
-# #         self.response.out.write(mJson)
-#         self.response.out.write(mJson['md5'])
-# =======
 
 
 
-
-
+JINJA_ENVIRONMENT = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+    extensions=['jinja2.ext.autoescape'],
+    autoescape=True)
 
 class MainPage(webapp2.RequestHandler):
 
     def get(self):
-        self.response.write(MAIN_PAGE_HTML)
+        movie_query = MovieModel.all().order('-release_time_timestamp').fetch(limit=20)
+        template_values = {
+             'movie_list': movie_query,
+        }
+        template = JINJA_ENVIRONMENT.get_template('movielist.html')
+        self.response.write(template.render(template_values))
 
 class RefreshData(webapp2.RequestHandler):
     def get(self):
         url = 'http://onlinepayment.majorcineplex.com/api/1.0/now_showing?w=320&h=480&x=2&o=0&pf=iOS&mid=iPhone%20Simulator&indent=0&deflate=1&appv=2.6&rev=2'
         result = urlfetch.fetch(url)
         mJson = json.loads(result.content)
-        for m in mJson['movies'] :
+        for m in mJson['movies']:
             movie_id = str(m['id'])
             e = MovieModel.get_or_insert(key_name=movie_id)
             e.id = m['id']
@@ -97,6 +76,46 @@ class RefreshData(webapp2.RequestHandler):
             e.types = m['types']
             e.cinemas = m['cinemas']
             e.put()
+            
+            
+            url = 'http://onlinepayment.majorcineplex.com/api/1.0/movie_detail?w=320&h=480&x=2&o=0&pf=iOS&mid=iPhone%20Simulator&indent=0&deflate=1&appv=2.6&rev=2&movie_id='+movie_id
+            result = urlfetch.fetch(url)
+            mJson = json.loads(result.content)
+            
+            movie_detail = mJson['detail']
+            e.detail_duration = movie_detail['duration']
+            e.detail_rate = movie_detail['rate']
+            e.detail_rateWarning = movie_detail['rateWarning']
+            
+            releasedate = movie_detail['releasedate']
+            e.detail_timestamp = releasedate['timestamp']
+            e.detail_text = releasedate['text']
+
+            synopsis = movie_detail['synopsis']
+            e.detail_synopsis_en = synopsis['en']
+            e.detail_synopsis_th = synopsis['th']
+
+            e.detail_image = movie_detail['image']
+
+            trailer = movie_detail['trailer']
+            e.detail_yt_id = trailer['yt_id']
+            e.detail_rtsp = trailer['rtsp']
+            e.detail_thumbnail = trailer['thumbnail']
+
+            genre = movie_detail['genre']
+            e.detail_genre_en = genre['en']
+            e.detail_genre_th = genre['th']
+            
+            director = movie_detail['director']
+            e.detail_director_en = director['en']
+            e.detail_director_th = director['th']
+            
+            cast = movie_detail['cast']
+            e.detail_cast_en = cast['en']
+            e.detail_cast_th = cast['th']
+            e.put()
+
+
 
 class NookMai(webapp2.RequestHandler):
 
@@ -107,66 +126,16 @@ class NookMai(webapp2.RequestHandler):
 
 class NookMaiDetailMovie(webapp2.RequestHandler):
 
-    def post(self):
+    def get(self):
 
+        movie_id = self.request.get('movie_id')
+        movie_data = MovieModel.get_or_insert(key_name=movie_id)
+        template_values = {
+            'movie_data': movie_data,
+        }
+        template = JINJA_ENVIRONMENT.get_template('movie_detail.html')
+        self.response.write(template.render(template_values))
 
-        self.response.write('<html><body>DetailMovie<pre>')
-        q = MovieModel.all()
-        //self.request.get('name_en')
-        //self.response.write(name_en)
-        self.response.write('</pre></body></html>')
-
-        
-#         self.response.write(MAIN_PAGE2_HTML)
-#         self.response.write('<html><body>DetailMovie<pre>')
-#         
-#         mJson = self.request.get('mJson', DEFAULT_MOVIE_NAME)
-#         self.response.out.write(mJson['md5'])
-#         json_data = json.dumps(mJson)
-#         self.response.out.write(json_data)
-        
-#         self.response.write('<html><body>DetailMovie<pre>')
-#         
-#         mJson = self.request.get('mJson', DEFAULT_MOVIE_NAME)
-#         json_data = json.dumps(mJson)
-#         self.response.out.write(json_data)
-        
-        # q = MovieModel.all()
-#         self.response.out.write(q)
-#         
-        
-        # query = db.MovieModel.query()
-#         self.response.write('%s' % (query))
-
-
-
-#         scoreName = 'name_th'
-#         if self.request.get('match') :
-#             scoreName = 'score_match'
-#         q.order('-'+scoreName)
-#         result = []
-#         for r in q.fetch(limit=100) :
-#             result.append(get_facebook_dict(r))
-#         dict = {"data":result}
-#         out_json(self, dict)
-        
-# !!        
-#         json_data = response.read()
-#         print '\n '
-#         response_dict = json.loads(json_data)
-#         print response_dict.get("response_code",{})
-# !!   
-        
-#         self.response.out.write(json_data['movies'])
-
-#         self.response.write(cgi.escape(self.request.get(mJson['movies'])))
-        
-#         self.response.write('</pre></body></html>')
-
-
-#         self.response.write(MAIN_PAGE2_HTML)
-#         mJson = self.request.get('mJson', )
-#         self.response.out.write(mJson)
 
 
 
