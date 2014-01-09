@@ -38,13 +38,17 @@ class MainPage(webapp2.RequestHandler):
 
     def get(self):
         self.response.write(MAIN_PAGE_HTML)
+        movie_query = MovieModel.all().order('-release_time_timestamp').fetch(limit=20)
+        for movie in movie_query:
+            self.response.write('<br>')
+            self.response.write(str(movie.id))
 
 class RefreshData(webapp2.RequestHandler):
     def get(self):
         url = 'http://onlinepayment.majorcineplex.com/api/1.0/now_showing?w=320&h=480&x=2&o=0&pf=iOS&mid=iPhone%20Simulator&indent=0&deflate=1&appv=2.6&rev=2'
         result = urlfetch.fetch(url)
         mJson = json.loads(result.content)
-        for m in mJson['movies'] :
+        for m in mJson['movies']:
             movie_id = str(m['id'])
             e = MovieModel.get_or_insert(key_name=movie_id)
             e.id = m['id']
