@@ -8,6 +8,7 @@ sys.path.append(os.path.abspath('models'))
 from google.appengine.api import users
 from google.appengine.api import urlfetch
 from moviemodel import *
+from cacheimagemodel import *
 
 MAIN_PAGE_HTML = """\
 <html>
@@ -83,6 +84,18 @@ class RefreshData(webapp2.RequestHandler):
             e.cinemas = m['cinemas']
             e.put()
 
+class ImageCache(webapp2.RequestHandler):
+    def get(self):
+        movie_id = self.request.get('movie_id')
+        image_query = CacheImageModel.get_or_insert(key_name=movie_id)
+        if image_query.image is None:
+            movie_model = MovieModel.get_by_key_name(movie_id)
+            image_query.id = movie_model.id
+            image_query.image = db.Blob(urlfetch.Fetch(movie_model.image).content)
+            image_query.put()
+        self.response.headers['Content-Type'] = 'image/jpeg'
+        self.response.out.write(image_query.image)
+
 class NookMai(webapp2.RequestHandler):
 
     def post(self):
@@ -105,5 +118,6 @@ application = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/sign', NookMai),
     ('/nextview', NookMaiDetailMovie),
-    ('/refresh_data', RefreshData),    
+    ('/refresh_data', RefreshData),
+    ('/image', ImageCache),
 ], debug=True)
