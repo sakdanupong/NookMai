@@ -13,49 +13,50 @@
  -->
 
 <table border="0">
-	<div>
-	<center>
+	
+	
+	<div style="text-align:center;">
 	<h1 class="title">
-		<b>{{ movie_data.name_en }}</b>
+		<strong>{{ movie_data.name_en }}</strong>
 		<br>
 		<span>{{ movie_data.name_th }}</span>
 	</h1>
-	</center>
 	</div>
 	
-	<div>
-	<center>
+	
+	<div style="text-align:center;">
 		<a href="/nextview?movie_id={{ movie_data.id }}">
 		<img border="0" src="{{ movie_data.image }}" width="164" height="248">
 		</a>
-	</center>
-	</div> 	
-	<div id="movie-content">
-	<center>
+	</div>
+	 
+	 	
+	<div id="movie-content" style="text-align:center;">
 	<h3>วันที่ข้าฉาย</h3>
 	<p>{{ movie_data.release_time_text }}</p>
 	<h3>เรื่องย่อ</h3>
-	<b>{{ movie_data.detail_synopsis_th }}</b>
+	<strong>{{ movie_data.detail_synopsis_th }}</strong>
 	</p>
-	</center>
 	</div>
 	
-	<div>
-	<center>
+	
+	<div style="text-align:center;">
 	<iframe width="560" height="315" src="//www.youtube.com/embed/dr-5SO5HgQY" frameborder="0" allowfullscreen></iframe>
-	</center>
 	</div>
 	
-	<table style="min-height:100px; display:block;">
 	
-	<div>
-	<center>
+	<div style="text-align:center;">
 	<form action="/comment?movie_id={{ movie_data.id }}" method="post">
-    <div><textarea name="content" rows="3" cols="60"></textarea></div>
+    <div>
+    <textarea name="content" rows="3" cols="60">
+    </textarea>
+    </div>
+    
     <div><input type="submit" value="Comment"></div>
     </form>
-    </center>
     </div>
+    
+    
     <table style="min-height:200px; display:block;">
 </table>
 
