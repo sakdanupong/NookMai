@@ -36,3 +36,21 @@ class MovieModel(db.Model):
     detail_director_th = db.StringProperty()      
     detail_cast_en = db.StringProperty()
     detail_cast_th = db.StringProperty()
+    
+    
+    
+    
+# #We set a parent key on the 'Greetings' to ensure that they are all in the same
+# # entity group. Queries across the single entity group will be consistent.
+# # However, the write rate should be limited to ~1/second.
+# 
+# def guestbook_key(guestbook_name=DEFAULT_GUESTBOOK_NAME):
+#     """Constructs a Datastore key for a Guestbook entity with guestbook_name."""
+#     return db.Key('Guestbook', guestbook_name)
+# 
+# # The following defines a data model for a greeting
+# class Greeting(db.Model):
+#     """Models an individual Guestbook entry with author, content, and date."""
+#     author = db.UserProperty()
+#     content = db.StringProperty(indexed=False)
+#     date = db.DateTimeProperty(auto_now_add=True)
