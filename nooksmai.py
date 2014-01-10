@@ -10,24 +10,27 @@ from google.appengine.api import users
 from google.appengine.api import urlfetch
 from moviemodel import *
 from cacheimagemodel import *
-
-MAIN_PAGE_HTML = """\
-<html>
-  <body>
-    <form action="/sign" method="post">
-      <div><textarea name="content" rows="3" cols="60"></textarea></div>
-       <div><input type="submit" value="Sign Guestbook"></div>
-    </form>
-    
-    <form action="/nextview?%s" method="post">
-       <div><input type="submit" value="next view"></div>
-    </form>
-
-  </body>
-</html>
-"""
+from commentmodel import *
 
 
+# MAIN_PAGE_HTML = """\
+# <html>
+#   <body>
+#     <form action="/sign" method="post">
+#       <div><textarea name="content" rows="3" cols="60"></textarea></div>
+#        <div><input type="submit" value="Sign Guestbook"></div>
+#     </form>
+#     
+#     <form action="/nextview?%s" method="post">
+#        <div><input type="submit" value="next view"></div>
+#     </form>
+# 
+#   </body>
+# </html>
+# """
+
+
+DEFAULT_GUESTBOOK_NAME = 'default_guestbook'
 
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -133,7 +136,7 @@ class ImageCache(webapp2.RequestHandler):
 class NookMai(webapp2.RequestHandler):
 
     def post(self):
-        self.response.write('<html><body>You wrote:<pre>')
+        self.response.write('<html><body>You wrotesdsdsd:<pre>')
         self.response.write(cgi.escape(self.request.get('content')))
         self.response.write('</pre></body></html>')
 
@@ -151,6 +154,77 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
 
 
 
+# def guestbook_key(guestbook_name=DEFAULT_GUESTBOOK_NAME):
+#     """Constructs a Datastore key for a Guestbook entity with guestbook_name."""
+#     return ndb.Key('Guestbook', guestbook_name)
+# 
+# class Greeting(ndb.Model):
+#     """Models an individual Guestbook entry with author, content, and date."""
+#     author = ndb.UserProperty()
+#     content = ndb.StringProperty(indexed=False)
+#     date = ndb.DateTimeProperty(auto_now_add=True)
+    
+
+def guestbook_key(guestbook_name=DEFAULT_GUESTBOOK_NAME):
+    """Constructs a Datastore key for a Guestbook entity with guestbook_name."""
+    return db.Key('CommentModel', guestbook_name)
+
+class CommentMovie(webapp2.RequestHandler):
+    def post(self):
+        movie_id = self.request.get('movie_id')
+        
+        self.response.write(movie_id)
+        self.response.write(cgi.escape(self.request.get('content')))
+
+
+#         guestbook_name = self.request.get('guestbook_name',
+#                                           DEFAULT_GUESTBOOK_NAME)
+#         comment = CommentModel(parent=guestbook_key(guestbook_name))
+#         
+#          if users.get_current_user():
+#              comment.author = users.get_current_user()
+# 
+#         comment.content = self.request.get('content')
+#         comment.id_movie = self.request.get(movie_id)
+#         
+#         #save comment
+#         comment.put()
+
+        
+#         guestbook_name = self.request.get('guestbook_name',
+#                                           DEFAULT_GUESTBOOK_NAME)
+#         greeting = CommentModel(parent=guestbook_key(guestbook_name))
+#         
+#         if users.get_current_user():
+#             greeting.author = users.get_current_user()
+# 
+#         greeting.content = self.request.get('content')
+#         greeting.put()
+        
+        
+        
+        
+        
+#         comment_query = CommentModel.get_or_insert(key_name=movie_id)
+        #redirect view
+#         self.redirect('/nextview?movie_id='+movie_id)
+
+#     def post(self):
+#         movie_id = self.request.get('movie_id')
+#         comment_query = CommentModel.get_or_insert(key_name=movie_id)
+#         if comment_query.content is None:
+#             movie_model = MovieModel.get_by_key_name(movie_id)
+#             comment_query.id = movie_model.id
+#             comment_query.author = db.Blob(urlfetch.Fetch(comment_query.author).content)
+#             comment_query.content = cgi.escape(self.request.get('content'))
+#             comment_query.date = db.Blob(urlfetch.Fetch(comment_query.date).content)
+#             comment_query.put()
+#             self.response.out.write(comment_query.content)
+            
+
+#         commentModel = CommentModel.query(
+#         ancestor=guestbook_key(guestbook_name)).order(-Greeting.date)
+#         greetings = greetings_query.fetch(10)
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
@@ -158,4 +232,31 @@ application = webapp2.WSGIApplication([
     ('/nextview', NookMaiDetailMovie),
     ('/refresh_data', RefreshData),
     ('/image', ImageCache),
+    ('/comment', CommentMovie),
 ], debug=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
