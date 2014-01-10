@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+<!-- 
+    {% for greeting in greetings %}
+      {% if greeting.author %}
+        <b>{{ greeting.author.nickname() }}</b> wrote:
+      {% else %}
+       An anonymous person wrote:
+      {% endif %}
+      <blockquote>{{ greeting.content }}</blockquote>
+    {% endfor %}
+ -->
+
+<table border="0">
+	<div>
+	<center>
+	<h1 class="title">
+		<b>{{ movie_data.name_en }}</b>
+		<br>
+		<span>{{ movie_data.name_th }}</span>
+	</h1>
+	</center>
+	</div>
+	
+	<div>
+	<center>
+		<a href="/nextview?movie_id={{ movie_data.id }}">
+		<img border="0" src="{{ movie_data.image }}" width="164" height="248">
+		</a>
+	</center>
+	</div> 	
+	<div id="movie-content">
+	<center>
+	<h3>วันที่ข้าฉาย</h3>
+	<p>{{ movie_data.release_time_text }}</p>
+	<h3>เรื่องย่อ</h3>
+	<b>{{ movie_data.detail_synopsis_th }}</b>
+	</p>
+	</center>
+	</div>
+</table>
+
+	
+<!-- 
+    <form action="/sign?guestbook_name={{ guestbook_name }}" method="post">
+      <div><textarea name="content" rows="3" cols="60"></textarea></div>
+      <div><input type="submit" value="Sign Guestbook"></div>
+    </form>
+
+    <hr>
+
+    <form>Guestbook name:
+      <input value="{{ guestbook_name }}" name="guestbook_name">
+      <input type="submit" value="switch">
+    </form>
+
+    <a href="{{ url|safe }}">{{ url_linktext }}</a>
+ -->
+
+</html>
+{% endautoescape %}
