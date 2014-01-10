@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 {% autoescape true %}
 <html>
+
+<head>
+<title>TEST</title>
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+</head>
+
 <!-- 
     {% for greeting in greetings %}
       {% if greeting.author %}
@@ -42,7 +48,21 @@
 	
 	<div>
 	<center>
-	<iframe width="560" height="315" src="//www.youtube.com/embed/dr-5SO5HgQY" frameborder="0" allowfullscreen></iframe>
+	<iframe id="youtube_frame" width="560" height="315" src="{{ movie_data.youtube_url }}" frameborder="0" allowfullscreen style="display:none;"></iframe>
+	<script>
+		{% if not movie_data.youtube_url %}
+			$.getJSON( "/trailer?movie_id={{ movie_data.id }}", function(data) { 
+				var youtube_link = "//www.youtube.com/embed/"+data['videoId'];
+				$("#youtube_frame").get(0).contentWindow.location.replace(youtube_link);
+// 				$("#youtube_frame").attr("src", youtube_link);
+				$("#youtube_frame").show();
+			});
+		{% else %}
+			$("#youtube_frame").hide();
+		{% endif %}
+	</script>
+	
+	
 	</center>
 	</div>
 	

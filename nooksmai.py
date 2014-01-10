@@ -8,11 +8,11 @@ import jinja2
 sys.path.append(os.path.abspath('models'))
 from google.appengine.api import users
 from google.appengine.api import urlfetch
+from apiclient.discovery import build
+from optparse import OptionParser
 from moviemodel import *
 from cacheimagemodel import *
 from commentmodel import *
-from trailercachemodel import *
-
 
 # MAIN_PAGE_HTML = """\
 # <html>
@@ -51,7 +51,7 @@ class MainPage(webapp2.RequestHandler):
 
 class RefreshData(webapp2.RequestHandler):
     def get(self):
-        url = 'http://onlinepayment.majorcineplex.com/api/1.0/now_showing?w=320&h=480&x=2&o=0&pf=iOS&mid=iPhone%20Simulator&indent=0&deflate=1&appv=2.6&rev=2'
+        url = 'http://onlinepayment.majorcineplex.com/api/1.0/now_showing?w=768&h=1024&x=2&o=0&pf=iOS&mid=iPad&indent=0&deflate=1&appv=2.6&rev=2'
         result = urlfetch.fetch(url)
         mJson = json.loads(result.content)
         for m in mJson['movies']:
@@ -134,18 +134,32 @@ class ImageCache(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'image/jpeg'
         self.response.out.write(image_query.image)
 
-YOUTUBE_EMBED = """<iframe width="560" height="315" src="//www.youtube.com/embed/9aBiHYT_8UI" frameborder="0" allowfullscreen></iframe>"""
-class TrailerPlayer(webapp2.RequestHandler):
+DEVELOPER_KEY = "AIzaSyCN0HA7pGrgF6bnLKNckBSc-Lm9NvY0FAk"
+YOUTUBE_API_SERVICE_NAME = "youtube"
+YOUTUBE_API_VERSION = "v3"
+class GetTrailer(webapp2.RequestHandler):
     def get(self):
-        self.response.out.write(YOUTUBE_EMBED)
-#         url = 'http://210.1.60.208:1935/vod/_definst_/mp4'
-#         trailer_query = TrailerCacheModel.get_or_insert()
-#         vdo = db.Blob(urlfetch.Fetch(url).content)
-#         self.response.headers['Content-Type'] = 'video/mp4'
-#         self.response.out.write(vdo)
-
-
-
+        movie_id = self.request.get('movie_id')
+        movie_model = MovieModel.get_by_key_name(movie_id)
+        if movie_model.youtube_url is None:
+            movie_name_th = movie_model.name_th
+            movie_name_en = movie_model.name_en
+            text_for_serch = movie_name_en + ' '+ movie_name_en + ' trailer'
+            youtube = build(
+            YOUTUBE_API_SERVICE_NAME, 
+            YOUTUBE_API_VERSION, 
+            developerKey=DEVELOPER_KEY)
+            search_response = youtube.search().list(
+            q=""+text_for_serch,
+            part="id,snippet",
+            type='video',
+            maxResults=5
+            ).execute()
+            video_items = search_response['items']
+            video_item = video_items[0]
+            item_id = video_item['id']
+            b = json.dumps(item_id)
+            return self.response.out.write(b)
 
 class NookMai(webapp2.RequestHandler):
 
@@ -247,5 +261,5 @@ application = webapp2.WSGIApplication([
     ('/refresh_data', RefreshData),
     ('/image', ImageCache),
     ('/comment', CommentMovie),
-    ('/trailer', TrailerPlayer),
+    ('/trailer', GetTrailer),
 ], debug=True)

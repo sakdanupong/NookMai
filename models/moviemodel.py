@@ -18,6 +18,7 @@ class MovieModel(db.Model):
     thumbnail = db.StringProperty()
     types = db.StringListProperty()
     cinemas = db.ListProperty(int)
+    youtube_url = db.StringProperty()
     
     detail_duration = db.IntegerProperty()
     detail_rate = db.StringProperty()
