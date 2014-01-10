@@ -203,56 +203,17 @@ class CommentMovie(webapp2.RequestHandler):
         
         self.response.write(movie_id)
         self.response.write(cgi.escape(self.request.get('content')))
-
-
-#         guestbook_name = self.request.get('guestbook_name',
-#                                           DEFAULT_GUESTBOOK_NAME)
-#         comment = CommentModel(parent=guestbook_key(guestbook_name))
-#         
-#          if users.get_current_user():
-#              comment.author = users.get_current_user()
-# 
-#         comment.content = self.request.get('content')
-#         comment.id_movie = self.request.get(movie_id)
-#         
-#         #save comment
-#         comment.put()
-
         
-#         guestbook_name = self.request.get('guestbook_name',
-#                                           DEFAULT_GUESTBOOK_NAME)
-#         greeting = CommentModel(parent=guestbook_key(guestbook_name))
-#         
-#         if users.get_current_user():
-#             greeting.author = users.get_current_user()
-# 
-#         greeting.content = self.request.get('content')
-#         greeting.put()
+        comment_query = CommentModel.get_or_insert(key_name=movie_id)
+        if comment_query.content is None:
+            movie_model = MovieModel.get_by_key_name(movie_id)
+            comment_query.id = movie_model.id
+            comment_query.content = cgi.escape(self.request.get('content'))
+            comment_query.put()
         
-        
-        
-        
-        
-#         comment_query = CommentModel.get_or_insert(key_name=movie_id)
         #redirect view
 #         self.redirect('/nextview?movie_id='+movie_id)
 
-#     def post(self):
-#         movie_id = self.request.get('movie_id')
-#         comment_query = CommentModel.get_or_insert(key_name=movie_id)
-#         if comment_query.content is None:
-#             movie_model = MovieModel.get_by_key_name(movie_id)
-#             comment_query.id = movie_model.id
-#             comment_query.author = db.Blob(urlfetch.Fetch(comment_query.author).content)
-#             comment_query.content = cgi.escape(self.request.get('content'))
-#             comment_query.date = db.Blob(urlfetch.Fetch(comment_query.date).content)
-#             comment_query.put()
-#             self.response.out.write(comment_query.content)
-            
-
-#         commentModel = CommentModel.query(
-#         ancestor=guestbook_key(guestbook_name)).order(-Greeting.date)
-#         greetings = greetings_query.fetch(10)
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
