@@ -10,6 +10,7 @@ from google.appengine.api import users
 from google.appengine.api import urlfetch
 from moviemodel import *
 from cacheimagemodel import *
+from trailercachemodel import *
 
 MAIN_PAGE_HTML = """\
 <html>
@@ -130,6 +131,19 @@ class ImageCache(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'image/jpeg'
         self.response.out.write(image_query.image)
 
+YOUTUBE_EMBED = """<iframe width="560" height="315" src="//www.youtube.com/embed/9aBiHYT_8UI" frameborder="0" allowfullscreen></iframe>"""
+class TrailerPlayer(webapp2.RequestHandler):
+    def get(self):
+        self.response.out.write(YOUTUBE_EMBED)
+#         url = 'http://210.1.60.208:1935/vod/_definst_/mp4'
+#         trailer_query = TrailerCacheModel.get_or_insert()
+#         vdo = db.Blob(urlfetch.Fetch(url).content)
+#         self.response.headers['Content-Type'] = 'video/mp4'
+#         self.response.out.write(vdo)
+
+
+
+
 class NookMai(webapp2.RequestHandler):
 
     def post(self):
@@ -158,4 +172,5 @@ application = webapp2.WSGIApplication([
     ('/nextview', NookMaiDetailMovie),
     ('/refresh_data', RefreshData),
     ('/image', ImageCache),
+    ('/trailer', TrailerPlayer),
 ], debug=True)
