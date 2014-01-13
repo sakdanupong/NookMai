@@ -52,12 +52,13 @@
 		{% if not movie_data.youtube_url %}
 			$.getJSON( "/trailer?movie_id={{ movie_data.id }}", function(data) { 
 				var youtube_link = "//www.youtube.com/embed/"+data['videoId'];
+				//alert(youtube_link);
 				$("#youtube_frame").get(0).contentWindow.location.replace(youtube_link);
-// 				$("#youtube_frame").attr("src", youtube_link);
-				$("#youtube_frame").show();
+				//$("#youtube_frame").attr("src", youtube_link);
+				$("#youtube_frame").show(500);
 			});
 		{% else %}
-			$("#youtube_frame").hide();
+			$("#youtube_frame").show();
 		{% endif %}
 	</script>
 	

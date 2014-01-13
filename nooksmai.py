@@ -81,6 +81,7 @@ class RefreshData(webapp2.RequestHandler):
             e.types = m['types']
             e.cinemas = m['cinemas']
             e.put()
+
             
             
             url = 'http://onlinepayment.majorcineplex.com/api/1.0/movie_detail?w=320&h=480&x=2&o=0&pf=iOS&mid=iPhone%20Simulator&indent=0&deflate=1&appv=2.6&rev=2&movie_id='+movie_id
@@ -134,6 +135,22 @@ class ImageCache(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'image/jpeg'
         self.response.out.write(image_query.image)
 
+
+def getMovieTrailerFromText(movie_name):
+    text_for_serch = movie_name + ' trailer'
+    youtube = build(
+    YOUTUBE_API_SERVICE_NAME, 
+    YOUTUBE_API_VERSION, 
+    developerKey=DEVELOPER_KEY)
+    search_response = youtube.search().list(
+    q=""+text_for_serch,
+    part="id,snippet",
+    type='video',
+    maxResults=5
+    ).execute()
+    video_items = search_response['items']
+    return video_items
+
 DEVELOPER_KEY = "AIzaSyCN0HA7pGrgF6bnLKNckBSc-Lm9NvY0FAk"
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
@@ -144,21 +161,25 @@ class GetTrailer(webapp2.RequestHandler):
         if movie_model.youtube_url is None:
             movie_name_th = movie_model.name_th
             movie_name_en = movie_model.name_en
-            text_for_serch = movie_name_en + ' '+ movie_name_en + ' trailer'
-            youtube = build(
-            YOUTUBE_API_SERVICE_NAME, 
-            YOUTUBE_API_VERSION, 
-            developerKey=DEVELOPER_KEY)
-            search_response = youtube.search().list(
-            q=""+text_for_serch,
-            part="id,snippet",
-            type='video',
-            maxResults=5
-            ).execute()
-            video_items = search_response['items']
-            video_item = video_items[0]
+            text_for_serch = movie_name_en + ' ' + movie_name_th
+            video_items = getMovieTrailerFromText(text_for_serch)
+            video_item = None
+            if len(video_items) > 0:
+                video_item = video_items[0]
+            if video_item is None:
+                video_items = getMovieTrailerFromText(movie_name_en)
+                if len(video_items) > 0:
+                    video_item = video_items[0]
+            if video_item is None:
+                video_items = getMovieTrailerFromText(movie_name_th)
+                if len(video_items) > 0:
+                    video_item = video_items[0]
             item_id = video_item['id']
             b = json.dumps(item_id)
+            # save youtube url to movie model
+            youtube_url = "//www.youtube.com/embed/"+item_id['videoId'];
+            movie_model.youtube_url = youtube_url
+            movie_model.put()
             return self.response.out.write(b)
 
 class NookMai(webapp2.RequestHandler):
