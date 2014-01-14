@@ -5,12 +5,16 @@ api_version: 1
 threadsafe: true
 
 handlers:
+- url: /back_office
+  script: nooksmai.application
+  login: admin
+  secure: always
+
 - url: /.*
   script: nooksmai.application
-  
+
 libraries:
 - name: webapp2
   version: latest
 - name: jinja2
   version: latest
-  
