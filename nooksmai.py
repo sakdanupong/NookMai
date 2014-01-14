@@ -198,27 +198,12 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
 
 
         #query show comment
-
         q = CommentModel.all();
         q.filter('movie_id =', int(movie_id))
         q.order('-date')
         comments = []
         for c in q.fetch(limit=100) :
             comments.append(c)
-
-        #comment_name = self.request.get('comment_name',DEFAULT_COMMENT_NAME)
-
-        #comment_query = CommentModel.query(ancestor=comment_key(comment_name)).order(-CommentModel.date)
-        
-        # comment_query = CommentModel.query(CommentModel.movie_id == 1320)
-
-        # movie_data = MovieModel.get_or_insert(key_name=movie_id)
-
-        # comment_query = CommentModel.get_by_key_name(key_name=movie_id)
-        # comment_query = CommentModel.query().order(CommentModel.content).order(-CommentModel.id_movie)
-
-        #comments = comment_query.fetch(10)
-        # self.response.write(comments)
         
         template_values = {
             'movie_data': movie_data,
@@ -262,8 +247,6 @@ class AddComment(webapp2.RequestHandler):
         #redirect view
         #self.redirect('/nextview?movie_id='+movie_id)
 
-
-
 # API 
 
 class GetComment(webapp2.RequestHandler):
@@ -282,6 +265,11 @@ class GetComment(webapp2.RequestHandler):
         r = {'data':clist}
         self.response.out.write(json.dumps(r))
 
+class NookMaiBackOffice(webapp2.RequestHandler):
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('back_office.html')
+        self.response.write(template.render())
+        # self.response.write(template.render(template_values))
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
@@ -292,6 +280,7 @@ application = webapp2.WSGIApplication([
     ('/trailer', GetTrailer),
     ('/api_add_comment', AddComment),
     ('/api_get_comment', GetComment),
+    ('/backoffice', NookMaiBackOffice),
 ], debug=True)
 
 
