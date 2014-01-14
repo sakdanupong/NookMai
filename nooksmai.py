@@ -235,6 +235,11 @@ class CommentMovie(webapp2.RequestHandler):
         #redirect view
 #         self.redirect('/nextview?movie_id='+movie_id)
 
+class NookMaiBackOffice(webapp2.RequestHandler):
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('back_office.html')
+        self.response.write(template.render())
+        # self.response.write(template.render(template_values))
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
@@ -244,4 +249,5 @@ application = webapp2.WSGIApplication([
     ('/image', ImageCache),
     ('/comment', CommentMovie),
     ('/trailer', GetTrailer),
+    ('/backoffice', NookMaiBackOffice),
 ], debug=True)
