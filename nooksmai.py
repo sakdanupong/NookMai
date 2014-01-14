@@ -31,8 +31,7 @@ from commentmodel import *
 # """
 
 
-DEFAULT_GUESTBOOK_NAME = 'default_guestbook'
-
+DEFAULT_COMMENT_NAME = 'default_user'
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -195,45 +194,76 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
 
         movie_id = self.request.get('movie_id')
         movie_data = MovieModel.get_or_insert(key_name=movie_id)
+
+
+
+        #query show comment
+        q = CommentModel.all();
+        q.filter('movie_id =', int(movie_id))
+        q.order('-date')
+        comments = []
+        for c in q.fetch(limit=100) :
+            comments.append(c)
+        
         template_values = {
             'movie_data': movie_data,
+            'comments':comments,
         }
+
+        
         template = JINJA_ENVIRONMENT.get_template('movie_detail.html')
         self.response.write(template.render(template_values))
 
 
 
-# def guestbook_key(guestbook_name=DEFAULT_GUESTBOOK_NAME):
-#     """Constructs a Datastore key for a Guestbook entity with guestbook_name."""
-#     return ndb.Key('Guestbook', guestbook_name)
-# 
-# class Greeting(ndb.Model):
-#     """Models an individual Guestbook entry with author, content, and date."""
-#     author = ndb.UserProperty()
-#     content = ndb.StringProperty(indexed=False)
-#     date = ndb.DateTimeProperty(auto_now_add=True)
+
     
 
-def guestbook_key(guestbook_name=DEFAULT_GUESTBOOK_NAME):
-    """Constructs a Datastore key for a Guestbook entity with guestbook_name."""
-    return db.Key('CommentModel', guestbook_name)
+# def comment_key(comment_name=DEFAULT_COMMENT_NAME):
+#     """Constructs a Datastore key for a Guestbook entity with comment_name."""
+#     return ndb.Key('Comment', comment_name)
 
-class CommentMovie(webapp2.RequestHandler):
+class AddComment(webapp2.RequestHandler):
+    def get(self):
+        self.process()
     def post(self):
+        self.process()
+    def process(self):
+        content = self.request.get('content')
         movie_id = self.request.get('movie_id')
-        
-        self.response.write(movie_id)
-        self.response.write(cgi.escape(self.request.get('content')))
-        
-        comment_query = CommentModel.get_or_insert(key_name=movie_id)
-        if comment_query.content is None:
-            movie_model = MovieModel.get_by_key_name(movie_id)
-            comment_query.id = movie_model.id
-            comment_query.content = cgi.escape(self.request.get('content'))
-            comment_query.put()
-        
+        author = self.request.get('author')
+        success = 0
+        if content :
+            c = CommentModel()
+            c.movie_id = int(movie_id)
+            c.content = cgi.escape(content)
+            c.author = cgi.escape(author)
+            c.put()
+            success = 1
+       
+        r = {'success':success}
+        self.response.out.write(json.dumps(r))
+
         #redirect view
-#         self.redirect('/nextview?movie_id='+movie_id)
+        #self.redirect('/nextview?movie_id='+movie_id)
+
+# API 
+
+class GetComment(webapp2.RequestHandler):
+    def get(self):
+        self.process()
+    def post(self):
+        self.process()
+    def process(self):
+        movie_id = self.request.get('movie_id')
+        q = CommentModel.all();
+        q.filter('movie_id =', int(movie_id))
+        q.order('-date')
+        clist = []
+        for c in q.fetch(limit=100) :
+            clist.append({'author':c.author,'content':c.content})
+        r = {'data':clist}
+        self.response.out.write(json.dumps(r))
 
 class NookMaiBackOffice(webapp2.RequestHandler):
     def get(self):
@@ -250,7 +280,24 @@ application = webapp2.WSGIApplication([
     ('/nextview', NookMaiDetailMovie),
     ('/refresh_data', RefreshData),
     ('/image', ImageCache),
-    ('/comment', CommentMovie),
     ('/trailer', GetTrailer),
     ('/back_office', NookMaiBackOffice),
+    ('/api_add_comment', AddComment),
+    ('/api_get_comment', GetComment),
+    ('/backoffice', NookMaiBackOffice),
 ], debug=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
