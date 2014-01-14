@@ -10,8 +10,25 @@
       {% endif %}
       <blockquote>{{ greeting.content }}</blockquote>
     {% endfor %}
- -->
+ --> 
+    <head>
+      <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+      <script>
+        function myFunction(movie_id, unix_timestamp) {
+          var d = new Date(unix_timestamp*1000);
+          var curr_date = d.getDate();
+          var curr_month = d.getMonth();
+          curr_month++;
+          var curr_year = d.getFullYear();
+          var converted_time =  curr_date + "/" + curr_month + "/" + curr_year;
+          $('#time_stamp_div'+movie_id).text(converted_time+'');
+        }  
 
+      </script>
+    </head>
+    <div>
+      <h4>NookMai.com</h4>
+    </div>
     {% for movie in movie_list %}
 		<table border="0">
 			<tr>
@@ -31,21 +48,16 @@
 	  					<a href="/nextview?movie_id={{ movie.id }}">
   							<b>{{ movie.name_en }}</b>
   						</a>
-  						<table border="0">
-  							<tr>
-  							    {% for rate_type in movie.types %}
-  							    	<td>
-  							    		<img border="0" src="{{ rate_type }}" width="70" height="44">
-  							    	</td>
-  							  	{% endfor %}
-  							</tr>
-  							<tr>
-  								<td>
-  							    	<img border="0" src="{{ movie.rate }}" width="70" height="44">
-  							    </td>
-  							</tr>  							
-  						</table>  						
-  					</div>
+            </div>
+            <div id='time_stamp_div{{movie.id}}'</div>
+            <script>
+              var movie_id = {{movie.id}};
+              var unix_timestamp = {{movie.release_time_timestamp}};
+              myFunction(movie_id, unix_timestamp);
+            </script>
+            <div>
+              {{movie.duration}} นาที
+            </div>
   				</td>
 			</tr>
 		</table>

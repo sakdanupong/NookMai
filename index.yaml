@@ -12,18 +12,6 @@ indexes:
 
 - kind: CommentModel
   properties:
-  - name: content
-  - name: id_movie
-    direction: desc
-
-- kind: CommentModel
-  properties:
   - name: movie_id
-  - name: date
-    direction: desc
-
-- kind: CommentModel
-  ancestor: yes
-  properties:
   - name: date
     direction: desc

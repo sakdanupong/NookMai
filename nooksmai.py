@@ -267,9 +267,12 @@ class GetComment(webapp2.RequestHandler):
 
 class NookMaiBackOffice(webapp2.RequestHandler):
     def get(self):
+        movie_query = MovieModel.all().order('-release_time_timestamp')
+        template_values = {
+             'movie_list': movie_query,
+        }
         template = JINJA_ENVIRONMENT.get_template('back_office.html')
-        self.response.write(template.render())
-        # self.response.write(template.render(template_values))
+        self.response.write(template.render(template_values))
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
@@ -278,6 +281,7 @@ application = webapp2.WSGIApplication([
     ('/refresh_data', RefreshData),
     ('/image', ImageCache),
     ('/trailer', GetTrailer),
+    ('/back_office', NookMaiBackOffice),
     ('/api_add_comment', AddComment),
     ('/api_get_comment', GetComment),
     ('/backoffice', NookMaiBackOffice),

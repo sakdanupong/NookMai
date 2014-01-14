@@ -34,6 +34,7 @@ Public Key:	6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp -->
 		</p>
 	</div>
 	
+<<<<<<< HEAD
 	<div style="text-align:center;">
 		<iframe id="youtube_frame" width="560" height="315" src="{{ movie_data.youtube_url }}" frameborder="0" allowfullscreen style="display:none;"></iframe>
 		<script>
@@ -49,6 +50,26 @@ Public Key:	6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp -->
 				$("#youtube_frame").show();
 			{% endif %}
 		</script>
+=======
+	<div>
+	<center>
+	<iframe id="youtube_frame" width="560" height="315" src="{{ movie_data.youtube_url }}" frameborder="0" allowfullscreen style="display:none;"></iframe>
+	<script>
+		{% if not movie_data.youtube_url %}
+			$.getJSON( "/trailer?movie_id={{ movie_data.id }}", function(data) { 
+				var youtube_link = "//www.youtube.com/embed/"+data['videoId'];
+				$("#youtube_frame").get(0).contentWindow.location.replace(youtube_link);
+				//$("#youtube_frame").attr("src", youtube_link);
+				$("#youtube_frame").show(500);
+			});
+		{% else %}
+			$("#youtube_frame").show();
+		{% endif %}
+	</script>
+	
+	
+	</center>
+>>>>>>> a6cad2fcac62ba054a1870d3e038fab2d28cc5a1
 	</div>
 	
 	
