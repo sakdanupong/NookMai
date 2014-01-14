@@ -1,3 +1,6 @@
+<!-- Private Key:	6LcDAO0SAAAAAM4kxOsIOBKRz8oLjj2-dHcBcui5
+Public Key:	6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp --> 
+
 <!DOCTYPE html>
 {% autoescape true %}
 <html>
@@ -9,7 +12,7 @@
 	
 
 <body>	
-	<h1 class="title">
+	<h1 class="title" style="text-align:center;">
 		<strong>{{ movie_data.name_en }}</strong>
 		<br>
 		<span>{{ movie_data.name_th }}</span>
@@ -31,7 +34,7 @@
 		</p>
 	</div>
 	
-	<div>
+	<div style="text-align:center;">
 		<iframe id="youtube_frame" width="560" height="315" src="{{ movie_data.youtube_url }}" frameborder="0" allowfullscreen style="display:none;"></iframe>
 		<script>
 			{% if not movie_data.youtube_url %}
@@ -51,9 +54,20 @@
 	
 	<div style="text-alaign:center;">
 		<form action="javascript:submitComment();" method="post">
-	    <textarea id="comment_content" name="content" style="width:500px; height:200px;"></textarea>
+	    <textarea id="comment_content" name="content" style="width:450px; height:100px;"></textarea>
     	<br>
-    	<input id="comment_author" name="author" rows="1" cols="60"></input>
+    	<input id="comment_author" name="author" placeholder="name" style="width:450px" rows="1" cols="60"></input>
+
+
+ 		<script type="text/javascript">
+ 			var RecaptchaOptions = {theme : 'clean'};
+ 		</script>
+ 		<script type="text/javascript"
+   			src="http://www.google.com/recaptcha/api/challenge?k=6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp">
+
+  		</script>
+
+
     	<input type="submit" value="Comment"></div>
     	</form>
     </div>
@@ -69,7 +83,9 @@
 
 <script>
 
-///
+/// qestion = "5+10=?"
+/// answer = 'ddd'
+
 	function submitComment() {
 		var author = $("#comment_author").val();
 		var content = $("#comment_content").val();
