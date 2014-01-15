@@ -49,11 +49,11 @@
   							<b>{{ movie.name_en }}</b>
   						</a>
             </div>
-            <div id='time_stamp_div{{movie.id}}'</div>
+            <div id='time_stamp_div{{movie.id}}'> {{movie.release_time_timestamp|covertUnixTimeToStrFotmat('%d/%m/%Y')}} </div>
             <script>
-              var movie_id = {{movie.id}};
-              var unix_timestamp = {{movie.release_time_timestamp}};
-              myFunction(movie_id, unix_timestamp);
+              // var movie_id = {{movie.id}};
+              // var unix_timestamp = {{movie.release_time_timestamp}};
+              // myFunction(movie_id, unix_timestamp);
             </script>
             <div>
               {{movie.duration}} นาที

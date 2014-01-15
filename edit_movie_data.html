@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+    <head>
+      <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+      <script>
+        function checkAll() {
+          alert('onClick !!!');
+        }
+      </script>
+    </head>
+    <div>
+      <h4>แก้ไขข้อมูลหนังเรื่อง {{movie_model.name_th}} </h4>
+      <br>
+      <br>
+      <div>
+        <form>
+          ชื่อหนังภาษาอังกฤษ : <input type="text" name="name_en" style="width: 350px;" value="{{movie_model.name_en}}"/>
+        </form>
+        <form>
+          ชื่อหนังภาษาไทย : <input type="text" name="name_th" style="width: 350px;" value="{{movie_model.name_th}}"/>
+        </form>
+        <form>
+          ความยาวหนัง (เป็นวินาที) : <input type="text" name="duration" style="width: 100px;" value="{{movie_model.duration}}"/>
+        </form>
+        <form>
+          โปสเตอร์หนัง (url) : <input type="text" name="image"  style="width: 350px;" value="{{movie_model.image}}"/>
+        </form>
+        <form>
+          วันที่ฉาย (d/m/y) : <input type="text" name="release_time_timestamp" style="width: 350px;" value="{{movie_model.release_time_timestamp | covertUnixTimeToStrFotmat('%d/%m/%Y')}}"/>
+        </form>
+        <form>
+          ลิ้งยูทุป (จาก youtube เท่านั้น) : <input type="text" name="youtube_url"  style="width: 350px;" value="{{movie_model.youtube_url}}"/>
+        </form>
+        <form>
+          รายละเอียดหนังภาษาอังกฤษ : <input type="text" name="synopsis_en"  style="width: 350px;" value="{{movie_model.detail_synopsis_en}}"/>
+        </form>
+        <form>
+          รายละเอียดหนังภาษาไทย : <input type="text" name="synopsis_th"  style="width: 350px;" value="{{movie_model.detail_synopsis_th}}"/>
+        </form>
+        <form>
+          ประเภทหนังภาษาอังกฤษ : <input type="text" name="genre_en"  style="width: 350px;" value="{{movie_model.detail_genre_en}}"/>
+        </form>
+        <form>
+          ประเภทหนังภาษาไทย : <input type="text" name="genre_th"  style="width: 350px;" value="{{movie_model.detail_genre_th}}"/>
+        </form>
+        <form>
+          ชื่อผู้กำกับภาษาอังกฤษ : <input type="text" name="director_en"  style="width: 350px;" value="{{movie_model.detail_director_en}}"/>
+        </form>
+        <form>
+          ชื่อผู้กำกับภาษาไทย : <input type="text" name="director_th"  style="width: 350px;" value="{{movie_model.detail_director_th}}"/>
+        </form>
+        <form>
+          รายชื่อนักแสงภาษาอังกฤษ : <input type="text" name="cast_en"  style="width: 350px;" value="{{movie_model.detail_cast_en}}"/>
+        </form>
+        <form>
+          รายชื่อนักแสงภาษาไทย : <input type="text" name="cast_th"  style="width: 350px;" value="{{movie_model.detail_cast_th}}"/>
+        </form>
+      </div>
+    </div>
+    <br>
+    <div>
+      <input type="submit" name="confirm" onClick="checkAll()"/>
+    </div>
+
+</html>
+{% endautoescape %}

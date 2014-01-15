@@ -4,6 +4,7 @@ import json
 import urllib
 import os,sys
 import jinja2
+import datetime
 
 sys.path.append(os.path.abspath('models'))
 from google.appengine.api import users
@@ -33,10 +34,15 @@ from commentmodel import *
 
 DEFAULT_COMMENT_NAME = 'default_user'
 
+def covertUnixTimeToStrFotmat(i_unix_timestamp, str_format):
+    value = datetime.datetime.fromtimestamp(i_unix_timestamp)    
+    return (value.strftime(str_format))
+
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
-    autoescape=True)
+    autoescape=True,)
+JINJA_ENVIRONMENT.filters['covertUnixTimeToStrFotmat']=covertUnixTimeToStrFotmat
 
 class MainPage(webapp2.RequestHandler):
 
@@ -257,7 +263,7 @@ class GetComment(webapp2.RequestHandler):
     def process(self):
         movie_id = self.request.get('movie_id')
         q = CommentModel.all();
-        q.filter('movie_id =', int(movie_id))
+        q.filter('movie_id =', int(movie_id)) 
         q.order('-date')
         clist = []
         for c in q.fetch(limit=100) :
@@ -268,11 +274,26 @@ class GetComment(webapp2.RequestHandler):
 class NookMaiBackOffice(webapp2.RequestHandler):
     def get(self):
         movie_query = MovieModel.all().order('-release_time_timestamp')
+        movie_fetch = movie_query.fetch(limit=5)
         template_values = {
-             'movie_list': movie_query,
+             'movie_list': movie_fetch,
         }
         template = JINJA_ENVIRONMENT.get_template('back_office.html')
         self.response.write(template.render(template_values))
+        
+class EditMovieData(webapp2.RequestHandler):
+    def post(self):
+        self.process()
+    def get(self):
+        movie_id = self.request.get('movie_id')
+        movie_model = MovieModel.get_by_key_name(movie_id);
+        template_values = {
+            'movie_model' : movie_model,
+        }
+
+        template = JINJA_ENVIRONMENT.get_template('edit_movie_data.html')
+        self.response.write(template.render(template_values))
+        
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
@@ -285,6 +306,7 @@ application = webapp2.WSGIApplication([
     ('/api_add_comment', AddComment),
     ('/api_get_comment', GetComment),
     ('/backoffice', NookMaiBackOffice),
+    ('/edit_movie_data', EditMovieData),
 ], debug=True)
 
 
