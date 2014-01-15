@@ -9,7 +9,7 @@
 	<div>Click Movie Name To Edit</div>
 	{% for movie in movie_list%}
 		<div>
-			<a href="/nextview?movie_id={{movie.id}}">{{movie.name_en}}</a>
+			<a href="/edit_movie_data?movie_id={{movie.id}}">{{movie.name_en}}</a>
 		</div>
 	{% endfor%}
 </body>

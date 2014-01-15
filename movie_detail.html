@@ -27,8 +27,8 @@ Public Key:	6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp -->
 	 
 	 	
 	<div id="movie-content" style="text-align:center;">
-		<h3>วันที่ข้าฉาย</h3>
-		<p>{{ movie_data.release_time_text }}</p>
+		<h3>วันที่เข้าฉาย</h3>
+		<p>{{movie_data.release_time_timestamp|covertUnixTimeToStrFotmat('%d/%m/%Y')}}</p>
 		<h3>เรื่องย่อ</h3>
 		<!-- <div width="500"><strong>{{ movie_data.detail_synopsis_th }}</strong></div> -->
 		<strong>{{ movie_data.detail_synopsis_th }}</strong>

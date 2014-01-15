@@ -4,6 +4,7 @@ import json
 import urllib
 import os,sys
 import jinja2
+import datetime
 import logging
 
 sys.path.append(os.path.abspath('models'))
@@ -18,23 +19,6 @@ from commentmodel import *
 from os import environ
 from recaptcha.client import captcha
 
-# MAIN_PAGE_HTML = """\
-# <html>
-#   <body>
-#     <form action="/sign" method="post">
-#       <div><textarea name="content" rows="3" cols="60"></textarea></div>
-#        <div><input type="submit" value="Sign Guestbook"></div>
-#     </form>
-#     
-#     <form action="/nextview?%s" method="post">
-#        <div><input type="submit" value="next view"></div>
-#     </form>
-# 
-#   </body>
-# </html>
-# """
-
-
 DEFAULT_COMMENT_NAME = 'default_user'
 
 CAPTCHA_PUBLICE_KEY = '6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp'
@@ -42,11 +26,15 @@ CAPTCHA_PRIVATE_KEY = '6LcDAO0SAAAAAM4kxOsIOBKRz8oLjj2-dHcBcui5'
 CAPTCHA_PUBLICE_KEY_LOCALHOST = '6LdtC-0SAAAAAH5bs8gr19lSa896njyCiY1GE3Ti'
 CAPTCHA_PRIVATE_KEY_LOCALHOST = '6LdtC-0SAAAAAKvLvewCc4m0_qb7MxuPgRhg0svA'
 
+def covertUnixTimeToStrFotmat(i_unix_timestamp, str_format):
+    value = datetime.datetime.fromtimestamp(i_unix_timestamp)    
+    return (value.strftime(str_format))
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
-    autoescape=True)
+    autoescape=True,)
+JINJA_ENVIRONMENT.filters['covertUnixTimeToStrFotmat']=covertUnixTimeToStrFotmat
 
 class MainPage(webapp2.RequestHandler):
 
@@ -324,7 +312,7 @@ class GetComment(webapp2.RequestHandler):
     def process(self):
         movie_id = self.request.get('movie_id')
         q = CommentModel.all();
-        q.filter('movie_id =', int(movie_id))
+        q.filter('movie_id =', int(movie_id)) 
         q.order('-date')
         clist = []
         for c in q.fetch(limit=100) :
@@ -335,11 +323,26 @@ class GetComment(webapp2.RequestHandler):
 class NookMaiBackOffice(webapp2.RequestHandler):
     def get(self):
         movie_query = MovieModel.all().order('-release_time_timestamp')
+        movie_fetch = movie_query.fetch(limit=5)
         template_values = {
-             'movie_list': movie_query,
+             'movie_list': movie_fetch,
         }
         template = JINJA_ENVIRONMENT.get_template('back_office.html')
         self.response.write(template.render(template_values))
+        
+class EditMovieData(webapp2.RequestHandler):
+    def post(self):
+        self.process()
+    def get(self):
+        movie_id = self.request.get('movie_id')
+        movie_model = MovieModel.get_by_key_name(movie_id);
+        template_values = {
+            'movie_model' : movie_model,
+        }
+
+        template = JINJA_ENVIRONMENT.get_template('edit_movie_data.html')
+        self.response.write(template.render(template_values))
+        
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
@@ -352,6 +355,7 @@ application = webapp2.WSGIApplication([
     ('/api_add_comment', AddComment),
     ('/api_get_comment', GetComment),
     ('/backoffice', NookMaiBackOffice),
+    ('/edit_movie_data', EditMovieData),
 ], debug=True)
 
 
