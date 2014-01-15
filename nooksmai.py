@@ -4,6 +4,7 @@ import json
 import urllib
 import os,sys
 import jinja2
+import logging
 
 sys.path.append(os.path.abspath('models'))
 from google.appengine.api import users
@@ -13,6 +14,9 @@ from optparse import OptionParser
 from moviemodel import *
 from cacheimagemodel import *
 from commentmodel import *
+
+from os import environ
+from recaptcha.client import captcha
 
 # MAIN_PAGE_HTML = """\
 # <html>
@@ -32,6 +36,12 @@ from commentmodel import *
 
 
 DEFAULT_COMMENT_NAME = 'default_user'
+
+CAPTCHA_PUBLICE_KEY = '6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp'
+CAPTCHA_PRIVATE_KEY = '6LcDAO0SAAAAAM4kxOsIOBKRz8oLjj2-dHcBcui5'
+CAPTCHA_PUBLICE_KEY_LOCALHOST = '6LdtC-0SAAAAAH5bs8gr19lSa896njyCiY1GE3Ti'
+CAPTCHA_PRIVATE_KEY_LOCALHOST = '6LdtC-0SAAAAAKvLvewCc4m0_qb7MxuPgRhg0svA'
+
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -205,9 +215,21 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
         for c in q.fetch(limit=100) :
             comments.append(c)
         
+
+        # chtml = captcha.displayhtml(
+        # public_key = "6LdtC-0SAAAAAH5bs8gr19lSa896njyCiY1GE3Ti",
+        # use_ssl = False,
+        # error = None)
+        chtml = captcha.displayhtml(
+        public_key = CAPTCHA_PUBLICE_KEY_LOCALHOST,
+        use_ssl = False,
+        error = None)
+
+
         template_values = {
             'movie_data': movie_data,
             'comments':comments,
+            'captchahtml': chtml,
         }
 
         
@@ -217,11 +239,10 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
 
 
 
-    
 
-# def comment_key(comment_name=DEFAULT_COMMENT_NAME):
-#     """Constructs a Datastore key for a Guestbook entity with comment_name."""
-#     return ndb.Key('Comment', comment_name)
+
+
+# API 
 
 class AddComment(webapp2.RequestHandler):
     def get(self):
@@ -229,25 +250,71 @@ class AddComment(webapp2.RequestHandler):
     def post(self):
         self.process()
     def process(self):
-        content = self.request.get('content')
-        movie_id = self.request.get('movie_id')
-        author = self.request.get('author')
+        # 
+        challenge = self.request.get('recaptcha_challenge_field')
+        response  = self.request.get('recaptcha_response_field')
+        # remoteip  = environ['REMOTE_ADDR']
+        remoteip = self.request.remote_addr
+
+        # cResponse = captcha.submit(
+        #             challenge,
+        #             response,
+        #             "6LdtC-0SAAAAAKvLvewCc4m0_qb7MxuPgRhg0svA",
+        #             remoteip)
+
+        cResponse = captcha.submit(
+                    challenge,
+                    response,
+                    CAPTCHA_PRIVATE_KEY_LOCALHOST,
+                    remoteip)
+
+
         success = 0
-        if content :
-            c = CommentModel()
-            c.movie_id = int(movie_id)
-            c.content = cgi.escape(content)
-            c.author = cgi.escape(author)
-            c.put()
-            success = 1
+
+        if cResponse.is_valid:
+            # response was valid
+            # other stuff goes here
+            # logging.warning('is_valid')
+
+            content = self.request.get('content')
+            movie_id = self.request.get('movie_id')
+            author = self.request.get('author')
+            if content :
+                c = CommentModel()
+                c.movie_id = int(movie_id)
+                c.content = cgi.escape(content)
+                c.author = cgi.escape(author)
+                c.put()
+                success = 1
        
+
+        else:
+            error = cResponse.error_code
+            logging.warning(error)
+
         r = {'success':success}
         self.response.out.write(json.dumps(r))
+
+
+
+        # content = self.request.get('content')
+        # movie_id = self.request.get('movie_id')
+        # author = self.request.get('author')
+        # success = 0
+        # if content :
+        #     c = CommentModel()
+        #     c.movie_id = int(movie_id)
+        #     c.content = cgi.escape(content)
+        #     c.author = cgi.escape(author)
+        #     c.put()
+        #     success = 1
+       
+        # r = {'success':success}
+        # self.response.out.write(json.dumps(r))
 
         #redirect view
         #self.redirect('/nextview?movie_id='+movie_id)
 
-# API 
 
 class GetComment(webapp2.RequestHandler):
     def get(self):

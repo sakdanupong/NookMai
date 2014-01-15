@@ -34,7 +34,6 @@ Public Key:	6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp -->
 		</p>
 	</div>
 	
-<<<<<<< HEAD
 	<div style="text-align:center;">
 		<iframe id="youtube_frame" width="560" height="315" src="{{ movie_data.youtube_url }}" frameborder="0" allowfullscreen style="display:none;"></iframe>
 		<script>
@@ -50,48 +49,28 @@ Public Key:	6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp -->
 				$("#youtube_frame").show();
 			{% endif %}
 		</script>
-=======
-	<div>
-	<center>
-	<iframe id="youtube_frame" width="560" height="315" src="{{ movie_data.youtube_url }}" frameborder="0" allowfullscreen style="display:none;"></iframe>
-	<script>
-		{% if not movie_data.youtube_url %}
-			$.getJSON( "/trailer?movie_id={{ movie_data.id }}", function(data) { 
-				var youtube_link = "//www.youtube.com/embed/"+data['videoId'];
-				$("#youtube_frame").get(0).contentWindow.location.replace(youtube_link);
-				//$("#youtube_frame").attr("src", youtube_link);
-				$("#youtube_frame").show(500);
-			});
-		{% else %}
-			$("#youtube_frame").show();
-		{% endif %}
-	</script>
-	
-	
-	</center>
->>>>>>> a6cad2fcac62ba054a1870d3e038fab2d28cc5a1
 	</div>
 	
 	
 	<div style="text-alaign:center;">
 		<form action="javascript:submitComment();" method="post">
+
 	    <textarea id="comment_content" name="content" style="width:450px; height:100px;"></textarea>
     	<br>
     	<input id="comment_author" name="author" placeholder="name" style="width:450px" rows="1" cols="60"></input>
 
+{% autoescape false %}
+ 		<script type="text/javascript">var RecaptchaOptions = {theme : 'clean'};</script>
+		{{ captchahtml }}
+{% endautoescape %}
 
- 		<script type="text/javascript">
- 			var RecaptchaOptions = {theme : 'clean'};
- 		</script>
- 		<script type="text/javascript"
-   			src="http://www.google.com/recaptcha/api/challenge?k=6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp">
 
-  		</script>
 
 
     	<input type="submit" value="Comment"></div>
     	</form>
     </div>
+
 	
 	<div id="comments" style="text-align:left;">
 		{% for comment in comments %}
@@ -107,13 +86,19 @@ Public Key:	6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp -->
 /// qestion = "5+10=?"
 /// answer = 'ddd'
 
+
+
 	function submitComment() {
 		var author = $("#comment_author").val();
 		var content = $("#comment_content").val();
+		var recaptcha_challenge_field = $('[name="recaptcha_challenge_field"]').val();
+		var recaptcha_response_field = $('[name="recaptcha_response_field"]').val();
 
 		var postData = {'movie_id':{{ movie_data.id }},
 		 				'author':author,
-		  				'content':content
+		  				'content':content,
+		  				'recaptcha_challenge_field':recaptcha_challenge_field,
+		  				'recaptcha_response_field':recaptcha_response_field,
 		  				};
 		$.getJSON("/api_add_comment", postData, function(data) {
 
@@ -128,6 +113,8 @@ Public Key:	6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp -->
 	function updateComments() {
 		$.getJSON("/api_get_comment", {'movie_id':{{ movie_data.id }}}, function(data) {
 			//alert(data['data']);
+			// clear TextField
+
 			var clist = data['data'];
 			var h = '';
 			for (var i = 0; i < clist.length; i++) {
