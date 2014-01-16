@@ -5,7 +5,14 @@
       <script src="//code.jquery.com/jquery-1.10.2.js"></script>
       <script>
         function checkAll() {
-          alert('onClick !!!');
+          var dict = {
+            "1" : false,
+            "2" : true,
+            "3" : false
+          };
+          $.each( dict, function( key, value ) {
+           alert( key + ": " + value );
+          });
         }
       </script>
     </head>
