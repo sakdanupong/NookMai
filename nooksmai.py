@@ -6,6 +6,7 @@ import os,sys
 import jinja2
 import datetime
 import logging
+import HTMLParser
 
 sys.path.append(os.path.abspath('models'))
 from google.appengine.api import users
@@ -26,6 +27,13 @@ CAPTCHA_PRIVATE_KEY = '6LcDAO0SAAAAAM4kxOsIOBKRz8oLjj2-dHcBcui5'
 CAPTCHA_PUBLICE_KEY_LOCALHOST = '6LdtC-0SAAAAAH5bs8gr19lSa896njyCiY1GE3Ti'
 CAPTCHA_PRIVATE_KEY_LOCALHOST = '6LdtC-0SAAAAAKvLvewCc4m0_qb7MxuPgRhg0svA'
 
+
+def decodeHTML(str):
+    html_parser = HTMLParser.HTMLParser()
+    unescaped = html_parser.unescape(str)
+    return unescaped
+
+
 def covertUnixTimeToStrFotmat(i_unix_timestamp, str_format):
     value = datetime.datetime.fromtimestamp(i_unix_timestamp)    
     return (value.strftime(str_format))
@@ -35,6 +43,8 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     extensions=['jinja2.ext.autoescape'],
     autoescape=True,)
 JINJA_ENVIRONMENT.filters['covertUnixTimeToStrFotmat']=covertUnixTimeToStrFotmat
+JINJA_ENVIRONMENT.filters['decodeHTML']=decodeHTML
+
 
 class MainPage(webapp2.RequestHandler):
 
@@ -183,7 +193,7 @@ class NookMai(webapp2.RequestHandler):
 
     def post(self):
         self.response.write('<html><body>You wrotesdsdsd:<pre>')
-        self.response.write(cgi.escape(self.request.get('content')))
+        self.response.write(self.request.get('content'))
         self.response.write('</pre></body></html>')
 
 class NookMaiDetailMovie(webapp2.RequestHandler):
@@ -194,7 +204,6 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
         movie_data = MovieModel.get_or_insert(key_name=movie_id)
 
 
-
         #query show comment
         q = CommentModel.all();
         q.filter('movie_id =', int(movie_id))
@@ -202,16 +211,16 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
         comments = []
         for c in q.fetch(limit=100) :
             comments.append(c)
-        
 
-        # chtml = captcha.displayhtml(
-        # public_key = "6LdtC-0SAAAAAH5bs8gr19lSa896njyCiY1GE3Ti",
-        # use_ssl = False,
-        # error = None)
         chtml = captcha.displayhtml(
         public_key = CAPTCHA_PUBLICE_KEY_LOCALHOST,
         use_ssl = False,
         error = None)
+
+        # chtml = captcha.displayhtml(
+        # public_key = CAPTCHA_PUBLICE_KEY,
+        # use_ssl = False,
+        # error = None)
 
 
         template_values = {
@@ -244,17 +253,19 @@ class AddComment(webapp2.RequestHandler):
         # remoteip  = environ['REMOTE_ADDR']
         remoteip = self.request.remote_addr
 
-        # cResponse = captcha.submit(
-        #             challenge,
-        #             response,
-        #             "6LdtC-0SAAAAAKvLvewCc4m0_qb7MxuPgRhg0svA",
-        #             remoteip)
-
         cResponse = captcha.submit(
                     challenge,
                     response,
                     CAPTCHA_PRIVATE_KEY_LOCALHOST,
                     remoteip)
+
+        # cResponse = captcha.submit(
+        #             challenge,
+        #             response,
+        #             CAPTCHA_PRIVATE_KEY,
+        #             remoteip)
+
+
 
 
         success = 0
@@ -274,31 +285,15 @@ class AddComment(webapp2.RequestHandler):
                 c.author = cgi.escape(author)
                 c.put()
                 success = 1
-       
+                
 
         else:
             error = cResponse.error_code
             logging.warning(error)
+            
 
         r = {'success':success}
         self.response.out.write(json.dumps(r))
-
-
-
-        # content = self.request.get('content')
-        # movie_id = self.request.get('movie_id')
-        # author = self.request.get('author')
-        # success = 0
-        # if content :
-        #     c = CommentModel()
-        #     c.movie_id = int(movie_id)
-        #     c.content = cgi.escape(content)
-        #     c.author = cgi.escape(author)
-        #     c.put()
-        #     success = 1
-       
-        # r = {'success':success}
-        # self.response.out.write(json.dumps(r))
 
         #redirect view
         #self.redirect('/nextview?movie_id='+movie_id)
@@ -316,7 +311,8 @@ class GetComment(webapp2.RequestHandler):
         q.order('-date')
         clist = []
         for c in q.fetch(limit=100) :
-            clist.append({'author':c.author,'content':c.content})
+            clist.append({'author':c.author,'content':c.content,'date':c.date.strftime("%B %d, %Y") ,'time_crate':c.date.strftime("%H:%M") })
+
         r = {'data':clist}
         self.response.out.write(json.dumps(r))
 

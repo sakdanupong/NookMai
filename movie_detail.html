@@ -1,18 +1,23 @@
-<!-- Private Key:	6LcDAO0SAAAAAM4kxOsIOBKRz8oLjj2-dHcBcui5
-Public Key:	6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp --> 
-
 <!DOCTYPE html>
 {% autoescape true %}
-<html>
 
+<html>
+<!-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> -->
 <head>
-	<title>TEST</title>
+	<title>ข้อมูลหนัง</title>
 	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<!-- 	<style type="text/css">
+  		body {
+    		color: purple;
+    		background-color: #d8da3d }
+  	</style> -->
 </head>
 	
 
 <body>	
 	<h1 class="title" style="text-align:center;">
+
+
 		<strong>{{ movie_data.name_en }}</strong>
 		<br>
 		<span>{{ movie_data.name_th }}</span>
@@ -65,14 +70,11 @@ Public Key:	6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp -->
     	<br>
     	<input id="comment_author" name="author" placeholder="name" style="width:450px" rows="1" cols="60"></input>
 
-{% autoescape false %}
 
+{% autoescape false %}
  		<script type="text/javascript">var RecaptchaOptions = {theme : 'clean'};</script>
 		{{ captchahtml }}
-		
 {% endautoescape %}
-
-
 
 
     	<input type="submit" value="Comment"></div>
@@ -82,18 +84,21 @@ Public Key:	6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp -->
 
 	
 	<div id="comments">
-	
+		<div><center><font size="20"><b>comment</b></font></center></div>
 		{% for comment in comments %}
 		<center>
-			<table width="500" border="1" cellpadding="0" cellspacing="5" bordercolor="#333333">
-			<br/><br/>
-			<div>author: {{ comment.author }}</div>
-	    	<div>content: {{ comment.content }}</div>
-	    	<div>date: {{ comment.date }}</div>
-			<br/><br/>
-	    	</table>
+		<table width="500" border="1" cellpadding="0" cellspacing="5" bordercolor="#333333">
+		<br/><br/>
+	    <div>ข้อความ: {{ comment.content|decodeHTML }}</div>
+	    <div>ชื่อ: {{ comment.author|decodeHTML }}</div>
+	    <div>วันที่: {{ comment.date.strftime("%B %d, %Y") }} เวลา: {{ comment.date.strftime("%H:%M") }}</div>
+		<br/><br/>
+	    </table>
 	    </center>
 		{% endfor %}
+	</div>
+
+	<div id="footer" style="height: 200px;">
 	</div>
 
 
@@ -120,9 +125,15 @@ Public Key:	6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp -->
 		$.getJSON("/api_add_comment", postData, function(data) {
 
 			if(data['success'] == 1){
+				// TODO clear text all
+				$('#comment_content').val("");
+				Recaptcha.reload();
+				// $('#doc_title').val("");
+				// $('#doc_title').val("");
+
 			 	setTimeout(updateComments,100);
 			}else
-			 	alert("ERROR");
+			 	alert("The CAPTCHA you entered is invalid. Please try again");
 		});
 
 	}
@@ -130,7 +141,7 @@ Public Key:	6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp -->
 	function updateComments() {
 		$.getJSON("/api_get_comment", {'movie_id':{{ movie_data.id }}}, function(data) {
 			//alert(data['data']);
-			// clear TextField
+			
 
 			var clist = data['data'];
 			var h = '';
@@ -138,8 +149,17 @@ Public Key:	6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp -->
 				var c = clist[i];
 		    	var author = c['author'];
 		    	var content = c['content'];
-		    	h += '<div>author:'+author+'</div>';
-		    	h += '<div>content:'+content+'</div><br/><br/>';
+		    	var date = c['date'];
+		    	var time_crate = c['time_crate'];
+		    	h += '<center>';
+		    	h += '<table width="500" border="1" cellpadding="0" cellspacing="5" bordercolor="#333333">';
+		    	h += '<br/><br/>';
+		    	h += '<div>ข้อความ:'+content+'</div>';
+		    	h += '<div>ชื่อ:'+author+'</div>';
+		    	h += '<div>วันที่:'+date+' เวลา:'+time_crate+'</div>';
+		    	h += '<br/><br/>';
+		    	h += '</table>';
+		    	h += '</center>';
 			}
 			$('#comments').html(h);
 		});
