@@ -26,6 +26,11 @@ CAPTCHA_PRIVATE_KEY = '6LcDAO0SAAAAAM4kxOsIOBKRz8oLjj2-dHcBcui5'
 CAPTCHA_PUBLICE_KEY_LOCALHOST = '6LdtC-0SAAAAAH5bs8gr19lSa896njyCiY1GE3Ti'
 CAPTCHA_PRIVATE_KEY_LOCALHOST = '6LdtC-0SAAAAAKvLvewCc4m0_qb7MxuPgRhg0svA'
 
+def editMovieData():
+    r = {'success':'success'}
+    b = json.dumps(r)
+    return b
+
 def covertUnixTimeToStrFotmat(i_unix_timestamp, str_format):
     value = datetime.datetime.fromtimestamp(i_unix_timestamp)    
     return (value.strftime(str_format))
@@ -35,6 +40,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     extensions=['jinja2.ext.autoescape'],
     autoescape=True,)
 JINJA_ENVIRONMENT.filters['covertUnixTimeToStrFotmat']=covertUnixTimeToStrFotmat
+JINJA_ENVIRONMENT.filters['editMovieData']=editMovieData
 
 class MainPage(webapp2.RequestHandler):
 
@@ -331,18 +337,64 @@ class NookMaiBackOffice(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
         
 class EditMovieData(webapp2.RequestHandler):
-    def post(self):
-        self.process()
     def get(self):
         movie_id = self.request.get('movie_id')
         movie_model = MovieModel.get_by_key_name(movie_id);
         template_values = {
             'movie_model' : movie_model,
         }
-
         template = JINJA_ENVIRONMENT.get_template('edit_movie_data.html')
         self.response.write(template.render(template_values))
         
+
+class APIEditMovie(webapp2.RequestHandler):
+    def get(self):
+        self.process()
+    def post(self):
+        self.process()
+    def process(self):
+        movie_id = self.request.get('movie_id')
+        name_th = self.request.get('name_th')
+        name_en = self.request.get('name_en')
+        duration = self.request.get('duration')
+        image = self.request.get('image')
+        release_time_timestamp = self.request.get('release_time_timestamp')
+        youtube_url = self.request.get('youtube_url')
+        synopsis_en = self.request.get('synopsis_en')
+        synopsis_th = self.request.get('synopsis_th')
+        genre_en = self.request.get('genre_en')
+        genre_th = self.request.get('genre_th')
+        director_en = self.request.get('director_en')
+        director_th = self.request.get('director_th')
+        cast_en = self.request.get('cast_en')
+        cast_th = self.request.get('cast_th')
+        success = 1 
+
+        fieldProblems = []
+        movie_model = MovieModel.get_by_key_name(movie_id)
+
+        if  name_th and name_en and image and release_time_timestamp and youtube_url:
+            success = 1
+        else:    
+            if not name_en:
+                fieldProblems.append(0)
+            if not name_th:
+                fieldProblems.append(1)
+            if not image:
+                fieldProblems.append(2)
+            if not release_time_timestamp:
+                fieldProblems.append(3)
+            if not youtube_url:
+                fieldProblems.append(4)
+            success = 0
+
+        r = {
+            'success' : success,
+            'fieldProblems' : fieldProblems,
+        }
+
+        self.response.out.write(json.dumps(r))
+
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
@@ -356,6 +408,7 @@ application = webapp2.WSGIApplication([
     ('/api_get_comment', GetComment),
     ('/backoffice', NookMaiBackOffice),
     ('/edit_movie_data', EditMovieData),
+    ('/api_edit_movie_data', APIEditMovie),
 ], debug=True)
 
 

@@ -4,14 +4,49 @@
     <head>
       <script src="//code.jquery.com/jquery-1.10.2.js"></script>
       <script>
+        function hideAllFieldProblem() {
+          $('#0').hide();
+          $('#1').hide();
+          $('#2').hide();
+          $('#3').hide();
+          $('#4').hide();
+        }
+
         function checkAll() {
-          var dict = {
-            "1" : false,
-            "2" : true,
-            "3" : false
+          hideAllFieldProblem();
+          var postData = {
+            'movie_id' : {{movie_model.id}},
+            'name_en' : $('#name_en').val(),//$("#name_th").val(),
+            'name_th' : $('#name_th').val(),
+            'duration' : $('#duration').val(),
+            'image' : $('#image').val(),
+            'release_time_timestamp' : $('#release_time_timestamp').val(),
+            'youtube_url' : $('#youtube_url').val(),
+            'synopsis_en' : $('#synopsis_en').val(),
+            'synopsis_th' : $('#synopsis_th').val(),
+            'genre_en' : $('#genre_en').val(),
+            'genre_th' : $('#genre_th').val(),
+            'director_en' : $('#director_en').val(),
+            'director_th' : $('#director_th').val(),
+            'cast_en' : $('#cast_en').val(),
+            'cast_th' : $('#cast_th').val(),
           };
-          $.each( dict, function( key, value ) {
-           alert( key + ": " + value );
+
+          $.getJSON( "/api_edit_movie_data", postData, function(data) { 
+            var success = data['success'];
+            var success_str = 'success';
+            if (success == 0) {
+              var fieldProblems = data['fieldProblems'];
+              success_str = 'fail';
+
+              for (var i = 0; i < fieldProblems.length; i++) {
+                  var c = fieldProblems[i];
+                  var s = '#'+c;
+                  $(s).show();
+              }   
+              //alert(success_str);
+            }
+            
           });
         }
       </script>
@@ -22,52 +57,60 @@
       <br>
       <div>
         <form>
-          ชื่อหนังภาษาอังกฤษ : <input type="text" name="name_en" style="width: 350px;" value="{{movie_model.name_en}}"/>
+          ชื่อหนังภาษาอังกฤษ : <input type="text" id="name_en" style="width: 350px;" value="{{movie_model.name_en}}"/>
+          <b id="0" style="display:none;"><font color="red">Please fill text</font></b>
         </form>
         <form>
-          ชื่อหนังภาษาไทย : <input type="text" name="name_th" style="width: 350px;" value="{{movie_model.name_th}}"/>
+          ชื่อหนังภาษาไทย : <input type="text" id="name_th" style="width: 350px;" value="{{movie_model.name_th}}"/>
+          <b id="1" style="display:none;"><font color="red">Please fill text</font></b>
         </form>
         <form>
-          ความยาวหนัง (เป็นวินาที) : <input type="text" name="duration" style="width: 100px;" value="{{movie_model.duration}}"/>
+          ความยาวหนัง (เป็นวินาที) : <input type="text" id="duration" style="width: 100px;" value="{{movie_model.duration}}"/>
+          <b id="2" style="display:none;"><font color="red">Please fill text</font></b>
         </form>
         <form>
-          โปสเตอร์หนัง (url) : <input type="text" name="image"  style="width: 350px;" value="{{movie_model.image}}"/>
+          โปสเตอร์หนัง (url) : <input type="text" id="image"  style="width: 350px;" value="{{movie_model.image}}"/>
+          <b id="3" style="display:none;"><font color="red">Please fill text</font></b>
         </form>
         <form>
-          วันที่ฉาย (d/m/y) : <input type="text" name="release_time_timestamp" style="width: 350px;" value="{{movie_model.release_time_timestamp | covertUnixTimeToStrFotmat('%d/%m/%Y')}}"/>
+          วันที่ฉาย (d/m/y) : <input type="text" id="release_time_timestamp" style="width: 350px;" value="{{movie_model.release_time_timestamp | covertUnixTimeToStrFotmat('%d/%m/%Y')}}"/>
+          <b id="4" style="display:none;"><font color="red">Please fill text in format dd/mm/yyyy</font></b>
         </form>
         <form>
-          ลิ้งยูทุป (จาก youtube เท่านั้น) : <input type="text" name="youtube_url"  style="width: 350px;" value="{{movie_model.youtube_url}}"/>
+          ลิ้งยูทุป (จาก youtube เท่านั้น) : <input type="text" id="youtube_url"  style="width: 350px;" value="{{movie_model.youtube_url}}"/>
+          <b id="5" style="display:none;"><font color="red">Please fill text</font></b>
         </form>
         <form>
-          รายละเอียดหนังภาษาอังกฤษ : <input type="text" name="synopsis_en"  style="width: 350px;" value="{{movie_model.detail_synopsis_en}}"/>
+          รายละเอียดหนังภาษาอังกฤษ : <input type="text" id="synopsis_en"  style="width: 350px;" value="{{movie_model.detail_synopsis_en}}"/>
         </form>
         <form>
-          รายละเอียดหนังภาษาไทย : <input type="text" name="synopsis_th"  style="width: 350px;" value="{{movie_model.detail_synopsis_th}}"/>
+          รายละเอียดหนังภาษาไทย : <input type="text" id="synopsis_th"  style="width: 350px;" value="{{movie_model.detail_synopsis_th}}"/>
         </form>
         <form>
-          ประเภทหนังภาษาอังกฤษ : <input type="text" name="genre_en"  style="width: 350px;" value="{{movie_model.detail_genre_en}}"/>
+          ประเภทหนังภาษาอังกฤษ : <input type="text" id="genre_en"  style="width: 350px;" value="{{movie_model.detail_genre_en}}"/>
         </form>
         <form>
-          ประเภทหนังภาษาไทย : <input type="text" name="genre_th"  style="width: 350px;" value="{{movie_model.detail_genre_th}}"/>
+          ประเภทหนังภาษาไทย : <input type="text" id="genre_th"  style="width: 350px;" value="{{movie_model.detail_genre_th}}"/>
         </form>
         <form>
-          ชื่อผู้กำกับภาษาอังกฤษ : <input type="text" name="director_en"  style="width: 350px;" value="{{movie_model.detail_director_en}}"/>
+          ชื่อผู้กำกับภาษาอังกฤษ : <input type="text" id="director_en"  style="width: 350px;" value="{{movie_model.detail_director_en}}"/>
         </form>
         <form>
-          ชื่อผู้กำกับภาษาไทย : <input type="text" name="director_th"  style="width: 350px;" value="{{movie_model.detail_director_th}}"/>
+          ชื่อผู้กำกับภาษาไทย : <input type="text" id="director_th"  style="width: 350px;" value="{{movie_model.detail_director_th}}"/>
         </form>
         <form>
-          รายชื่อนักแสงภาษาอังกฤษ : <input type="text" name="cast_en"  style="width: 350px;" value="{{movie_model.detail_cast_en}}"/>
+          รายชื่อนักแสงภาษาอังกฤษ : <input type="text" id="cast_en"  style="width: 350px;" value="{{movie_model.detail_cast_en}}"/>
         </form>
         <form>
-          รายชื่อนักแสงภาษาไทย : <input type="text" name="cast_th"  style="width: 350px;" value="{{movie_model.detail_cast_th}}"/>
+          รายชื่อนักแสงภาษาไทย : <input type="text" id="cast_th"  style="width: 350px;" value="{{movie_model.detail_cast_th}}"/>
         </form>
       </div>
     </div>
     <br>
     <div>
-      <input type="submit" name="confirm" onClick="checkAll()"/>
+      <form action="javascript:checkAll();" method="post">
+        <input type="submit" name="confirm"/>
+      </form>
     </div>
 
 </html>
