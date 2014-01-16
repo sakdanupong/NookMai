@@ -30,6 +30,7 @@ Public Key:	6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp -->
 		<h3>วันที่เข้าฉาย</h3>
 		<p>{{movie_data.release_time_timestamp|covertUnixTimeToStrFotmat('%d/%m/%Y')}}</p>
 		<h3>เรื่องย่อ</h3>
+		<!-- <div width="500"><strong>{{ movie_data.detail_synopsis_th }}</strong></div> -->
 		<strong>{{ movie_data.detail_synopsis_th }}</strong>
 		</p>
 	</div>
@@ -51,31 +52,47 @@ Public Key:	6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp -->
 		</script>
 	</div>
 	
+
+	<br/>
+	<br/>
+	<br/>
+	
 	
 	<div style="text-alaign:center;">
 		<form action="javascript:submitComment();" method="post">
-
+		<center>
 	    <textarea id="comment_content" name="content" style="width:450px; height:100px;"></textarea>
     	<br>
     	<input id="comment_author" name="author" placeholder="name" style="width:450px" rows="1" cols="60"></input>
 
 {% autoescape false %}
+
  		<script type="text/javascript">var RecaptchaOptions = {theme : 'clean'};</script>
 		{{ captchahtml }}
+		
 {% endautoescape %}
 
 
 
 
     	<input type="submit" value="Comment"></div>
+    	</center>
     	</form>
     </div>
 
 	
-	<div id="comments" style="text-align:left;">
+	<div id="comments">
+	
 		{% for comment in comments %}
+		<center>
+			<table width="500" border="1" cellpadding="0" cellspacing="5" bordercolor="#333333">
+			<br/><br/>
 			<div>author: {{ comment.author }}</div>
-	    	<div>content: {{ comment.content }}</div><br/><br/>
+	    	<div>content: {{ comment.content }}</div>
+	    	<div>date: {{ comment.date }}</div>
+			<br/><br/>
+	    	</table>
+	    </center>
 		{% endfor %}
 	</div>
 
