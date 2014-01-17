@@ -7,6 +7,7 @@ import jinja2
 import datetime
 import logging
 import HTMLParser
+import time
 
 sys.path.append(os.path.abspath('models'))
 from google.appengine.api import users
@@ -16,6 +17,7 @@ from optparse import OptionParser
 from moviemodel import *
 from cacheimagemodel import *
 from commentmodel import *
+from decimal import *
 
 from os import environ
 from recaptcha.client import captcha
@@ -40,6 +42,27 @@ def decodeHTML(str):
 def covertUnixTimeToStrFotmat(i_unix_timestamp, str_format):
     value = datetime.datetime.fromtimestamp(i_unix_timestamp)    
     return (value.strftime(str_format))
+
+def checkDateFormat(str_date):
+    success = 1
+    try:
+        datetime.datetime.strptime(str_date,"%d/%m/%Y")
+    except ValueError as err:
+        success = 0
+    return success
+
+def isint(x):
+    try:
+        a = float(x)
+        b = int(a)
+    except ValueError:
+        return False
+    else:
+        return a == b
+
+def splitStr(str_to_split, split):
+    s2 = str_to_split.split(split)
+    return s2;
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -190,6 +213,16 @@ class GetTrailer(webapp2.RequestHandler):
             youtube_url = "//www.youtube.com/embed/"+item_id['videoId'];
             movie_model.youtube_url = youtube_url
             movie_model.put()
+            return self.response.out.write(b)
+        else:
+            youtube_url = movie_model.youtube_url
+            split_items = splitStr(youtube_url,'/')
+            last_index = len(split_items) - 1
+            videoId = split_items[last_index]
+            dict = {
+                'videoId' : videoId,
+            }
+            b = json.dumps(dict)
             return self.response.out.write(b)
 
 class NookMai(webapp2.RequestHandler):
@@ -361,13 +394,16 @@ class APIEditMovie(webapp2.RequestHandler):
         director_th = self.request.get('director_th')
         cast_en = self.request.get('cast_en')
         cast_th = self.request.get('cast_th')
+
         success = 1 
 
         fieldProblems = []
         movie_model = MovieModel.get_by_key_name(movie_id)
 
-        if  name_th and name_en and image and release_time_timestamp and youtube_url:
-            success = 1
+        if  name_th and name_en and image:
+            movie_model.name_th = name_th
+            movie_model.name_en = name_en
+            movie_model.image = image
         else:    
             if not name_en:
                 fieldProblems.append(0)
@@ -375,16 +411,51 @@ class APIEditMovie(webapp2.RequestHandler):
                 fieldProblems.append(1)
             if not image:
                 fieldProblems.append(2)
-            if not release_time_timestamp:
-                fieldProblems.append(3)
-            if not youtube_url:
-                fieldProblems.append(4)
             success = 0
+
+        if success == 1:
+            if not checkDateFormat(release_time_timestamp):
+                success = 0
+                fieldProblems.append(3)
+            else:
+                date_object = datetime.datetime.strptime(release_time_timestamp,"%d/%m/%Y")
+                ans_time = time.mktime(date_object.timetuple())
+                movie_model.release_time_timestamp = int(ans_time)
+                success = 1# to do add data to data store
+
+        if success == 1:
+            if not isint(duration):
+                success = 0
+                fieldProblems.append(5)
+            else:
+                movie_model.duration = int(duration)
+                success = 1# to do add data to data store
+
+        g_yt_url = ''
+
+        if success == 1:
+            if youtube_url is None:
+                fieldProblems.append(4)
+                success = 0
+            else:
+                logging.warning(youtube_url)
+                split_items = splitStr(youtube_url,'=')
+                if len(split_items) <= 1:
+                    split_items = splitStr(youtube_url,'/')
+                last_index = len(split_items) - 1
+                videoId = split_items[last_index]
+                yt_url = "//www.youtube.com/embed/" + videoId
+                g_yt_url = yt_url
+                movie_model.youtube_url = yt_url
 
         r = {
             'success' : success,
             'fieldProblems' : fieldProblems,
+            'youtube_url' : g_yt_url,
         }
+
+        if (success == 1):
+            movie_model.put()
 
         self.response.out.write(json.dumps(r))
 

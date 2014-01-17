@@ -4,12 +4,34 @@
     <head>
       <script src="//code.jquery.com/jquery-1.10.2.js"></script>
       <script>
+
+        function updateYoutubeFrame() {
+          $("#youtube_frame").hide();
+          {% if not movie_model.youtube_url %}
+          $.getJSON( "/trailer?movie_id={{ movie_model.id }}", function(data) { 
+            var youtube_link = "//www.youtube.com/embed/"+data['videoId'];
+             $("#youtube_frame").get(0).contentWindow.location.replace(youtube_link);
+             $("#youtube_frame").show(500);
+          });
+          {% else %}
+            $("#youtube_frame").show();
+          {% endif %}
+        }
+
+        function updateYoutubeWithNew(new_link) {
+            var youtube_div = document.getElementById('youtube_div');
+            var youtube_frame = document.getElementById('youtube_frame');
+            youtube_frame.parentNode.removeChild(youtube_frame);
+            youtube_div.innerHTML ='<iframe id="youtube_frame" width="560" height="315" src="'+ new_link +'" frameborder="0" allowfullscreen"></iframe>'
+        }
+
         function hideAllFieldProblem() {
           $('#0').hide();
           $('#1').hide();
           $('#2').hide();
           $('#3').hide();
           $('#4').hide();
+          $('#5').hide();
         }
 
         function checkAll() {
@@ -43,8 +65,11 @@
                   var c = fieldProblems[i];
                   var s = '#'+c;
                   $(s).show();
-              }   
+              }
               //alert(success_str);
+            } else {
+              var youtube_url = data['youtube_url'];
+              updateYoutubeWithNew(youtube_url);
             }
             
           });
@@ -52,7 +77,7 @@
       </script>
     </head>
     <div>
-      <h4>แก้ไขข้อมูลหนังเรื่อง {{movie_model.name_th}} </h4>
+      <h4>แก้ไขข้อมูลหนังเรื่อง {{movie_model.name_en}} {{movie_model.name_th}} </h4>
       <br>
       <br>
       <div>
@@ -66,20 +91,26 @@
         </form>
         <form>
           ความยาวหนัง (เป็นวินาที) : <input type="text" id="duration" style="width: 100px;" value="{{movie_model.duration}}"/>
-          <b id="2" style="display:none;"><font color="red">Please fill text</font></b>
+          <b id="5" style="display:none;"><font color="red">Please fill number</font><font color="blue"> EX. 100 or 78</font></b>
         </form>
         <form>
           โปสเตอร์หนัง (url) : <input type="text" id="image"  style="width: 350px;" value="{{movie_model.image}}"/>
-          <b id="3" style="display:none;"><font color="red">Please fill text</font></b>
+          <b id="2" style="display:none;"><font color="red">Please fill text</font></b>
         </form>
         <form>
           วันที่ฉาย (d/m/y) : <input type="text" id="release_time_timestamp" style="width: 350px;" value="{{movie_model.release_time_timestamp | covertUnixTimeToStrFotmat('%d/%m/%Y')}}"/>
-          <b id="4" style="display:none;"><font color="red">Please fill text in format dd/mm/yyyy</font></b>
+          <b id="3" style="display:none;"><font color="red">Please fill text in format dd/mm/yyyy</font><font color="blue"> EX. 10/12/2013</font></b>
         </form>
         <form>
           ลิ้งยูทุป (จาก youtube เท่านั้น) : <input type="text" id="youtube_url"  style="width: 350px;" value="{{movie_model.youtube_url}}"/>
-          <b id="5" style="display:none;"><font color="red">Please fill text</font></b>
+          <b id="4" style="display:none;"><font color="red">Please fill with youtube url</font><font color="blue"> http://www.youtube.com/watch?v=DUydjuBNxxx</font></b>
         </form>
+        <div id="youtube_div">
+        <iframe id="youtube_frame" width="560" height="315" src="{{ movie_model.youtube_url }}" frameborder="0" allowfullscreen style="display:none;"></iframe>
+        <script>
+          updateYoutubeFrame();
+        </script>
+        </div>
         <form>
           รายละเอียดหนังภาษาอังกฤษ : <input type="text" id="synopsis_en"  style="width: 350px;" value="{{movie_model.detail_synopsis_en}}"/>
         </form>
@@ -114,4 +145,5 @@
     </div>
 
 </html>
+
 {% endautoescape %}
