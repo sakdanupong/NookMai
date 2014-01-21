@@ -14,6 +14,7 @@ from google.appengine.api import users
 from google.appengine.api import urlfetch
 from apiclient.discovery import build
 from optparse import OptionParser
+from google.appengine.api import images
 from moviemodel import *
 from cacheimagemodel import *
 from commentmodel import *
@@ -165,9 +166,30 @@ class ImageCache(webapp2.RequestHandler):
             image_query.id = movie_model.id
             image_query.image = db.Blob(urlfetch.Fetch(movie_model.image).content)
             image_query.put()
-        self.response.headers['Content-Type'] = 'image/jpeg'
+        self.response.headers['Content-Type'] = 'image/*'
         self.response.out.write(image_query.image)
 
+class UploadAndCacheImage(webapp2.RequestHandler):
+    def get(self):
+        self.process()
+    def post(self):
+        self.process()
+    def process(self):
+        logging.warning('############### xxxxxxxxx')
+        success = 0
+        movie_id = self.request.get('movie_id')
+        # poster_img = images.resize(self.request.get('img'), 164, 248)
+        poster_img = self.request.get('image')
+        if poster_img:
+            image_query = CacheImageModel.get_by_key_name(movie_id)
+            image_query.id = int(movie_id)
+            image_query.image = db.Blob(poster_img)
+            image_query.put()
+            success = 1
+            dic = { 
+                'success' : success,
+            };
+            self.response.out.write(json.dumps(dic))
 
 def getMovieTrailerFromText(movie_name):
     text_for_serch = movie_name + ' trailer'
@@ -248,8 +270,14 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
         for c in q.fetch(limit=100) :
             comments.append(c)
 
+
+        localhost = self.request.host
+        key = CAPTCHA_PUBLICE_KEY
+        if "localhost" in localhost.lower():
+            key = CAPTCHA_PUBLICE_KEY_LOCALHOST
+
         chtml = captcha.displayhtml(
-        public_key = CAPTCHA_PUBLICE_KEY_LOCALHOST,
+        public_key = key,
         use_ssl = False,
         error = None)
 
@@ -289,10 +317,15 @@ class AddComment(webapp2.RequestHandler):
         # remoteip  = environ['REMOTE_ADDR']
         remoteip = self.request.remote_addr
 
+        key = CAPTCHA_PRIVATE_KEY
+        localhost = self.request.host
+        if "localhost" in localhost.lower():
+            key = CAPTCHA_PRIVATE_KEY_LOCALHOST
+
         cResponse = captcha.submit(
                     challenge,
                     response,
-                    CAPTCHA_PRIVATE_KEY_LOCALHOST,
+                    key,
                     remoteip)
 
         # cResponse = captcha.submit(
@@ -383,7 +416,6 @@ class APIEditMovie(webapp2.RequestHandler):
         name_th = self.request.get('name_th')
         name_en = self.request.get('name_en')
         duration = self.request.get('duration')
-        image = self.request.get('image')
         release_time_timestamp = self.request.get('release_time_timestamp')
         youtube_url = self.request.get('youtube_url')
         synopsis_en = self.request.get('synopsis_en')
@@ -400,17 +432,16 @@ class APIEditMovie(webapp2.RequestHandler):
         fieldProblems = []
         movie_model = MovieModel.get_by_key_name(movie_id)
 
-        if  name_th and name_en and image:
+        if  name_th and name_en and youtube_url:
             movie_model.name_th = name_th
             movie_model.name_en = name_en
-            movie_model.image = image
         else:    
             if not name_en:
                 fieldProblems.append(0)
             if not name_th:
                 fieldProblems.append(1)
-            if not image:
-                fieldProblems.append(2)
+            if not youtube_url:
+                fieldProblems.append(4)
             success = 0
 
         if success == 1:
@@ -422,13 +453,13 @@ class APIEditMovie(webapp2.RequestHandler):
                 ans_time = time.mktime(date_object.timetuple())
                 movie_model.release_time_timestamp = int(ans_time)
                 success = 1# to do add data to data store
-
+        
         if success == 1:
             if not isint(duration):
                 success = 0
                 fieldProblems.append(5)
             else:
-                movie_model.duration = int(duration)
+                movie_model.duration = int(duration)        
                 success = 1# to do add data to data store
 
         g_yt_url = ''
@@ -438,7 +469,6 @@ class APIEditMovie(webapp2.RequestHandler):
                 fieldProblems.append(4)
                 success = 0
             else:
-                logging.warning(youtube_url)
                 split_items = splitStr(youtube_url,'=')
                 if len(split_items) <= 1:
                     split_items = splitStr(youtube_url,'/')
@@ -448,14 +478,25 @@ class APIEditMovie(webapp2.RequestHandler):
                 g_yt_url = yt_url
                 movie_model.youtube_url = yt_url
 
+        movie_model.detail_synopsis_en = synopsis_en
+        movie_model.detail_synopsis_th = synopsis_th
+        movie_model.detail_genre_en = genre_en
+        movie_model.detail_genre_th = genre_th
+        movie_model.detail_director_en = director_en
+        movie_model.detail_director_th = director_th
+        movie_model.detail_cast_en = cast_en
+        movie_model.detail_cast_th = cast_th
+
+        if (success == 1):
+            movie_model.put()
+
         r = {
             'success' : success,
             'fieldProblems' : fieldProblems,
             'youtube_url' : g_yt_url,
         }
 
-        if (success == 1):
-            movie_model.put()
+        
 
         self.response.out.write(json.dumps(r))
 
@@ -473,6 +514,7 @@ application = webapp2.WSGIApplication([
     ('/backoffice', NookMaiBackOffice),
     ('/edit_movie_data', EditMovieData),
     ('/api_edit_movie_data', APIEditMovie),
+    ('/upload_poster', UploadAndCacheImage),
 ], debug=True)
 
 

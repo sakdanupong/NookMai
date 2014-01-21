@@ -4,6 +4,21 @@
     <head>
       <script src="//code.jquery.com/jquery-1.10.2.js"></script>
       <script>
+        $( document ).ready(function() {
+          $(document).bind('keypress',pressed);
+        });
+
+        function pressed(e) {
+          var EnterKey = 13;
+          if(e.keyCode === EnterKey) {
+             SubmitAllData();
+             return false;
+          }
+          return true;
+        }
+        function replaceYoutubeURLValue(str_youtube_link) {
+          $('#youtube_url').attr('value', str_youtube_link);
+        }
 
         function updateYoutubeFrame() {
           $("#youtube_frame").hide();
@@ -12,6 +27,7 @@
             var youtube_link = "//www.youtube.com/embed/"+data['videoId'];
              $("#youtube_frame").get(0).contentWindow.location.replace(youtube_link);
              $("#youtube_frame").show(500);
+             replaceYoutubeURLValue(youtube_link);
           });
           {% else %}
             $("#youtube_frame").show();
@@ -22,58 +38,104 @@
             var youtube_div = document.getElementById('youtube_div');
             var youtube_frame = document.getElementById('youtube_frame');
             youtube_frame.parentNode.removeChild(youtube_frame);
-            youtube_div.innerHTML ='<iframe id="youtube_frame" width="560" height="315" src="'+ new_link +'" frameborder="0" allowfullscreen"></iframe>'
+            youtube_div.innerHTML ='<iframe id="youtube_frame" width="560" height="315" src="'+ new_link +'" frameborder="0" allowfullscreen"></iframe>';
+            replaceYoutubeURLValue(new_link);
         }
 
         function hideAllFieldProblem() {
           $('#0').hide();
           $('#1').hide();
-          $('#2').hide();
           $('#3').hide();
           $('#4').hide();
           $('#5').hide();
         }
 
-        function checkAll() {
+        function SubmitAllData() {
           hideAllFieldProblem();
-          var postData = {
-            'movie_id' : {{movie_model.id}},
-            'name_en' : $('#name_en').val(),//$("#name_th").val(),
-            'name_th' : $('#name_th').val(),
-            'duration' : $('#duration').val(),
-            'image' : $('#image').val(),
-            'release_time_timestamp' : $('#release_time_timestamp').val(),
-            'youtube_url' : $('#youtube_url').val(),
-            'synopsis_en' : $('#synopsis_en').val(),
-            'synopsis_th' : $('#synopsis_th').val(),
-            'genre_en' : $('#genre_en').val(),
-            'genre_th' : $('#genre_th').val(),
-            'director_en' : $('#director_en').val(),
-            'director_th' : $('#director_th').val(),
-            'cast_en' : $('#cast_en').val(),
-            'cast_th' : $('#cast_th').val(),
-          };
-
-          $.getJSON( "/api_edit_movie_data", postData, function(data) { 
-            var success = data['success'];
-            var success_str = 'success';
-            if (success == 0) {
-              var fieldProblems = data['fieldProblems'];
-              success_str = 'fail';
-
-              for (var i = 0; i < fieldProblems.length; i++) {
+          var formData = new FormData();
+          formData.append('movie_id', {{movie_model.id}});
+          formData.append('name_en', $('#name_en').val());
+          formData.append('name_th', $('#name_th').val());
+          formData.append('duration', $('#duration').val());
+          formData.append('release_time_timestamp', $('#release_time_timestamp').val());
+          formData.append('youtube_url', $('#youtube_url').val());
+          formData.append('synopsis_en', $('#synopsis_en').val());
+          formData.append('synopsis_th', $('#synopsis_th').val());
+          formData.append('genre_en', $('#genre_en').val());
+          formData.append('genre_th', $('#genre_th').val());
+          formData.append('director_en', $('#director_en').val());
+          formData.append('director_th', $('#director_th').val());
+          formData.append('cast_en', $('#cast_en').val());
+          formData.append('cast_th', $('#cast_th').val());
+          $.ajax({
+            url: "/api_edit_movie_data",  //Server script to process data
+            type: 'POST',
+            mimeType:"multipart/form-data",
+            dataType: 'json',
+            success: function(json) {
+              var success = json['success'];
+              if (success == 0) {
+                var fieldProblems = json['fieldProblems'];
+                for (var i = 0; i < fieldProblems.length; i++) {
                   var c = fieldProblems[i];
                   var s = '#'+c;
                   $(s).show();
+                }
+              } else {
+                alert('Success !!');
+                var youtube_url = json['youtube_url'];
+                updateYoutubeWithNew(youtube_url);
               }
-              //alert(success_str);
-            } else {
-              var youtube_url = data['youtube_url'];
-              updateYoutubeWithNew(youtube_url);
-            }
-            
+            },
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false
           });
+          
         }
+
+        function uploadPosterImage(input) {
+          if (input.files && input.files[0]) {
+          var formURL = $("#upload_form").attr("action");
+          var formData = new FormData();
+          // jQuery.each($('#fileImportData')[0].files, function(i, file) {
+          //   formData.append('uploadFile-'+i, file);
+          // });
+          formData.append('image', input.files[0]);
+          // formData.append('_ajax_nonce', importNonce);
+          $.ajax({
+            url: formURL,  //Server script to process data
+            type: 'POST',
+            mimeType:"multipart/form-data",
+            dataType: 'json',
+            // xhr: function() {  // Custom XMLHttpRequest
+            // var myXhr = $.ajaxSettings.xhr();
+            // if(myXhr.upload){ // Check if upload property exists
+            //     myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
+            // }
+            // return myXhr;
+            // },
+            // //Ajax events
+            // beforeSend: beforeSendHandler,
+            // success: completeHandler,
+            // error: errorHandler,
+            success: function(json) {
+              var success = json['success'];
+              if (success == 1) {
+                $('#poster_img').attr('src', '/image?movie_id={{ movie_model.id }}');
+              }
+            },
+            // Form data
+            data: formData,
+            //Options to tell jQuery not to process data or worry about content-type.
+            cache: false,
+            contentType: false,
+            processData: false
+          });
+          }
+        }
+
       </script>
     </head>
     <div>
@@ -93,17 +155,21 @@
           ความยาวหนัง (เป็นวินาที) : <input type="text" id="duration" style="width: 100px;" value="{{movie_model.duration}}"/>
           <b id="5" style="display:none;"><font color="red">Please fill number</font><font color="blue"> EX. 100 or 78</font></b>
         </form>
-        <form>
-          โปสเตอร์หนัง (url) : <input type="text" id="image"  style="width: 350px;" value="{{movie_model.image}}"/>
-          <b id="2" style="display:none;"><font color="red">Please fill text</font></b>
-        </form>
+        <div>
+          <form id="upload_form" action="/upload_poster?movie_id={{movie_model.id}}" enctype="multipart/form-data" method="post">
+            เปลี่ยนโปสเตอร์หนัง : <input type="file" name="img" onchange="uploadPosterImage(this)" accept="image/*"/>
+          </form>
+        </div>
+        <div>
+          <img id="poster_img" border="0" src="/image?movie_id={{ movie_model.id }}" width="164" height="248">
+        </div>
         <form>
           วันที่ฉาย (d/m/y) : <input type="text" id="release_time_timestamp" style="width: 350px;" value="{{movie_model.release_time_timestamp | covertUnixTimeToStrFotmat('%d/%m/%Y')}}"/>
           <b id="3" style="display:none;"><font color="red">Please fill text in format dd/mm/yyyy</font><font color="blue"> EX. 10/12/2013</font></b>
         </form>
         <form>
           ลิ้งยูทุป (จาก youtube เท่านั้น) : <input type="text" id="youtube_url"  style="width: 350px;" value="{{movie_model.youtube_url}}"/>
-          <b id="4" style="display:none;"><font color="red">Please fill with youtube url</font><font color="blue"> http://www.youtube.com/watch?v=DUydjuBNxxx</font></b>
+          <b id="4" style="display:none;"><font color="red">Please fill with youtube url</font><font color="blue"> Ex. http://www.youtube.com/watch?v=DUydjuBNxxx</font></b>
         </form>
         <div id="youtube_div">
         <iframe id="youtube_frame" width="560" height="315" src="{{ movie_model.youtube_url }}" frameborder="0" allowfullscreen style="display:none;"></iframe>
@@ -111,12 +177,20 @@
           updateYoutubeFrame();
         </script>
         </div>
-        <form>
-          รายละเอียดหนังภาษาอังกฤษ : <input type="text" id="synopsis_en"  style="width: 350px;" value="{{movie_model.detail_synopsis_en}}"/>
-        </form>
-        <form>
-          รายละเอียดหนังภาษาไทย : <input type="text" id="synopsis_th"  style="width: 350px;" value="{{movie_model.detail_synopsis_th}}"/>
-        </form>
+        <div>
+          รายละเอียดหนังภาษาอังกฤษ : 
+        </div>
+        <div>
+          <!-- รายละเอียดหนังภาษาอังกฤษ : <input type="text" id="synopsis_en"  style="width: 350px;" value="{{movie_model.detail_synopsis_en}}"/> -->
+          <textarea id="synopsis_en" rows="5" cols="70">{{movie_model.detail_synopsis_en}}</textarea>
+        </div>
+        <div>
+          รายละเอียดหนังภาษาไทย : 
+        </div>
+        <div>
+          <!-- รายละเอียดหนังภาษาอังกฤษ : <input type="text" id="synopsis_en"  style="width: 350px;" value="{{movie_model.detail_synopsis_en}}"/> -->
+          <textarea id="synopsis_th" rows="5" cols="70">{{movie_model.detail_synopsis_th}}</textarea>
+        </div>
         <form>
           ประเภทหนังภาษาอังกฤษ : <input type="text" id="genre_en"  style="width: 350px;" value="{{movie_model.detail_genre_en}}"/>
         </form>
@@ -139,7 +213,7 @@
     </div>
     <br>
     <div>
-      <form action="javascript:checkAll();" method="post">
+      <form action="javascript:SubmitAllData();" method="post">
         <input type="submit" name="confirm"/>
       </form>
     </div>
