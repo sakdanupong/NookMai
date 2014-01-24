@@ -72,15 +72,24 @@ def splitStr(str_to_split, split):
     s2 = str_to_split.split(split)
     return s2;
 
-def increment_movie_comment_counter(movie_id):
-    movie_object = MovieModel.get_by_key_name(movie_id)
-    movie_object.comment_count += 1
-    movie_object.put()
+def increment_movie_comment_counter(c_key):
+    c = db.get(c_key)
+    c.comment_count += 1
+    c.put()
 
-def increment_record_comment_counter():
-    record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
-    record_object.comment_count += 1
-    record_object.put()
+def increment_record_comment_counter(c_key):
+    c = db.get(c_key)
+    c.comment_count += 1
+    c.put()
+
+def datetime_lctimezone_format(dt):
+    # loc_dt = dt.astimezone(BANGKOK_TIMEZONE)
+    ans_time = time.mktime(dt.timetuple())
+    tz = BANGKOK_TIMEZONE
+    value = datetime.datetime.fromtimestamp(ans_time, tz)
+    # BANGKOK_TIMEZONE.localize(dt)
+    #loc_dt_str = loc_dt.strftime(str_format)
+    return value
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -89,6 +98,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 JINJA_ENVIRONMENT.filters['covertUnixTimeToStrFotmat']=covertUnixTimeToStrFotmat
 JINJA_ENVIRONMENT.filters['editMovieData']=editMovieData
 JINJA_ENVIRONMENT.filters['decodeHTML']=decodeHTML
+JINJA_ENVIRONMENT.filters['datetime_lctimezone_format']=datetime_lctimezone_format
 
 
 MAINPAGE_DATA_PER_PAGE = 5
@@ -104,21 +114,24 @@ class MainPage(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
 class RefreshData(webapp2.RequestHandler):
-    def increment_record_movie_counter(self):
-        record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
-        # logging.warning('movie object movie_count ##########'+str(record_object.movie_count))
-        record_object.movie_count += 1
-        record_object.put()
-        self.new_id = record_object.movie_count
-        # logging.warning('new id ##########'+str(self.new_id))
+    def increment_record_movie_counter(self, c_key):
+        c = db.get(c_key)
+        c.movie_count += 1
+        self.new_id = c.movie_count
+        c.put()
 
     def get(self):
         url = 'http://onlinepayment.majorcineplex.com/api/1.0/now_showing?w=768&h=1024&x=2&o=0&pf=iOS&mid=iPad&indent=0&deflate=1&appv=2.6&rev=2'
         result = urlfetch.fetch(url)
         mJson = json.loads(result.content)
-        self.new_id = 0
+        
         for m in mJson['movies']:
-            db.run_in_transaction(self.increment_record_movie_counter)
+            q = MovieModel.all();
+            q.filter('original_id =', m['id'])
+            if q.count() :
+                continue
+            record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)                
+            db.run_in_transaction(self.increment_record_movie_counter, record_object.key())
             movie_id = str(self.new_id)
             e = MovieModel.get_or_insert(key_name=movie_id)
             e.id = self.new_id
@@ -145,9 +158,6 @@ class RefreshData(webapp2.RequestHandler):
             e.thumbnail = movie_trailer['thumbnail']
             e.types = m['types']
             e.cinemas = m['cinemas']
-            e.put()
-
-            
             
             url = 'http://onlinepayment.majorcineplex.com/api/1.0/movie_detail?w=320&h=480&x=2&o=0&pf=iOS&mid=iPhone%20Simulator&indent=0&deflate=1&appv=2.6&rev=2&movie_id='+str(m['id'])
             result = urlfetch.fetch(url)
@@ -191,9 +201,7 @@ class ResetCounter(webapp2.RequestHandler):
     def get(self):
         record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
         if record_object is None:
-            record_object = RecordCountModel.get_or_insert(ALL_RECORD_COUNTER_KEY)
-        
-record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
+            record_object = RecordCountModel.get_or_insert(key_name=ALL_RECORD_COUNTER_KEY)
 
 
 class ImageCache(webapp2.RequestHandler):
@@ -391,8 +399,10 @@ class AddComment(webapp2.RequestHandler):
                 c.movie_id = int(movie_id)
                 c.content = cgi.escape(content)
                 c.author = cgi.escape(author)
-                db.run_in_transaction(increment_movie_comment_counter, movie_id)
-                db.run_in_transaction(increment_record_comment_counter)
+                movie_object = MovieModel.get_by_key_name(movie_id)
+                db.run_in_transaction(increment_movie_comment_counter, movie_object.key())
+                record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
+                db.run_in_transaction(increment_record_comment_counter, record_object.key())
                 c.put()
                 success = 1
 
@@ -421,8 +431,9 @@ class GetComment(webapp2.RequestHandler):
         q.filter('movie_id =', int(movie_id)) 
         q.order('-date')
         clist = []
+
         for c in q.fetch(limit=100) :
-            clist.append({'author':c.author,'content':c.content,'date':c.date.strftime("%B %d, %Y") ,'time_crate':c.date.strftime("%H:%M") })
+            clist.append({'author':c.author,'content':c.content,'date':datetime_lctimezone_format(c.date).strftime("%B %d, %Y") ,'time_crate':datetime_lctimezone_format(c.date).strftime("%H:%M") })
 
         r = {'data':clist}
         self.response.out.write(json.dumps(r))

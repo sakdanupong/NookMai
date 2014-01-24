@@ -91,7 +91,7 @@
 		<br/><br/>
 	    <div>ข้อความ: {{ comment.content|decodeHTML }}</div>
 	    <div>ชื่อ: {{ comment.author|decodeHTML }}</div>
-	    <div>วันที่: {{ comment.date.strftime("%B %d, %Y") }} เวลา: {{ comment.date.strftime("%H:%M") }}</div>
+	    <div>วันที่: {{ (comment.date | datetime_lctimezone_format).strftime("%B %d, %Y") }} เวลา: {{ (comment.date | datetime_lctimezone_format).strftime("%H:%M") }}</div>
 		<br/><br/>
 	    </table>
 	    </center>
