@@ -47,7 +47,9 @@
 				$.getJSON( "/trailer?movie_id={{ movie_data.id }}", function(data) { 
 					var youtube_link = "//www.youtube.com/embed/"+data['videoId'];
 					$("#youtube_frame").get(0).contentWindow.location.replace(youtube_link);
-					$("#youtube_frame").show(500);
+					document.getElementById("youtube_frame").onload = function() {
+ 						$("#youtube_frame").show();
+					};
 				});
 			{% else %}
 				$("#youtube_frame").show();

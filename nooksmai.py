@@ -12,12 +12,16 @@ import time
 sys.path.append(os.path.abspath('models'))
 from google.appengine.api import users
 from google.appengine.api import urlfetch
+from google.appengine.api import memcache
 from apiclient.discovery import build
 from optparse import OptionParser
 from google.appengine.api import images
+from pytz.gae import pytz
+from pytz import timezone
 from moviemodel import *
 from cacheimagemodel import *
 from commentmodel import *
+from record_count_model import *
 from decimal import *
 
 from os import environ
@@ -29,6 +33,8 @@ CAPTCHA_PUBLICE_KEY = '6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp'
 CAPTCHA_PRIVATE_KEY = '6LcDAO0SAAAAAM4kxOsIOBKRz8oLjj2-dHcBcui5'
 CAPTCHA_PUBLICE_KEY_LOCALHOST = '6LdtC-0SAAAAAH5bs8gr19lSa896njyCiY1GE3Ti'
 CAPTCHA_PRIVATE_KEY_LOCALHOST = '6LdtC-0SAAAAAKvLvewCc4m0_qb7MxuPgRhg0svA'
+BANGKOK_TIMEZONE = pytz.timezone('Asia/Bangkok')
+ALL_RECORD_COUNTER_KEY = 'allRecordCounter'
 
 def editMovieData():
     r = {'success':'success'}
@@ -41,7 +47,8 @@ def decodeHTML(str):
     return unescaped
 
 def covertUnixTimeToStrFotmat(i_unix_timestamp, str_format):
-    value = datetime.datetime.fromtimestamp(i_unix_timestamp)    
+    tz = BANGKOK_TIMEZONE
+    value = datetime.datetime.fromtimestamp(i_unix_timestamp, tz)
     return (value.strftime(str_format))
 
 def checkDateFormat(str_date):
@@ -65,6 +72,16 @@ def splitStr(str_to_split, split):
     s2 = str_to_split.split(split)
     return s2;
 
+def increment_movie_comment_counter(movie_id):
+    movie_object = MovieModel.get_by_key_name(movie_id)
+    movie_object.comment_count += 1
+    movie_object.put()
+
+def increment_record_comment_counter():
+    record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
+    record_object.comment_count += 1
+    record_object.put()
+
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
@@ -72,6 +89,9 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 JINJA_ENVIRONMENT.filters['covertUnixTimeToStrFotmat']=covertUnixTimeToStrFotmat
 JINJA_ENVIRONMENT.filters['editMovieData']=editMovieData
 JINJA_ENVIRONMENT.filters['decodeHTML']=decodeHTML
+
+
+MAINPAGE_DATA_PER_PAGE = 5
 
 class MainPage(webapp2.RequestHandler):
 
@@ -84,14 +104,25 @@ class MainPage(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
 class RefreshData(webapp2.RequestHandler):
+    def increment_record_movie_counter(self):
+        record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
+        # logging.warning('movie object movie_count ##########'+str(record_object.movie_count))
+        record_object.movie_count += 1
+        record_object.put()
+        self.new_id = record_object.movie_count
+        # logging.warning('new id ##########'+str(self.new_id))
+
     def get(self):
         url = 'http://onlinepayment.majorcineplex.com/api/1.0/now_showing?w=768&h=1024&x=2&o=0&pf=iOS&mid=iPad&indent=0&deflate=1&appv=2.6&rev=2'
         result = urlfetch.fetch(url)
         mJson = json.loads(result.content)
+        self.new_id = 0
         for m in mJson['movies']:
-            movie_id = str(m['id'])
+            db.run_in_transaction(self.increment_record_movie_counter)
+            movie_id = str(self.new_id)
             e = MovieModel.get_or_insert(key_name=movie_id)
-            e.id = m['id']
+            e.id = self.new_id
+            e.original_id = m['id']
             e.ribbon_type = m['ribbon_type']
             if 'avd_time' in m:
                 movie_time = m['avd_time']
@@ -118,7 +149,7 @@ class RefreshData(webapp2.RequestHandler):
 
             
             
-            url = 'http://onlinepayment.majorcineplex.com/api/1.0/movie_detail?w=320&h=480&x=2&o=0&pf=iOS&mid=iPhone%20Simulator&indent=0&deflate=1&appv=2.6&rev=2&movie_id='+movie_id
+            url = 'http://onlinepayment.majorcineplex.com/api/1.0/movie_detail?w=320&h=480&x=2&o=0&pf=iOS&mid=iPhone%20Simulator&indent=0&deflate=1&appv=2.6&rev=2&movie_id='+str(m['id'])
             result = urlfetch.fetch(url)
             mJson = json.loads(result.content)
             
@@ -155,6 +186,14 @@ class RefreshData(webapp2.RequestHandler):
             e.detail_cast_th = cast['th']
             e.put()
 
+
+class ResetCounter(webapp2.RequestHandler):
+    def get(self):
+        record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
+        if record_object is None:
+            record_object = RecordCountModel.get_or_insert(ALL_RECORD_COUNTER_KEY)
+        
+record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
 
 
 class ImageCache(webapp2.RequestHandler):
@@ -352,8 +391,11 @@ class AddComment(webapp2.RequestHandler):
                 c.movie_id = int(movie_id)
                 c.content = cgi.escape(content)
                 c.author = cgi.escape(author)
+                db.run_in_transaction(increment_movie_comment_counter, movie_id)
+                db.run_in_transaction(increment_record_comment_counter)
                 c.put()
                 success = 1
+
                 
 
         else:
@@ -399,6 +441,13 @@ class EditMovieData(webapp2.RequestHandler):
     def get(self):
         movie_id = self.request.get('movie_id')
         movie_model = MovieModel.get_by_key_name(movie_id);
+        template_values = {
+            'movie_model' : movie_model,
+        }
+        template = JINJA_ENVIRONMENT.get_template('edit_movie_data.html')
+        self.response.write(template.render(template_values))
+    def post(self):
+        movie_model = MovieModel()
         template_values = {
             'movie_model' : movie_model,
         }
@@ -515,6 +564,7 @@ application = webapp2.WSGIApplication([
     ('/edit_movie_data', EditMovieData),
     ('/api_edit_movie_data', APIEditMovie),
     ('/upload_poster', UploadAndCacheImage),
+    ('/reset_counter', ResetCounter),
 ], debug=True)
 
 

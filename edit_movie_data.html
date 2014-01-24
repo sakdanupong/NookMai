@@ -25,9 +25,11 @@
           {% if not movie_model.youtube_url %}
           $.getJSON( "/trailer?movie_id={{ movie_model.id }}", function(data) { 
             var youtube_link = "//www.youtube.com/embed/"+data['videoId'];
-             $("#youtube_frame").get(0).contentWindow.location.replace(youtube_link);
-             $("#youtube_frame").show(500);
-             replaceYoutubeURLValue(youtube_link);
+            $("#youtube_frame").get(0).contentWindow.location.replace(youtube_link);
+            document.getElementById("youtube_frame").onload = function() {
+              $("#youtube_frame").show();
+            };
+            replaceYoutubeURLValue(youtube_link);
           });
           {% else %}
             $("#youtube_frame").show();
@@ -135,6 +137,11 @@
           });
           }
         }
+        function checkDateTime() {
+          {% if movie_model.release_time_timestamp %}
+            $('#release_time_timestamp').attr('value', "{{movie_model.release_time_timestamp | covertUnixTimeToStrFotmat('%d/%m/%Y')}}");
+          {% endif %}
+        }
 
       </script>
     </head>
@@ -164,9 +171,12 @@
           <img id="poster_img" border="0" src="/image?movie_id={{ movie_model.id }}" width="164" height="248">
         </div>
         <form>
-          วันที่ฉาย (d/m/y) : <input type="text" id="release_time_timestamp" style="width: 350px;" value="{{movie_model.release_time_timestamp | covertUnixTimeToStrFotmat('%d/%m/%Y')}}"/>
+          วันที่ฉาย (d/m/y) : <input type="text" id="release_time_timestamp" style="width: 350px;"/>
           <b id="3" style="display:none;"><font color="red">Please fill text in format dd/mm/yyyy</font><font color="blue"> EX. 10/12/2013</font></b>
         </form>
+        <script>
+          checkDateTime();
+        </script>
         <form>
           ลิ้งยูทุป (จาก youtube เท่านั้น) : <input type="text" id="youtube_url"  style="width: 350px;" value="{{movie_model.youtube_url}}"/>
           <b id="4" style="display:none;"><font color="red">Please fill with youtube url</font><font color="blue"> Ex. http://www.youtube.com/watch?v=DUydjuBNxxx</font></b>

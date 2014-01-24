@@ -1,6 +1,7 @@
 from google.appengine.ext import db
 
 class MovieModel(db.Model):
+    original_id = db.IntegerProperty(default=0)
     id = db.IntegerProperty()
     ribbon_type = db.IntegerProperty()
     name_en = db.StringProperty()
@@ -12,7 +13,7 @@ class MovieModel(db.Model):
     thumbnail = db.StringProperty()
     types = db.StringListProperty()
     youtube_url = db.StringProperty()
-    comment_count = db.IntegerProperty()
+    comment_count = db.IntegerProperty(default=0)
     create_ = db.DateTimeProperty(auto_now_add=True)
 
     detail_synopsis_en = db.TextProperty()

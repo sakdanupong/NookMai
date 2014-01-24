@@ -12,6 +12,13 @@
 			<a href="/edit_movie_data?movie_id={{movie.id}}">{{movie.name_en}}</a>
 		</div>
 	{% endfor%}
+	<br>
+	<br>
+	<div>
+		<form action="/edit_movie_data?movie_id={{None}}" method="post">
+			<input type="submit" onclick="goToCreateMovie();" value="เพิ่มหนัง"/>
+		</form>
+	</div>
 </body>
 </html>
 {% endautoescape %}
