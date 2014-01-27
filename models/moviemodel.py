@@ -3,7 +3,6 @@ from google.appengine.ext import db
 class MovieModel(db.Model):
     original_id = db.IntegerProperty(default=0)
     id = db.IntegerProperty()
-    ribbon_type = db.IntegerProperty()
     name_en = db.StringProperty()
     name_th = db.StringProperty()
     duration = db.IntegerProperty()
