@@ -1,0 +1,12 @@
+
+body {
+	margin: 0;
+	padding: 0;
+	text-align: auto;
+}
+
+#header_div {
+	width: 1200px;
+	height: 190px;
+	background-color: #cc4d4d;
+}

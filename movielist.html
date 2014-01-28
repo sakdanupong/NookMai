@@ -26,6 +26,8 @@
 
       </script>
     </head>
+    <body>
+    {% include "/main_header.html" with context %}
     <div>
       <h4>NookMai.com</h4>
     </div>
@@ -82,6 +84,6 @@
 
     <a href="{{ url|safe }}">{{ url_linktext }}</a>
  -->
-
+</body>
 </html>
 {% endautoescape %}

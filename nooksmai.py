@@ -109,6 +109,7 @@ class MainPage(webapp2.RequestHandler):
         movie_query = MovieModel.all().order('-release_time_timestamp').fetch(limit=20)
         template_values = {
              'movie_list': movie_query,
+             'title' : 'test',
         }
         template = JINJA_ENVIRONMENT.get_template('movielist.html')
         self.response.write(template.render(template_values))
