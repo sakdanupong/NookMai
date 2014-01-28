@@ -1,12 +1,140 @@
-
 body {
 	margin: 0;
 	padding: 0;
-	text-align: auto;
 }
 
 #header_div {
+	margin: auto;
 	width: 1200px;
-	height: 190px;
+	height: 120px;
 	background-color: #cc4d4d;
+}
+
+#nav_div {
+	margin: auto;
+	width: 1200px;
+	height: 70px;
+	background-color: #323232;
+}
+
+#img_header_logo {
+	margin: 0;
+	padding: 0;
+	float: left;
+	margin-top: 36px;
+	margin-left: 130px;
+}
+
+#search_div {
+	float: right;
+	width: 262px;
+	height: 40px;
+	margin-top: 40px;
+	margin-right: 52px;
+	background-color: #b43c3c;
+}
+
+#inner_nav_div {
+	/*background-color: #ffffff;
+	height: 100%;
+	margin: auto;*/
+	/*margin: auto*/
+}
+
+ul {
+	list-style-type: none;
+	height: 70px;
+	width: 760px;
+	margin: auto;
+}
+
+li {
+	float: left;
+
+}
+
+li a {
+	padding-right: 32px;
+	padding-left: 32px;
+	display: block;
+	line-height: 60px;
+	text-decoration: none;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 20px;
+	color: #FFFFFF;
+	margin: 5px;
+}
+
+li a:hover {
+	background: #5b5b5b;
+	display: block;
+}
+
+/*li {
+  color: #555;
+  text-decoration: none;
+  float: left;
+  padding-right: 3px;    
+}
+
+.link {
+    vertical-align: middle;
+    display: table-cell;
+    height: 70px;
+}*/
+
+/*a {
+	color: #FFFFFF;
+	position:absolute;
+    top: 35%; // nearly 50%, but not exactly 50%
+    left: 50%;
+	text-decoration: none;
+	font-size: 20px;
+	width: 50%;
+    height: 100%;
+    text-align: center;
+}
+
+a:hover {
+	background-color: #aaddee;
+	background-size: 120%;
+}*/
+
+.round-corner {
+	-webkit-border-radius: 5px 5px 5px 5px; 
+	-moz-border-radius: 5px 5px 5px 5px;
+	-o-border-radius: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+}
+
+input {
+	float: left;
+	margin-left: 20px;
+	margin-top: 7px;
+	background-color: rgba(0,0,0,0.0);
+	color: #ffffff;
+	border: none;
+	width: 206px;
+	height: 24px;
+	font-size: 16px;
+	outline: 0;
+}
+
+#img_search {
+	float: right;
+	margin-right: 10px;
+	margin-top: 10px;
+}
+
+::-webkit-input-placeholder { /* WebKit browsers */
+    color:    #f6ebeb;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    #f6ebeb;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    #f6ebeb;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color:    #f6ebeb;
 }
