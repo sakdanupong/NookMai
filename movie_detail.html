@@ -2,45 +2,85 @@
 {% autoescape true %}
 
 <html>
-<!-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> -->
+
+<style type="text/css">
+  	body {
+    	background-color: #ecedef }
+	.movie-title-image {
+    	text-align: center;
+    	}
+   	.movie-content {
+   		text-align: center;
+   	}
+   	.movie-youtube {
+   		text-align: center;
+   	}
+ </style>
+
 <head>
+	<!-- <link rel="stylesheet" type="text/css" href="./movie_detail_style.css"> -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>ข้อมูลหนัง</title>
 	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<!-- 	<style type="text/css">
-  		body {
-    		color: purple;
-    		background-color: #d8da3d }
-  	</style> -->
 </head>
-	
+
 
 <body>	
-	<h1 class="title" style="text-align:center;">
-
-
+	
+	<!-- <h1 class="title" style="text-align:center;"> -->
+<!-- 	<h1>
 		<strong>{{ movie_data.name_en }}</strong>
 		<br>
 		<span>{{ movie_data.name_th }}</span>
-	</h1>
+	</h1> -->
+
+	<div class="movie-title-image" style="width:900px; height:450px;">
+
+		<div class="movie-image" style="width:288px; height:450px; float:left;">
+			<a href="/nextview?movie_id={{ movie_data.id }}">
+			<img border="0" src="/image?movie_id={{ movie_data.id }}" width="288" height="450" float:left>
+			</a>
+		</div>
+
+
+		<div class="movie-title" style="width:612px; height:44px; float:right; color:"#666666";">
+			<strong>{{ movie_data.name_en }}</strong>
+		</div>
+				
+		<div class="movie-content" style="width:612px; height:450px; float:right; color:"#666666";">
+			<h3>วันที่เข้าฉาย</h3>
+			<p>{{movie_data.release_time_timestamp|covertUnixTimeToStrFotmat('%d/%m/%Y')}}</p>
+			<h3>เรื่องย่อ</h3>
+			<!-- <div width="500"><strong>{{ movie_data.detail_synopsis_th }}</strong></div> -->
+			<strong>{{ movie_data.detail_synopsis_th }}</strong>
+			</p>
+		</div>
+
+	</div>
 	
-	
-	<div style="text-align:center;">
+<!-- 	<div class="movie-image" width="288" height="450" float:right>
 		<a href="/nextview?movie_id={{ movie_data.id }}">
-		<img border="0" src="/image?movie_id={{ movie_data.id }}" width="164" height="248">
+		<img border="0" src="/image?movie_id={{ movie_data.id }}" width="288" height="450" float:left>
 		</a>
-	</div>
+	</div> -->
+
+	<!-- <div id= "movie-image" style="text-align:center;"> -->
+<!-- 	<div class="movie-image">
+		<a href="/nextview?movie_id={{ movie_data.id }}">
+		<img border="0" src="/image?movie_id={{ movie_data.id }}" width="288" height="450" float:left>
+		</a>
+	</div> -->
 	 
-	 	
-	<div id="movie-content" style="text-align:center;">
-		<h3>วันที่เข้าฉาย</h3>
-		<p>{{movie_data.release_time_timestamp|covertUnixTimeToStrFotmat('%d/%m/%Y')}}</p>
-		<h3>เรื่องย่อ</h3>
-		<!-- <div width="500"><strong>{{ movie_data.detail_synopsis_th }}</strong></div> -->
-		<strong>{{ movie_data.detail_synopsis_th }}</strong>
-		</p>
+	<div class="movie-synopsis" style="width:900px; color:"#666666";">
+			<h3>เรื่อ
+			<!-- <div width="500"><strong>{{ movie_data.detail_synopsis_th }}</strong></div> -->
+			<strong>{{ movie_data.detail_synopsis_th }}</strong>
+			</p>
 	</div>
+
 	
-	<div style="text-align:center;">
+	<div class="movie-youtube">
 		<iframe id="youtube_frame" width="560" height="315" src="{{ movie_data.youtube_url }}" frameborder="0" allowfullscreen style="display:none;"></iframe>
 		<script>
 			{% if not movie_data.youtube_url %}
