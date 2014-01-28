@@ -57,11 +57,12 @@ li a {
 	padding-right: 32px;
 	padding-left: 32px;
 	display: block;
-	line-height: 70px;
+	line-height: 60px;
 	text-decoration: none;
 	font-family: Georgia, "Times New Roman", Times, serif;
 	font-size: 20px;
 	color: #FFFFFF;
+	margin: 5px;
 }
 
 li a:hover {
