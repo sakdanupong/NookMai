@@ -1,0 +1,101 @@
+
+body {
+	background-color: #ecedef; }
+.movie-title-image {
+	margin: auto;
+/*    	width:900px; 
+	height:450px;*/
+}
+.movie-image {
+	margin: auto;
+	width:288px; 
+	height:450px; 
+	float:left;
+}
+.movie-title {
+	margin: auto;
+	width:550px; 
+	height:60px; 
+	float:right; 
+	color:#666666; 
+	font-size:50px;
+}
+.movie-date {
+	margin: auto;
+	width:550px; 
+	height:24px; 
+	float:right; 
+	color:#cc4d4d; 
+	font-size:18px;
+}
+.movie-synopsis-line {
+	width:550px; 
+	height:35px; 
+	float:right;
+}
+.movie-synopsis-en {
+	margin: auto;
+	width:550px; 
+	/*height:86px; */
+	float:right; 
+	color:#666666;
+}
+.movie-director {
+   margin: auto;
+   width:550px; 
+   /*height:86px; */
+   float:right; 
+   color:#666666;
+}
+.movie-writers {
+   margin: auto;
+   width:550px; 
+   /*height:86px; */
+   float:right; 
+   color:#666666;
+}
+.movie-stars {
+   margin: auto;
+   width:550px; 
+   /*height:86px; */
+   float:right; 
+   color:#666666;
+}
+
+.movie-synopsis-th {
+	margin: auto;
+	width:860px; 
+	background-color: #FFFFFF;
+	padding: 20px 20px 20px 20px;
+	border-radius: 10px;
+}
+.movie-artiste {
+	margin: auto;
+	background-color: #FFFFFF;
+	padding: 20px 20px 20px 20px;
+	border-radius: 10px;
+	width:860px;
+	height:270px; 
+}
+.movie-youtube {
+	/*text-align:center;*/
+	margin: auto;
+	background-color: #FFFFFF;
+	padding: 20px 20px 20px 20px;
+	border-radius: 10px;
+	width:860px;
+	height:400px; 
+}
+.movie-spece-0 {
+	width:550px;
+	height:60px;
+}
+.movie-spece-1 {
+	width:550px;
+	height:30px;
+}
+h2 {
+	margin: auto;
+	color:#cc4d4d; 
+	font-size:18px;
+}
