@@ -13,6 +13,10 @@
  --> 
     <head>
       <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+      <link type="text/css" rel="stylesheet" href="/stylesheets/main_header.css" />
+      <link type="text/css" rel="stylesheet" href="/stylesheets/font_family.css" />
+      <link type="text/css" rel="stylesheet" href="/stylesheets/base_document.css" />
+      <link type="text/css" rel="stylesheet" href="/stylesheets/main_body.css" />
       <script>
         function myFunction(movie_id, unix_timestamp) {
           var d = new Date(unix_timestamp*1000);
@@ -24,11 +28,28 @@
           $('#time_stamp_div'+movie_id).text(converted_time+'');
         }  
 
+        $( document ).ready(function() {
+          $('#nav_home').addClass('active');
+        });
+
       </script>
     </head>
     <body>
-    {% include "/main_header.html" with context %}
-    {% for movie in movie_list %}
+      {% include "/main_header.html" with context %}
+      <div id="main_body_div">
+        <div id="youtube_div"><iframe id="feature_youtube_frame" src="//www.youtube.com/embed/2zqy21Z29ps" frameborder="0" allowfullscreen></iframe></div>
+        <div id="nowshowing_div">
+          <div class="main_page_caption">NOW SHOWING</div>
+          <div id="nowshowing_horizontal_scroll_div"></div>
+        </div>
+        <div id="comingsoon_div">
+          <div class="round-corner" id="inner_comingsoon_div">
+            <div class="main_page_caption">COMING SOON</div>
+          </div> 
+        </div>          
+      </div>
+      
+   <!--  {% for movie in movie_list %}
 		<table border="0">
 			<tr>
   				<td>
@@ -37,7 +58,6 @@
 							<img border="0" src="/image?movie_id={{ movie.id }}" width="164" height="248">
 						</a>  						
   					</div>
-<!-- 					<div id="menu" style="background-color:#FFD700;height:200px;width:100px;float:left;"> -->
 					<div style="text-align:center;">
   						{{ movie.release_time_text }}
   					</div>
@@ -63,24 +83,7 @@
   				</td>
 			</tr>
 		</table>
-    {% endfor %}
-
-	
-<!-- 
-    <form action="/sign?guestbook_name={{ guestbook_name }}" method="post">
-      <div><textarea name="content" rows="3" cols="60"></textarea></div>
-      <div><input type="submit" value="Sign Guestbook"></div>
-    </form>
-
-    <hr>
-
-    <form>Guestbook name:
-      <input value="{{ guestbook_name }}" name="guestbook_name">
-      <input type="submit" value="switch">
-    </form>
-
-    <a href="{{ url|safe }}">{{ url_linktext }}</a>
- -->
+    {% endfor %} -->
 </body>
 </html>
 {% endautoescape %}
