@@ -104,6 +104,12 @@ body {
    width:78px;
    float:left; 
 }
+
+
+.movie-box-comment-right-top {
+
+}
+
 .movie-box-comment-right > img {
    position: relative;
    top: 25px;
@@ -111,15 +117,22 @@ body {
 }
 
 .movie-box-comment-right {
-   float: left;
    width: 740px;
+   float: left;
 }
 
 .movie-box-comment-right-bg {
    background-color: #d0d0d0;
-   width:730px;
+   width:720px;
    height:110px; 
    float:left;
+}
+
+
+
+
+.movie-box-comment-right-down {
+
 }
 
 .movie-box-comment-captcha {
@@ -127,6 +140,7 @@ body {
    width:442px;
    height:103px; 
    float:left;
+   margin-top: 10px;
 }
 
 .movie-box-comment-name-right-bg {
@@ -134,15 +148,17 @@ body {
    width:160px;
    height:40px; 
    float:left;
+   margin-top: 10px;
+   margin-left: 10px;
 }
 
 .btn-post {
    background: none repeat scroll 0 0 #999999;
    border-radius: 10px;
-   clear: both;
+   /*clear: both;*/
    color: #FFFFFF;
    display: block;
-   float: right;
+
    text-decoration: none;
    height: 40px;
    width: 50px;
@@ -154,6 +170,8 @@ body {
    color: #FFFFFF;
    margin-top: 10px;
    font-family: montRegular;
+   float: left;
+   margin-left: 10px;
 }
 
 

@@ -124,16 +124,26 @@
 			<img id="img_avatar" src="/images/details/avatar.png" />
 		</div>
 		
+
 		<div class="movie-box-comment-right">
-			<img id="img_icon_msg" src="/images/details/icon_msg.png" />
-			<div class="movie-box-comment-right-bg"></div>
-			{% autoescape false %}
- 				<script type="text/javascript">var RecaptchaOptions = {theme : 'clean'};</script>
-				{{ captchahtml }}
-			{% endautoescape %}
-			<div class="movie-box-comment-name-right-bg"></div>
-			<a  class="btn-post" href="#">Post</a>
+			<div class="movie-box-comment-right-top">
+				<img id="img_icon_msg" src="/images/details/icon_msg.png" />
+				<div class="movie-box-comment-right-bg"></div>
+			</div>
+
+			<div class="movie-box-comment-right-down">
+				<div class="movie-box-comment-captcha">
+					{% autoescape false %}
+ 					<script type="text/javascript">var RecaptchaOptions = {theme : 'clean'};</script>
+					{{ captchahtml }}
+					{% endautoescape %}
+				</div>
+				<div class="movie-box-comment-name-right-bg"></div>
+				<a  class="btn-post" href="#">Post</a>
+			</div>
 		</div>
+
+
 	</div>
 </div>
 
