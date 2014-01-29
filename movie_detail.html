@@ -6,6 +6,7 @@
 
 <head>
 	<link rel="stylesheet" type="text/css" href="/stylesheets/movie_detail_style.css?v=1">
+	<link type="text/css" rel="stylesheet" href="/stylesheets/font_family.css" />
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>ข้อมูลหนัง</title>
@@ -23,95 +24,105 @@
 		<span>{{ movie_data.name_th }}</span>
 	</h1> -->
 
-	<div class="movie-spece-0"></div>
+<div class="movie-spece-0"></div>
 
-	<div class="movie-title-image" style="width:900px; height:450px;">
-	<!-- <div class="movie-title-image" style="width:900px;"> -->
+	<!-- <div class="movie-title-image" style="width:900px; ">  -->
+		<!-- clear:both; -->
+		<!-- height:450px; -->
+<div class="movie-title-image" style="width:900px;">
 
-		<div class="movie-image">
-			<a href="/nextview?movie_id={{ movie_data.id }}">
-			<img border="0" src="/image?movie_id={{ movie_data.id }}" width="288" height="450" float:left>
-			</a>
-		</div>
-
-		<div class="movie-title">
-			<strong>{{ movie_data.name_en }}</strong>
-		</div>
-				
-		<div class="movie-date">
-			<strong>Action | Adventure | Romance - {{movie_data.release_time_timestamp|covertUnixTimeToStrFotmat('%d %m %Y')}}</strong>
-		</div>
-
-		<div class="movie-synopsis-line">
-			______________________________________________________________________
-		</div>
-
-		<div class="movie-synopsis-en">
-			<strong>{{ movie_data.detail_synopsis_en }}</strong>
-		</div>
-
-		<!-- <div class="movie-director" style="margin: auto; width:550px; height:86px; float:right; color:#666666;"> -->
-		<div class="movie-director">
-			<strong>Director:</strong>
-		</div>
-
-		<!-- <div class="movie-writers" style="margin: auto; width:550px; height:86px; float:right; color:#666666;"> -->
-		<div class="movie-writers">
-			<strong>Writers:</strong>
-		</div>
-
-		<!-- <div class="movie-stars" style="margin: auto; width:550px; height:86px; float:right; color:#666666;"> -->
-		<div class="movie-stars">
-			<strong>Stars:</strong>
-		</div>
-
-	</div>
-	
-	<div class="movie-spece-1"></div>
-
-	<div class="movie-synopsis-th"> 
-			<h2>เรื่องย่อ</h2>
-			<p>
-			<div style="color:#666666;">{{ movie_data.detail_synopsis_th }}</div>
-			</p>
+	<div class="movie-image">
+		<a href="/nextview?movie_id={{ movie_data.id }}">
+		<img border="0" src="/image?movie_id={{ movie_data.id }}" width="288" float:left>
+		</a>
 	</div>
 
-	<div class="movie-spece-1"></div>
-
-	<div class="movie-artiste">
-			<h2>นักแสดง</h2>
+	<div class="movie-title">
+		<strong>{{ movie_data.name_en }}</strong>
+	</div>
+			
+	<div class="movie-date">
+		<strong>Action | Adventure | Romance - {{movie_data.release_time_timestamp|covertUnixTimeToStrFotmat('%d %m %Y')}}</strong>
 	</div>
 
-	<div class="movie-spece-1"></div>
+	<div class="movie-synopsis-line">
+		______________________________________________________________________
+	</div>
 
-	<div class="movie-youtube">
-		<h2>ตัวอย่างหนัง</h2>
-		<div style="height: 40px;"></div>
-		<iframe id="youtube_frame" src="{{ movie_data.youtube_url }}" frameborder="0" allowfullscreen style="display: block; width: 560px; height: 320px; margin: 0 auto; border: 0;"></iframe>
-		<script>
-			{% if not movie_data.youtube_url %}
-				$.getJSON( "/trailer?movie_id={{ movie_data.id }}", function(data) { 
-					var youtube_link = "//www.youtube.com/embed/"+data['videoId'];
-					$("#youtube_frame").get(0).contentWindow.location.replace(youtube_link);
-					document.getElementById("youtube_frame").onload = function() {
- 						$("#youtube_frame").show();
-					};
-				});
-			{% else %}
-				$("#youtube_frame").show();
-			{% endif %}
-		</script>
-	</div> 
+	<div class="movie-synopsis-en">
+		<strong>{{ movie_data.detail_synopsis_en }}</strong>
+	</div>
 
 
+	<!-- <div class="movie-director" style="margin: auto; width:550px; height:86px; float:right; color:#666666;"> -->
+	<div class="movie-director-writers-stars">
+		<strong>Director:</strong>
+	</div>
+
+	<!-- <div class="movie-spece-3"></div> -->
+
+	<div class="movie-director-writers-stars">
+		<strong>Writers:</strong>
+	</div>
+
+	<!-- <div class="movie-spece-3"></div> -->
+
+	<div class="movie-director-writers-stars">
+		<strong>Stars:</strong>
+	</div>
+
+	<!-- <div class="movie-spece-3"></div> -->
+</div>
 	
+<div class="movie-spece-1"></div>
 
-	<br/>
-	<br/>
-	<br/>
+<div class="movie-synopsis-th"> 
+		<h2>เรื่องย่อ</h2>
+		<p>
+		<div style="color:#666666;">{{ movie_data.detail_synopsis_th }}</div>
+		</p>
+</div>
+
+<div class="movie-spece-1"></div>
+
+<div class="movie-artiste">
+		<h2>นักแสดง</h2>
+</div>
+
+<div class="movie-spece-1"></div>
+
+<div class="movie-youtube">
+	<h2>ตัวอย่างหนัง</h2>
+	<div style="height: 40px;"></div>
+	<iframe id="youtube_frame" src="{{ movie_data.youtube_url }}" frameborder="0" allowfullscreen style="display: block; width: 560px; height: 320px; margin: 0 auto; border: 0;"></iframe>
+	<script>
+		{% if not movie_data.youtube_url %}
+			$.getJSON( "/trailer?movie_id={{ movie_data.id }}", function(data) { 
+				var youtube_link = "//www.youtube.com/embed/"+data['videoId'];
+				$("#youtube_frame").get(0).contentWindow.location.replace(youtube_link);
+				document.getElementById("youtube_frame").onload = function() {
+						$("#youtube_frame").show();
+				};
+			});
+		{% else %}
+			$("#youtube_frame").show();
+		{% endif %}
+	</script>
+</div> 
+
+<br/>
+<br/>
+<br/>
 	
 	
-	<div style="text-alaign:center;">
+<div class="movie-comment">
+	
+	<div style="margin: auto; width:900px; height:70px;  margin-top:20px;"><h3>ความคิดเห็น</h3></div>
+	<div class="movie-box-comment">
+
+	</div>
+</div>
+
 		<form action="javascript:submitComment();" method="post">
 		<center>
 	    <textarea id="comment_content" name="content" style="width:450px; height:100px;"></textarea>
@@ -125,39 +136,35 @@
 {% endautoescape %}
 
 
-    	<input type="submit" value="Comment"></div>
+    	<input type="submit" value="Comment" style="clear:both;"></div>
     	</center>
     	</form>
-    </div>
+  
 
 	
-	<div id="comments">
-		<div><center><font size="20"><b>comment</b></font></center></div>
-		{% for comment in comments %}
-		<center>
-		<table width="500" border="1" cellpadding="0" cellspacing="5" bordercolor="#333333">
-		<br/><br/>
-	    <div>ข้อความ: {{ comment.content|decodeHTML }}</div>
-	    <div>ชื่อ: {{ comment.author|decodeHTML }}</div>
-	    <div>วันที่: {{ (comment.date | datetime_lctimezone_format).strftime("%B %d, %Y") }} เวลา: {{ (comment.date | datetime_lctimezone_format).strftime("%H:%M") }}</div>
-		<br/><br/>
-	    </table>
-	    </center>
-		{% endfor %}
-	</div>
+<div id="comments" style="background-color: #323232; width: 1200px; margin: auto;">
+	<!-- <div><center><font size="20"><b>comment</b></font></center></div> -->
+	{% for comment in comments %}
+	<center>
+	<table width="500" border="1" cellpadding="0" cellspacing="5" bordercolor="#333333">
+	<br/><br/>
+    <div>ข้อความ: {{ comment.content|decodeHTML }}</div>
+    <div>ชื่อ: {{ comment.author|decodeHTML }}</div>
+    <div>วันที่: {{ (comment.date | datetime_lctimezone_format).strftime("%B %d, %Y") }} เวลา: {{ (comment.date | datetime_lctimezone_format).strftime("%H:%M") }}</div>
+	<br/><br/>
+    </table>
+    </center>
+	{% endfor %}
+</div>
 
-	<div id="footer" style="height: 200px;">
-	</div>
+
+
+<div id="footer">
+</div>
 
 
 
 <script>
-
-/// qestion = "5+10=?"
-/// answer = 'ddd'
-
-
-
 	function submitComment() {
 		var author = $("#comment_author").val();
 		var content = $("#comment_content").val();
@@ -215,6 +222,7 @@
 
 </script>
 
+{% include "/main_footer.html" with context %}
 
 </body>
 

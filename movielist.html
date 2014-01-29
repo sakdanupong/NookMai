@@ -40,50 +40,51 @@
         <div id="youtube_div"><iframe id="feature_youtube_frame" src="//www.youtube.com/embed/2zqy21Z29ps" frameborder="0" allowfullscreen></iframe></div>
         <div id="nowshowing_div">
           <div class="main_page_caption">NOW SHOWING</div>
-          <div id="nowshowing_horizontal_scroll_div"></div>
+            <div id="nowshowing_wraper_parent">
+              <button class="date-nav-prev">Prev</button>
+              <button class="date-nav-next">Next ></button>
+                <div id="wrapper">
+                  <div id="slider">
+                      {% for movie in movie_list %}
+                      <div class="nowshowing_poster_div">
+                        <div>
+                          <a href="/nextview?movie_id={{movie.id}}"> <img class="poster_image" border="0" src="/image?movie_id={{ movie.id }}"> <a/>
+                        </div>
+                        <div class="nowshowing_poster_title"><a href="/nextview?movie_id={{movie.id}}">  {{movie.name_en}}<a/></div>
+                      </div>
+                    {% endfor %}
+                  </div>
+              </div>
+            </div>
         </div>
-        <div id="comingsoon_div">
+        <script>
+          var count = 0;
+          var sliderWidth = 660;
+          var slider = $('#slider');
+          var sliderCount = $('div', slider).length;
+          slider.width(sliderCount * sliderWidth);
+
+          $('.date-nav-prev').click(function () { 
+              if (count == 0)
+                return;
+              $('#slider').animate({left: '+='+sliderWidth}, 500);
+              count -=1;
+          });
+
+          $('.date-nav-next').click(function () {
+              if (count == 3)
+                return;
+              $('#slider').animate({left: '-='+sliderWidth}, 500);
+              count +=1;
+          });
+        </script>
+        <!-- <div id="comingsoon_div">
           <div class="round-corner" id="inner_comingsoon_div">
             <div class="main_page_caption">COMING SOON</div>
           </div> 
-        </div>          
+        </div>  -->         
       </div>
-      
-   <!--  {% for movie in movie_list %}
-		<table border="0">
-			<tr>
-  				<td>
-  					<div>
-						<a href="/nextview?movie_id={{ movie.id }}">
-							<img border="0" src="/image?movie_id={{ movie.id }}" width="164" height="248">
-						</a>  						
-  					</div>
-					<div style="text-align:center;">
-  						{{ movie.release_time_text }}
-  					</div>
-  				</td>
-  				<td style="float:left;">
-  					<div>
-	  					<a href="/nextview?movie_id={{ movie.id }}">
-  							<b>{{ movie.name_en }}</b>
-  						</a>
-            </div>
-            <div id='time_stamp_div{{movie.id}}'> {{movie.release_time_timestamp|covertUnixTimeToStrFotmat('%d/%m/%Y')}} </div>
-            <script>
-              // var movie_id = {{movie.id}};
-              // var unix_timestamp = {{movie.release_time_timestamp}};
-              // myFunction(movie_id, unix_timestamp);
-            </script>
-            <div>
-              {{movie.duration}} นาที
-            </div>
-            <div>
-              จำนวน Comment {{movie.comment_count}}
-            </div>
-  				</td>
-			</tr>
-		</table>
-    {% endfor %} -->
+      {% include "/main_footer.html" with context %}
 </body>
 </html>
 {% endautoescape %}
