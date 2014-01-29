@@ -34,13 +34,6 @@ body {
 	background-color: #b43c3c;
 }
 
-#inner_nav_div {
-	/*background-color: #ffffff;
-	height: 100%;
-	margin: auto;*/
-	/*margin: auto*/
-}
-
 ul {
 	list-style-type: none;
 	height: 70px;
@@ -54,15 +47,16 @@ li {
 }
 
 li a {
-	padding-right: 32px;
-	padding-left: 32px;
+	padding-right: 19px;
+	padding-left: 19px;
 	display: block;
-	line-height: 60px;
+	line-height: 40px;
 	text-decoration: none;
 	font-family: Georgia, "Times New Roman", Times, serif;
 	font-size: 20px;
 	color: #FFFFFF;
-	margin: 5px;
+	margin: 15px;
+	font-family: montRegular;
 }
 
 li a:hover {
@@ -107,7 +101,7 @@ a:hover {
 	border-radius: 5px 5px 5px 5px;
 }
 
-input {
+#search_input {
 	float: left;
 	margin-left: 20px;
 	margin-top: 7px;
@@ -118,6 +112,7 @@ input {
 	height: 24px;
 	font-size: 16px;
 	outline: 0;
+	font-family: montRegular;
 }
 
 #img_search {
