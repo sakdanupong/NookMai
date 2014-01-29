@@ -19,6 +19,7 @@ body {
 	float:right; 
 	color:#666666; 
 	font-size:50px;
+   font-family: montRegular;
 }
 .movie-date {
 	margin: auto;
@@ -27,6 +28,7 @@ body {
 	float:right; 
 	color:#cc4d4d; 
 	font-size:18px;
+   font-family: montRegular;
 }
 .movie-synopsis-line {
 	width:550px; 
@@ -36,30 +38,17 @@ body {
 .movie-synopsis-en {
 	margin: auto;
 	width:550px; 
-	/*height:86px; */
 	float:right; 
 	color:#666666;
+   font-family: montRegular;
 }
-.movie-director {
-   margin: auto;
+.movie-director-writers-stars {
+   margin-top: 20px;
    width:550px; 
-   /*height:86px; */
    float:right; 
    color:#666666;
-}
-.movie-writers {
-   margin: auto;
-   width:550px; 
-   /*height:86px; */
-   float:right; 
-   color:#666666;
-}
-.movie-stars {
-   margin: auto;
-   width:550px; 
-   /*height:86px; */
-   float:right; 
-   color:#666666;
+   /*clear:both;*/
+   font-family: montRegular;
 }
 
 .movie-synopsis-th {
@@ -68,6 +57,7 @@ body {
 	background-color: #FFFFFF;
 	padding: 20px 20px 20px 20px;
 	border-radius: 10px;
+   clear:both;
 }
 .movie-artiste {
 	margin: auto;
@@ -86,16 +76,52 @@ body {
 	width:860px;
 	height:400px; 
 }
+.movie-comment {
+   margin: auto;
+   width: 1200px;
+   height:400px; 
+   background-color: #323232;
+}
+.movie-box-comment {
+   margin: auto;
+   width:860px; 
+   height:160px; 
+   background-color: #FFFFFF;
+   padding: 20px 20px 20px 20px;
+   border-radius: 10px;
+   clear:both;
+}
+
+#comment {
+   margin: auto;
+   width: 1200px;
+   background-color: #323232;
+   clear:both;
+}
+
 .movie-spece-0 {
-	width:550px;
+	width:900px;
 	height:60px;
 }
 .movie-spece-1 {
-	width:550px;
+	width:900px;
 	height:30px;
+   clear:both;
+}
+.movie-spece-3 {
+   margin: auto;
+   width:550px;
+   height:30px;
+   float:right; 
+   /*clear:both;*/
 }
 h2 {
 	margin: auto;
 	color:#cc4d4d; 
 	font-size:18px;
+}
+h3 {
+   margin: auto;
+   color:#FFFFFF; 
+   font-size:18px;
 }
