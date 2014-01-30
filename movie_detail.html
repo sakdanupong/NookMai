@@ -7,6 +7,9 @@
 <head>
 	<link rel="stylesheet" type="text/css" href="/stylesheets/movie_detail_style.css?v=1">
 	<link type="text/css" rel="stylesheet" href="/stylesheets/font_family.css" />
+	<link type="text/css" rel="stylesheet" href="/stylesheets/main_header.css" />
+    <link type="text/css" rel="stylesheet" href="/stylesheets/base_document.css" />
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main_body.css" />
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>ข้อมูลหนัง</title>
@@ -120,15 +123,18 @@
 	<div style="margin: auto; width:900px; height:55px;"><h3>ความคิดเห็น</h3></div>
 	<!-- margin-top:20px; display:block; -->
 	<div class="movie-box-comment">
+		<form id="form-comment" action="javascript:submitComment();" method="post">
 		<div class="movie-box-comment-left">
 			<img id="img_avatar" src="/images/details/avatar.png" />
 		</div>
-		
+
 
 		<div class="movie-box-comment-right">
 			<div class="movie-box-comment-right-top">
 				<img id="img_icon_msg" src="/images/details/icon_msg.png" />
-				<div class="movie-box-comment-right-bg"></div>
+				<div class="movie-box-comment-right-bg">
+					<textarea id="comment_content" name="content"></textarea>
+				</div>
 			</div>
 
 			<div class="movie-box-comment-right-down">
@@ -138,54 +144,39 @@
 					{{ captchahtml }}
 					{% endautoescape %}
 				</div>
-				<div class="movie-box-comment-name-right-bg"></div>
-				<a  class="btn-post" href="#">Post</a>
+				<div class="movie-box-comment-name-right-bg">
+					<input id="comment_author" name="author" placeholder="name"</input>
+				</div>
+				<a class="btn-post" type="submit" href="javascript:submitComment()" >Post</a>
 			</div>
 		</div>
-
-
+		</form>
 	</div>
 </div>
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		<form action="javascript:submitComment();" method="post">
-		<center>
-	    <textarea id="comment_content" name="content" style="width:450px; height:100px;"></textarea>
-    	<br>
-    	<input id="comment_author" name="author" placeholder="name" style="width:450px" rows="1" cols="60"></input>
-
-
-<!-- {% autoescape false %}
- 		<script type="text/javascript">var RecaptchaOptions = {theme : 'clean'};</script>
-		{{ captchahtml }}
-{% endautoescape %} -->
-
-
-    	<input type="submit" value="Comment" style="clear:both;"></div>
-    	</center>
-    	</form>
   
 
 	
-<div id="comments" style="background-color: #323232; width: 1200px; margin: auto;">
-	<!-- <div><center><font size="20"><b>comment</b></font></center></div> -->
+<div id="comments-template">
 	{% for comment in comments %}
-	<center>
+	
+	<div class="comments-template-box">
+		<div class="comments-template-left">
+			<img id="img_avatar" src="/images/details/avatar.png" />
+			<div class="comments-template-name">{{ comment.author|decodeHTML }}</div>
+		</div>
+		<div class="comments-template-right">
+			<div class="comments-template-date-and-time">{{ (comment.date | datetime_lctimezone_format).strftime("%B %d, %Y") }} : {{ (comment.date | datetime_lctimezone_format).strftime("%H:%M") }}น.</div>
+			<div class="comments-template-content">{{ comment.content|decodeHTML }}</div>
+		</div>
+	</div>
+
+
+
+
+<!-- 	<center>
 	<table width="900" border="1" cellpadding="0" cellspacing="5" bordercolor="#333333">
 	<br/><br/>
     <div>ข้อความ: {{ comment.content|decodeHTML }}</div>
@@ -193,14 +184,52 @@
     <div>วันที่: {{ (comment.date | datetime_lctimezone_format).strftime("%B %d, %Y") }} เวลา: {{ (comment.date | datetime_lctimezone_format).strftime("%H:%M") }}</div>
 	<br/><br/>
     </table>
-    </center>
+    </center> -->
 	{% endfor %}
+
+
+	
 </div>
 
+<!-- <div class="comments-template-box-footer"></div> -->
 
 
-<div id="footer">
-</div>
+
+		<!-- <form action="javascript:submitComment();" method="post">
+		<center> -->
+	    <!-- <textarea id="comment_content" name="content" style="width:450px; height:100px;"></textarea> -->
+    	<!-- <br> -->
+    	<!-- <input id="comment_author" name="author" placeholder="name" style="width:450px" rows="1" cols="60"></input> -->
+
+
+<!-- {% autoescape false %}
+ 		<script type="text/javascript">var RecaptchaOptions = {theme : 'clean'};</script>
+		{{ captchahtml }}
+{% endautoescape %} -->
+
+<!-- 
+    	<input type="submit" value="Comment" style="clear:both;"></div>
+    	</center>
+    	</form> -->
+
+
+
+<!-- <div id="comments" style="background-color: #323232; width: 1200px; margin: auto;"> -->
+	<!-- <div><center><font size="20"><b>comment</b></font></center></div> -->
+	<!-- {% for comment in comments %} -->
+<!-- 	<center>
+	<table width="900" border="1" cellpadding="0" cellspacing="5" bordercolor="#333333">
+	<br/><br/>
+    <div>ข้อความ: {{ comment.content|decodeHTML }}</div>
+    <div>ชื่อ: {{ comment.author|decodeHTML }}</div>
+    <div>วันที่: {{ (comment.date | datetime_lctimezone_format).strftime("%B %d, %Y") }} เวลา: {{ (comment.date | datetime_lctimezone_format).strftime("%H:%M") }}</div>
+	<br/><br/>
+    </table>
+    </center> -->
+	<!-- {% endfor %} -->
+<!-- </div> -->
+
+
 
 
 
