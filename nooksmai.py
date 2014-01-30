@@ -109,7 +109,6 @@ class MainPage(webapp2.RequestHandler):
         movie_query = MovieModel.all().order('-release_time_timestamp').fetch(limit=20)
         template_values = {
              'movie_list': movie_query,
-             'title' : 'test',
         }
         template = JINJA_ENVIRONMENT.get_template('movielist.html')
         self.response.write(template.render(template_values))
@@ -129,9 +128,9 @@ class RefreshData(webapp2.RequestHandler):
         for m in mJson['movies']:
             q = MovieModel.all();
             q.filter('original_id =', m['id'])
-            if q.count() :
-                continue
-            record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)                
+            if q.count():
+                break
+            record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)         
             db.run_in_transaction(self.increment_record_movie_counter, record_object.key())
             movie_id = str(self.new_id)
             e = MovieModel.get_or_insert(key_name=movie_id)
