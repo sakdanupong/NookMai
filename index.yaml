@@ -15,3 +15,14 @@ indexes:
   - name: movie_id
   - name: date
     direction: desc
+
+- kind: MovieModel
+  properties:
+  - name: is_coming_soon
+  - name: release_time_timestamp
+
+- kind: MovieModel
+  properties:
+  - name: is_coming_soon
+  - name: release_time_timestamp
+    direction: desc
