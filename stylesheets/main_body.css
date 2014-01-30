@@ -24,10 +24,17 @@
 
 .main_page_caption {
 	font-size: 30pt;
-	line-height: 98px;
 	text-align: center;
 	font-family: montRegular;
 	color: #ffb400;
+}
+
+#comingsoon_caption {
+	line-height: 109px;
+}
+
+#nowshowing_caption {
+	line-height: 98px;
 }
 
 #nowshowing_wraper_and_button_parent {
@@ -67,6 +74,7 @@
     height: 100%;
     position: absolute;
 }
+
 .nowshowing_poster_div {
     width:132px; 
     height:100%; 
@@ -78,12 +86,12 @@
 	height: 197px;
 }
 
-.nowshowing_poster_title {
+.poster_title {
 	height: 41px;
 	text-align: center;
 }
 
-.nowshowing_poster_title a {
+.poster_title a {
 	color: #FFFFFF;
 	font-size: 14px;
 	font-family: montRegular;
@@ -95,17 +103,47 @@
 	margin: 0;
 } 
 
-/*#comingsoon_div {
-	height: 780px;
+#comingsoon_div {
+	width: 1200px;
+	height: 660px;
+	margin: auto;
 	background-color: #ecedef;
+	padding-top: 60px;
+	padding-bottom: 60px;
 }
 
 #inner_comingsoon_div {
-	width: 902px;
-	height: 664px;
-	background-color: #ffffff;
-	margin-left: 149px;
-	margin-right: 149px;
-	margin-top: 58px;
-	margin-bottom: 58px;
-}*/
+	width: 900px;
+	height: 660px;
+	margin: auto;
+	background-color: white;
+}
+
+.comingsoon_poster_div {
+    width:132px; 
+    height:100%; 
+    float:left;
+    margin-right: 2px;
+    margin-left: 39px;
+}
+#comingsoon_poster_link {
+	color: #2f3840;
+}
+
+.comingsoon_poster_lower_div {
+	width:132px; 
+    height:100%; 
+    float:left;
+    margin-right: 2px;
+    margin-left: 39px;
+    margin-top: 32px;
+}
+
+#comingsoon_more_div a {
+	color: #7a7e82;
+	clear: both;
+	float: right;
+	margin-right: 29px;
+	font-family: montRegular;
+	text-decoration: none;
+}

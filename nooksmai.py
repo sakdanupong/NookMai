@@ -23,6 +23,7 @@ from cacheimagemodel import *
 from commentmodel import *
 from record_count_model import *
 from decimal import *
+from comingsoonmodel import *
 
 from os import environ
 from recaptcha.client import captcha
@@ -35,6 +36,7 @@ CAPTCHA_PUBLICE_KEY_LOCALHOST = '6LdtC-0SAAAAAH5bs8gr19lSa896njyCiY1GE3Ti'
 CAPTCHA_PRIVATE_KEY_LOCALHOST = '6LdtC-0SAAAAAKvLvewCc4m0_qb7MxuPgRhg0svA'
 BANGKOK_TIMEZONE = pytz.timezone('Asia/Bangkok')
 ALL_RECORD_COUNTER_KEY = 'allRecordCounter'
+REFRESH_DATA_CACHE = 'REFRESH_DATA_CACHE'
 
 def editMovieData():
     r = {'success':'success'}
@@ -83,12 +85,9 @@ def increment_record_comment_counter(c_key):
     c.put()
 
 def datetime_lctimezone_format(dt):
-    # loc_dt = dt.astimezone(BANGKOK_TIMEZONE)
     ans_time = time.mktime(dt.timetuple())
     tz = BANGKOK_TIMEZONE
     value = datetime.datetime.fromtimestamp(ans_time, tz)
-    # BANGKOK_TIMEZONE.localize(dt)
-    #loc_dt_str = loc_dt.strftime(str_format)
     return value
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -106,9 +105,13 @@ MAINPAGE_DATA_PER_PAGE = 5
 class MainPage(webapp2.RequestHandler):
 
     def get(self):
-        movie_query = MovieModel.all().order('-release_time_timestamp').fetch(limit=20)
+        movie_query = MovieModel.all().order('-release_time_timestamp')
+        movie_list = movie_query.filter('is_coming_soon =', 0).fetch(limit=20)
+        comingsoon_query = MovieModel.all().order('release_time_timestamp')
+        coming_list = comingsoon_query.filter('is_coming_soon =', 1).fetch(limit=10)
         template_values = {
-             'movie_list': movie_query,
+             'movie_list': movie_list,
+             'comingsoon_list' : coming_list,
         }
         template = JINJA_ENVIRONMENT.get_template('movielist.html')
         self.response.write(template.render(template_values))
@@ -121,21 +124,26 @@ class RefreshData(webapp2.RequestHandler):
         c.put()
 
     def get(self):
+        data = memcache.get(REFRESH_DATA_CACHE)
+        if data is not None:
+            return
+        else:
+            memcache.add(key=REFRESH_DATA_CACHE, value=1, time=60)
+
         url = 'http://onlinepayment.majorcineplex.com/api/1.0/now_showing?w=768&h=1024&x=2&o=0&pf=iOS&mid=iPad&indent=0&deflate=1&appv=2.6&rev=2'
         result = urlfetch.fetch(url)
         mJson = json.loads(result.content)
-        
+        record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
         for m in mJson['movies']:
             q = MovieModel.all();
             q.filter('original_id =', m['id'])
             if q.count():
-                break
-            record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)         
+                continue
             db.run_in_transaction(self.increment_record_movie_counter, record_object.key())
             movie_id = str(self.new_id)
             e = MovieModel.get_or_insert(key_name=movie_id)
-            e.id = self.new_id
             e.original_id = m['id']
+            e.id = self.new_id
             e.ribbon_type = m['ribbon_type']
             if 'avd_time' in m:
                 movie_time = m['avd_time']
@@ -196,6 +204,96 @@ class RefreshData(webapp2.RequestHandler):
             e.detail_cast_th = cast['th']
             e.put()
 
+        data = memcache.get(REFRESH_DATA_CACHE)
+        if data is not None:
+            memcache.delete(key=REFRESH_DATA_CACHE)
+
+        # coming_soon
+
+        url = 'http://onlinepayment.majorcineplex.com/api/1.0/coming_soon?w=768&h=1024&x=2&o=0&pf=iOS&mid=iPad&indent=0&deflate=1&appv=2.6&rev=2'
+        result = urlfetch.fetch(url)
+        mJson = json.loads(result.content)
+        
+        for g in mJson['groups']:
+            month_dict = g['name']
+            g_coming_month_th = month_dict['th'];
+            g_coming_month_en = month_dict['en'];
+            csm = ComingSoonModel.get_or_insert(key_name=g_coming_month_en)
+            csm.comming_month_en = g_coming_month_en
+            csm.comming_month_th = g_coming_month_th
+            for m in g['movies']: 
+                q = MovieModel.all()
+                q.filter('original_id =', m['id'])
+                if q.count():
+                  continue
+                record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)         
+                db.run_in_transaction(self.increment_record_movie_counter, record_object.key())
+                movie_id = str(self.new_id)
+                e = MovieModel.get_or_insert(key_name=movie_id)
+                e.coming_month_en = g_coming_month_en
+                e.coming_month_th = g_coming_month_th
+                e.is_coming_soon = 1
+                e.id = self.new_id
+                e.original_id = m['id']
+                e.ribbon_type = m['ribbon_type']
+                if 'avd_time' in m:
+                    movie_time = m['avd_time']
+                    e.adv_time_timestamp = movie_time['timestamp']
+                    e.adv_time_text = movie_time['text']
+                movie_name = m['name']
+                e.name_en = movie_name['en']
+                e.name_th = movie_name['th']
+                movie_detail = m['detail']
+                e.duration = movie_detail['duration']
+                e.rate = movie_detail['rate']
+                e.rateWarning = movie_detail['rateWarning']
+                e.image = movie_detail['image']
+                movie_release_date = movie_detail['releasedate']
+                e.release_time_timestamp = movie_release_date['timestamp']
+                e.release_time_text = movie_release_date['text']
+                movie_trailer = movie_detail['trailer']
+                e.yt_id = movie_trailer['yt_id']
+                e.rtsp = movie_trailer['rtsp']
+                e.thumbnail = movie_trailer['thumbnail']
+                e.types = m['types']
+                e.cinemas = m['cinemas']
+                
+                url = 'http://onlinepayment.majorcineplex.com/api/1.0/movie_detail?w=320&h=480&x=2&o=0&pf=iOS&mid=iPhone%20Simulator&indent=0&deflate=1&appv=2.6&rev=2&movie_id='+str(m['id'])
+                result = urlfetch.fetch(url)
+                mJson = json.loads(result.content)
+                
+                movie_detail = mJson['detail']
+                e.detail_duration = movie_detail['duration']
+                e.detail_rate = movie_detail['rate']
+                e.detail_rateWarning = movie_detail['rateWarning']
+                
+                releasedate = movie_detail['releasedate']
+                e.detail_timestamp = releasedate['timestamp']
+                e.detail_text = releasedate['text']
+
+                synopsis = movie_detail['synopsis']
+                e.detail_synopsis_en = synopsis['en']
+                e.detail_synopsis_th = synopsis['th']
+
+                e.detail_image = movie_detail['image']
+
+                trailer = movie_detail['trailer']
+                e.detail_yt_id = trailer['yt_id']
+                e.detail_rtsp = trailer['rtsp']
+                e.detail_thumbnail = trailer['thumbnail']
+
+                genre = movie_detail['genre']
+                e.detail_genre_en = genre['en']
+                e.detail_genre_th = genre['th']
+                
+                director = movie_detail['director']
+                e.detail_director_en = director['en']
+                e.detail_director_th = director['th']
+                
+                cast = movie_detail['cast']
+                e.detail_cast_en = cast['en']
+                e.detail_cast_th = cast['th']
+                e.put()
 
 class ResetCounter(webapp2.RequestHandler):
     def get(self):
@@ -222,7 +320,7 @@ class UploadAndCacheImage(webapp2.RequestHandler):
     def post(self):
         self.process()
     def process(self):
-        logging.warning('############### xxxxxxxxx')
+        # logging.warning('############### xxxxxxxxx')
         success = 0
         movie_id = self.request.get('movie_id')
         # poster_img = images.resize(self.request.get('img'), 164, 248)
