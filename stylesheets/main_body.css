@@ -1,0 +1,84 @@
+#main_body_div {
+	margin: auto;
+	width: 1200px;
+}
+
+#youtube_div {
+	height: 630px;
+	background-color: #ecedef;
+}
+
+#feature_youtube_frame {
+	width: 854px;
+	height: 510px;
+	margin-top: 60px;
+	margin-bottom: 60px;
+	margin-left: 173px;
+	margin-right: 173px;
+}
+
+#nowshowing_div {
+	height: 378px;
+	background-color: #323232;
+}
+
+.main_page_caption {
+	font-size: 30pt;
+	line-height: 98px;
+	text-align: center;
+	font-family: montRegular;
+	color: #ffb400;
+}
+
+#nowshowing_wraper_parent {
+	width:660px;
+	margin: auto;
+}
+
+#wrapper{
+    width:100%; 
+    height:238px; 
+    position:relative; 
+    overflow:hidden;
+}
+#slider {
+    width: 400%;
+    height: 100%;
+    position: absolute;
+}
+.nowshowing_poster_div {
+    width:132px; 
+    height:100%; 
+    float:left; 
+}
+
+.poster_image {
+	height: 197px;
+}
+
+.nowshowing_poster_title {
+	height: 41px;
+	text-align: center;
+}
+
+.nowshowing_poster_title a {
+	color: #FFFFFF;
+	font-size: 14px;
+	font-family: montRegular;
+	text-decoration: none;
+}
+
+/*#comingsoon_div {
+	height: 780px;
+	background-color: #ecedef;
+}
+
+#inner_comingsoon_div {
+	width: 902px;
+	height: 664px;
+	background-color: #ffffff;
+	margin-left: 149px;
+	margin-right: 149px;
+	margin-top: 58px;
+	margin-bottom: 58px;
+}*/
