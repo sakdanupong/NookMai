@@ -41,7 +41,7 @@
 	</div>
 
 	<div class="movie-title">
-		<strong>{{ movie_data.name_en }}</strong>
+		<strong>{{ movie_data.name_en|decodeHTML }}</strong>
 	</div>
 			
 	<div class="movie-date">
@@ -50,14 +50,14 @@
 
 
 	<div class="movie-synopsis-en">
-		<strong>{{ movie_data.detail_synopsis_en }}</strong>
+		<strong>{{ movie_data.detail_synopsis_en|decodeHTML }}</strong>
 	</div>
 
 
 	<!-- <div class="movie-director" style="margin: auto; width:550px; height:86px; float:right; color:#666666;"> -->
 	<div class="movie-director-writers-stars">
 		<div class="movie-director-writers-stars-left">Director:</div>
-		<div class="movie-director-writers-stars-right">{{ movie_data.detail_director_en }}</div>
+		<div class="movie-director-writers-stars-right">{{ movie_data.detail_director_en|decodeHTML }}</div>
 		<!-- <strong>Director:{{ movie_data.detail_director_en }}</strong> -->
 	</div>
 
@@ -71,7 +71,7 @@
 
 	<div class="movie-director-writers-stars">
 		<div class="movie-director-writers-stars-left">Stars:</div>
-		<div class="movie-director-writers-stars-right">{{ movie_data.detail_cast_en }}</div>
+		<div class="movie-director-writers-stars-right">{{ movie_data.detail_cast_en|decodeHTML }}</div>
 		<script>
 			// alert('wqdqwdqwd');
 			// var str = {{ movie_data.detail_cast_en }}
@@ -89,7 +89,7 @@
 <div class="movie-synopsis-th"> 
 		<h2>เรื่องย่อ</h2>
 		<p>
-		<div style="color:#666666;">{{ movie_data.detail_synopsis_th }}</div>
+		<div style="color:#666666;">{{ movie_data.detail_synopsis_th|decodeHTML }}</div>
 		</p>
 </div>
 
