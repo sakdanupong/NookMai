@@ -7,16 +7,26 @@ threadsafe: true
 handlers:
 - url: /fonts
   static_dir: fonts
+
 - url: /images
   static_dir: images
+
 - url: /stylesheets
   static_dir: stylesheets
+
 - url: /back_office
   script: nooksmai.application
   login: admin
   secure: always
+
 - url: /.*
   script: nooksmai.application
+
+- url: /nooksmaiicon\.ico
+  static_files: nooksmaiicon.ico
+  upload: nooksmaiicon\.ico
+
+
 
 libraries:
 - name: webapp2

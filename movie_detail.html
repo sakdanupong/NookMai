@@ -45,12 +45,9 @@
 	</div>
 			
 	<div class="movie-date">
-		<strong>Action | Adventure | Romance - {{movie_data.release_time_timestamp|covertUnixTimeToStrFotmat('%d %m %Y')}}</strong>
+		<strong>{{ movie_data.detail_genre_en }} - {{movie_data.release_time_timestamp|covertUnixTimeToStrFotmat('%d %B %Y')}}</strong>
 	</div>
 
-	<div class="movie-synopsis-line">
-		______________________________________________________________________
-	</div>
 
 	<div class="movie-synopsis-en">
 		<strong>{{ movie_data.detail_synopsis_en }}</strong>
@@ -59,22 +56,32 @@
 
 	<!-- <div class="movie-director" style="margin: auto; width:550px; height:86px; float:right; color:#666666;"> -->
 	<div class="movie-director-writers-stars">
-		<strong>Director:</strong>
+		<div class="movie-director-writers-stars-left">Director:</div>
+		<div class="movie-director-writers-stars-right">{{ movie_data.detail_director_en }}</div>
+		<!-- <strong>Director:{{ movie_data.detail_director_en }}</strong> -->
 	</div>
 
-	<!-- <div class="movie-spece-3"></div> -->
 
 	<div class="movie-director-writers-stars">
-		<strong>Writers:</strong>
+		<!-- <strong>Writers:</strong> -->
+		<div class="movie-director-writers-stars-left">Writers:</div>
+		<div class="movie-director-writers-stars-right"></div>
 	</div>
 
-	<!-- <div class="movie-spece-3"></div> -->
 
 	<div class="movie-director-writers-stars">
-		<strong>Stars:</strong>
+		<div class="movie-director-writers-stars-left">Stars:</div>
+		<div class="movie-director-writers-stars-right">{{ movie_data.detail_cast_en }}</div>
+		<script>
+			// alert('wqdqwdqwd');
+			// var str = {{ movie_data.detail_cast_en }}
+			// var n = str.search(", ");
+
+			// alert(str);
+		</script>
+		<!-- <strong>Stars:{{ movie_data.detail_cast_en}}</strong> -->
 	</div>
 
-	<!-- <div class="movie-spece-3"></div> -->
 </div>
 	
 <div class="movie-spece-1"></div>
@@ -188,10 +195,10 @@
 	{% endfor %}
 
 
-	
-</div>
 
-<!-- <div class="comments-template-box-footer"></div> -->
+</div>
+<div class="comments-template-box-footer"></div>
+
 
 
 
@@ -264,7 +271,7 @@
 
 	function updateComments() {
 		$.getJSON("/api_get_comment", {'movie_id':{{ movie_data.id }}}, function(data) {
-			//alert(data['data']);
+			// alert(data['data']);
 			
 
 			var clist = data['data'];
@@ -275,17 +282,34 @@
 		    	var content = c['content'];
 		    	var date = c['date'];
 		    	var time_crate = c['time_crate'];
-		    	h += '<center>';
-		    	h += '<table width="900" border="1" cellpadding="0" cellspacing="5" bordercolor="#333333">';
-		    	h += '<br/><br/>';
-		    	h += '<div>ข้อความ:'+content+'</div>';
-		    	h += '<div>ชื่อ:'+author+'</div>';
-		    	h += '<div>วันที่:'+date+' เวลา:'+time_crate+'</div>';
-		    	h += '<br/><br/>';
-		    	h += '</table>';
-		    	h += '</center>';
+		    	// h += '<center>';
+		    	// h += '<table width="900" border="1" cellpadding="0" cellspacing="5" bordercolor="#333333">';
+		    	// h += '<br/><br/>';
+		    	// h += '<div>ข้อความ:'+content+'</div>';
+		    	// h += '<div>ชื่อ:'+author+'</div>';
+		    	// h += '<div>วันที่:'+date+' เวลา:'+time_crate+'</div>';
+		    	// h += '<br/><br/>';
+		    	// h += '</table>';
+		    	// h += '</center>';
+
+
+		    	h += '<div class="comments-template-box">';
+		    		h += '<div class="comments-template-left">';
+		    			h += '<img id="img_avatar" src="/images/details/avatar.png" />';
+		    			h += '<div class="comments-template-name">'+author+'</div>';
+		    		h += '</div>';
+		    		h += '<div class="comments-template-right">';
+		    			h += '<div class="comments-template-date-and-time">'+date+':'+time_crate+'น.</div>'
+		    			h += '<div class="comments-template-content">'+content+'</div>'
+		    		h += '</div>';
+		    	h += '</div>';
+
+
 			}
-			$('#comments').html(h);
+			
+			$('#comments-template').html(h);
+
+			// $('#comments').html(h);
 		});
 	}
 
