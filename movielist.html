@@ -3,6 +3,7 @@
 <html>
     <head>
       <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+      <link rel="shortcut icon" href="images/favicon.ico" />  
       <link type="text/css" rel="stylesheet" href="/stylesheets/main_header.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/font_family.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/base_document.css" />
@@ -41,12 +42,12 @@
                 <div id="wrapper">
                   <div id="slider">
                     {% for movie in movie_list %}
-                      <a href="/nextview?movie_id={{movie.id}}"> 
+                      <a href="/detail?movie_id={{movie.id}}"> 
                         <div class="nowshowing_poster_div">
                           <div>
                             <img class="poster_image" border="0" src="/image?movie_id={{ movie.id }}">
                           </div>
-                          <div class="poster_title"><a id="nowshowing_poster_link" href="/nextview?movie_id={{movie.id}}">  {{movie.name_en}}<a/></div>
+                          <div class="poster_title"><a id="nowshowing_poster_link" href="/detail?movie_id={{movie.id}}">  {{movie.name_en}}<a/></div>
                         </div>
                       <a/>
                     {% endfor %}
@@ -82,21 +83,21 @@
             <div id="comingsoon_movie_div">
               {% for movie in comingsoon_list %}
                 {% if loop.index < 6%}
-                  <a href="/nextview?movie_id={{movie.id}}"> 
+                  <a href="/detail?movie_id={{movie.id}}"> 
                     <div class="comingsoon_poster_div">
                       <div>
                         <img class="poster_image" border="0" src="/image?movie_id={{ movie.id }}">
                       </div>
-                      <div class="poster_title"><a id="comingsoon_poster_link" href="/nextview?movie_id={{movie.id}}">  {{movie.name_en}}</a></div>
+                      <div class="poster_title"><a id="comingsoon_poster_link" href="/detail?movie_id={{movie.id}}">  {{movie.name_en}}</a></div>
                     </div>
                   </a>
                 {% else %}
-                  <a href="/nextview?movie_id={{movie.id}}"> 
+                  <a href="/detail?movie_id={{movie.id}}"> 
                     <div class="comingsoon_poster_lower_div">
                       <div>
                         <img class="poster_image" border="0" src="/image?movie_id={{ movie.id }}">
                       </div>
-                      <div class="poster_title"><a id="comingsoon_poster_link" href="/nextview?movie_id={{movie.id}}">  {{movie.name_en}}</a></div>
+                      <div class="poster_title"><a id="comingsoon_poster_link" href="/detail?movie_id={{movie.id}}">  {{movie.name_en}}</a></div>
                     </div>
                   </a>
                 {% endif %}

@@ -515,7 +515,7 @@ class AddComment(webapp2.RequestHandler):
         self.response.out.write(json.dumps(r))
 
         #redirect view
-        #self.redirect('/nextview?movie_id='+movie_id)
+        #self.redirect('/detail?movie_id='+movie_id)
 
 
 class GetComment(webapp2.RequestHandler):
@@ -662,7 +662,7 @@ class APIEditMovie(webapp2.RequestHandler):
 application = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/sign', NookMai),
-    ('/nextview', NookMaiDetailMovie),
+    ('/detail', NookMaiDetailMovie),
     ('/refresh_data', RefreshData),
     ('/image', ImageCache),
     ('/trailer', GetTrailer),

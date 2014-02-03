@@ -22,10 +22,6 @@ handlers:
 - url: /.*
   script: nooksmai.application
 
-- url: /nooksmaiicon\.ico
-  static_files: nooksmaiicon.ico
-  upload: nooksmaiicon\.ico
-
 
 
 libraries:

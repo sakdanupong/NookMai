@@ -2,6 +2,19 @@
 "http://www.w3.org/TR/html4/strict.dtd">
 {% autoescape true %}
 <html>
+<head>
+	<script>
+function top() {
+	alert('toptoptoptoptoptop');
+    // document.getElementById( 'top' ).scrollIntoView();    
+};
+
+function bottom() {
+    // document.getElementById( 'bottom' ).scrollIntoView();
+    // window.setTimeout( function () { top(); }, 2000 );
+};
+</script>
+</head>
 <body>
 	<div id="header_div">
 		<img id="img_header_logo" src="/images/headers/logo.png" />
@@ -14,12 +27,18 @@
 		<div id="inner_nav_div">
 			<ul><li><a id="nav_home" class="round-corner" href="/">Home</a></li>
 				<li><a id="nav_now_showing" class="round-corner" href="/">Now Showing</a></li>
+				<!-- <li><a class="nav_now_showing" class="round-corner" type="submit" href="javascript:top()" action="javascript:top();">Now Showing</a></li> -->
+
+				<!-- <script type="text/javascript">top();</script> -->
 				<li><a id="nav_coming_soon" class="round-corner" href="/">Coming Soon</a></li>
 				<li><a id="nav_programs" class="round-corner" href="/">Programs</a>
 				</li>
 			</ul>
 		</div>
 	</div>
+
+
+
 </body>
 </html>
 {% endautoescape %}
