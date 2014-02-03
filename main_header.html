@@ -3,16 +3,16 @@
 {% autoescape true %}
 <html>
 <head>
-	<script>
-function top() {
-	alert('toptoptoptoptoptop');
-    // document.getElementById( 'top' ).scrollIntoView();    
+<script>
+
+function scrollToDiv(element) {
+	// $("*").animate({ scrollTop: 0}, { duration: 'slow', easing: 'swing'});
+	var p = document.getElementById(element);
+	$("*").animate({ scrollTop: p.offsetTop}, { duration: 'slow', easing: 'swing'});
 };
 
-function bottom() {
-    // document.getElementById( 'bottom' ).scrollIntoView();
-    // window.setTimeout( function () { top(); }, 2000 );
-};
+
+
 </script>
 </head>
 <body>
@@ -26,11 +26,11 @@ function bottom() {
 	<div id="nav_div">
 		<div id="inner_nav_div">
 			<ul><li><a id="nav_home" class="round-corner" href="/">Home</a></li>
-				<li><a id="nav_now_showing" class="round-corner" href="/">Now Showing</a></li>
-				<!-- <li><a class="nav_now_showing" class="round-corner" type="submit" href="javascript:top()" action="javascript:top();">Now Showing</a></li> -->
+				<!-- <li><a id="nav_now_showing" class="round-corner" href="/">Now Showing</a></li> -->
+				<!-- <li><a id="nav_coming_soon" class="round-corner" href="/">Coming Soon</a></li> -->
+				<li><a id="nav_now_showing" class="round-corner" href="javascript:scrollToDiv('nowshowing_div')">Now Showing</a></li>
+				<li><a id="nav_coming_soon" class="round-corner" href="javascript:scrollToDiv('comingsoon_div')">Coming Soon</a></li>
 
-				<!-- <script type="text/javascript">top();</script> -->
-				<li><a id="nav_coming_soon" class="round-corner" href="/">Coming Soon</a></li>
 				<li><a id="nav_programs" class="round-corner" href="/">Programs</a>
 				</li>
 			</ul>
