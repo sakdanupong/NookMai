@@ -133,7 +133,12 @@
 	<div class="movie-box-comment">
 		<form id="form-comment" action="javascript:submitComment();" method="post">
 		<div class="movie-box-comment-left">
-			<img id="img_avatar" src="/images/details/avatar.png" />
+			<a href='javascript:uploadImage()'><img id="img_avatar" src="/images/details/avatar.png"/></a>
+			<!-- <img id="img_avatar" src="/images/details/avatar.png" /> -->
+
+			<!-- <img id="img_avatar" src="/images/details/avatar.png" href='javascript:uploadContactImage()' /> -->
+			<!-- <a class="btn-post" type="submit" href="javascript:submitComment()" ></a> -->
+
 		</div>
 
 
@@ -172,7 +177,9 @@
 	
 	<div class="comments-template-box">
 		<div class="comments-template-left">
-			<img id="img_avatar" src="/images/details/avatar.png" />
+			<!-- <img id="img_avatar" src="/images/details/avatar.png" /> -->
+			<img alt="" src="/images/details/avatar.png" id="img_avatar" />
+
 			<div class="comments-template-name">{{ comment.author|decodeHTML }}</div>
 		</div>
 		<div class="comments-template-right">
@@ -314,6 +321,26 @@
 		});
 	}
 
+
+
+function uploadImage() {
+	// alert('uploadImage')
+
+    $('#uploadContactImage').dialog({
+        title: 'Change contact image',
+        buttons: {
+            "Upload new image": function() {
+                $(this).dialog("close");
+            },
+            "Remove current image": function() {
+                $(this).dialog("close");
+            },
+            "Cancel": function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+}
 </script>
 
 {% include "/main_footer.html" with context %}
