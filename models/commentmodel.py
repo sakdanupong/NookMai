@@ -13,3 +13,4 @@ class CommentModel(db.Model):
     author = db.StringProperty(indexed=False)
     content = db.StringProperty(indexed=False)
     date = db.DateTimeProperty(auto_now_add=True)
+    emotion_id = db.IntegerProperty()

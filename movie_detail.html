@@ -92,6 +92,23 @@
 		<p>
 		<div style="color:#666666;">{{ movie_data.detail_synopsis_th|decodeHTML }}</div>
 		</p>
+
+		<div style="height: 40px;"></div>
+		<iframe id="youtube_frame" src="{{ movie_data.youtube_url }}" frameborder="0" allowfullscreen style="display: block; width: 855px; height: 510px; margin: 0 auto; border: 0;"></iframe>
+		<script>
+		{% if not movie_data.youtube_url %}
+			$.getJSON( "/trailer?movie_id={{ movie_data.id }}", function(data) { 
+				var youtube_link = "//www.youtube.com/embed/"+data['videoId'];
+				$("#youtube_frame").get(0).contentWindow.location.replace(youtube_link);
+				document.getElementById("youtube_frame").onload = function() {
+						$("#youtube_frame").show();
+				};
+			});
+		{% else %}
+			$("#youtube_frame").show();
+		{% endif %}
+		</script>
+		<div style="height: 20px;"></div>
 </div>
 
 <!-- <div class="movie-spece-1"></div>
@@ -100,12 +117,12 @@
 		<h2>นักแสดง</h2>
 </div> -->
 
-<div class="movie-spece-1"></div>
+<!-- <div class="movie-spece-1"></div>
 
 <div class="movie-youtube">
 	<h2>ตัวอย่างหนัง</h2>
 	<div style="height: 40px;"></div>
-	<iframe id="youtube_frame" src="{{ movie_data.youtube_url }}" frameborder="0" allowfullscreen style="display: block; width: 560px; height: 320px; margin: 0 auto; border: 0;"></iframe>
+	<iframe id="youtube_frame" src="{{ movie_data.youtube_url }}" frameborder="0" allowfullscreen style="display: block; width: 855px; height: 510px; margin: 0 auto; border: 0;"></iframe>
 	<script>
 		{% if not movie_data.youtube_url %}
 			$.getJSON( "/trailer?movie_id={{ movie_data.id }}", function(data) { 
@@ -119,26 +136,29 @@
 			$("#youtube_frame").show();
 		{% endif %}
 	</script>
-</div> 
+</div>  -->
 
-<br/>
-<br/>
-<br/>
-	
+<div style="height: 80px;"></div>
 	
 <div class="movie-comment">
 	
-	<div style="margin: auto; width:900px; height:55px;"><h3>ความคิดเห็น</h3></div>
+	<div class="movie-box-comment-title"><h2>ความคิดเห็น</h2></div>
 	<!-- margin-top:20px; display:block; -->
 	<div class="movie-box-comment">
 		<form id="form-comment" action="javascript:submitComment();" method="post">
 		<div class="movie-box-comment-left">
-			<a href='javascript:uploadImage()'><img id="img_avatar" src="/images/details/avatar.png"/></a>
-			<!-- <img id="img_avatar" src="/images/details/avatar.png" /> -->
+			<!-- <a href='javascript:uploadImage()'><img id="img_avatar" src="/images/details/avatar.png"/></a> -->
+			<img id="img_avatar" src="/images/details/avatar.png" />
 
 			<!-- <img id="img_avatar" src="/images/details/avatar.png" href='javascript:uploadContactImage()' /> -->
 			<!-- <a class="btn-post" type="submit" href="javascript:submitComment()" ></a> -->
 
+			<select name="emotion_test" size="4" id="emotion_review">
+			<option value="1">อารม1</option>
+			<option value="2">อารม2</option>
+			<option value="3">อารม3</option>
+			<option value="4">อารม4</option>
+			</select>
 		</div>
 
 
@@ -146,7 +166,11 @@
 			<div class="movie-box-comment-right-top">
 				<img id="img_icon_msg" src="/images/details/icon_msg.png" />
 				<div class="movie-box-comment-right-bg">
-					<textarea id="comment_content" name="content"></textarea>
+				<!--<script type="text/javascript" src="/textedit/nicEdit/nicEdit.js"></script>
+    			<script type="text/javascript">bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });
+				</script>-->
+				<textarea id="comment_content" name="content"></textarea> 
+				<!-- area3 -->
 				</div>
 			</div>
 
@@ -174,7 +198,7 @@
 	
 <div id="comments-template">
 	{% for comment in comments %}
-	
+	<div style="height:10px;"></div>
 	<div class="comments-template-box">
 		<div class="comments-template-left">
 			<!-- <img id="img_avatar" src="/images/details/avatar.png" /> -->
@@ -183,6 +207,7 @@
 			<div class="comments-template-name">{{ comment.author|decodeHTML }}</div>
 		</div>
 		<div class="comments-template-right">
+			<div class="comments-template-count-comment">ความคิดเห็นที่ {{(movie_data.comment_count - loop.index)+1 }}</div>
 			<div class="comments-template-date-and-time">{{ (comment.date | datetime_lctimezone_format).strftime("%B %d, %Y") }} : {{ (comment.date | datetime_lctimezone_format).strftime("%H:%M") }}น.</div>
 			<div class="comments-template-content">{{ comment.content|decodeHTML }}</div>
 		</div>
@@ -250,10 +275,18 @@
 
 <script>
 	function submitComment() {
-		var author = $("#comment_author").val();
+		// var nicE = new nicEditors.findEditor('comment_content');
+		// var content = nicE.getContent();
 		var content = $("#comment_content").val();
+
+ 		var emotion_review = document.getElementById('emotion_review').value;
+     	alert(emotion_review);
+
+
+		var author = $("#comment_author").val();
 		var recaptcha_challenge_field = $('[name="recaptcha_challenge_field"]').val();
 		var recaptcha_response_field = $('[name="recaptcha_response_field"]').val();
+		// alert(content);
 
 		var postData = {'movie_id':{{ movie_data.id }},
 		 				'author':author,
@@ -262,10 +295,13 @@
 		  				'recaptcha_response_field':recaptcha_response_field,
 		  				};
 		$.getJSON("/api_add_comment", postData, function(data) {
+			// alert(data);
 
 			if(data['success'] == 1){
 				// TODO clear text all
-				$('#comment_content').val("");
+				$('#comment_content').val("");				
+				// nicE.setContent('');
+
 				Recaptcha.reload();
 				// $('#doc_title').val("");
 				// $('#doc_title').val("");
@@ -299,16 +335,18 @@
 		    	// h += '<br/><br/>';
 		    	// h += '</table>';
 		    	// h += '</center>';
-
-
+		    	var count_index = (clist.length)-i;
+		    		
+				h += '<div style="height:10px;"></div>';
 		    	h += '<div class="comments-template-box">';
 		    		h += '<div class="comments-template-left">';
 		    			h += '<img id="img_avatar" src="/images/details/avatar.png" />';
 		    			h += '<div class="comments-template-name">'+author+'</div>';
 		    		h += '</div>';
-		    		h += '<div class="comments-template-right">';
-		    			h += '<div class="comments-template-date-and-time">'+date+':'+time_crate+'น.</div>'
-		    			h += '<div class="comments-template-content">'+content+'</div>'
+		    		h += '<div class="comments-template-right">';		
+						h += '<div class="comments-template-count-comment">ความคิดเห็นที่ '+count_index+'</div>';
+		    			h += '<div class="comments-template-date-and-time">'+date+':'+time_crate+'น.</div>';
+		    			h += '<div class="comments-template-content">'+content+'</div>';
 		    		h += '</div>';
 		    	h += '</div>';
 
