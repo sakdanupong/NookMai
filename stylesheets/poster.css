@@ -1,0 +1,14 @@
+.poster_div {
+    width:132px; 
+    height:244px;
+}
+
+.poster_image {
+	height: 197px;
+}
+
+.poster_title {
+	width: 132px;
+	height: 41px;
+	text-align: center;
+}

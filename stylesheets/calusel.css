@@ -1,0 +1,16 @@
+.btn_calusel {
+	line-height: 24px;
+	background-color: #ffb400;
+	color: #323232;
+	font-size: 14px;
+	font-family: montRegular;
+	text-decoration: none;
+	padding-left: 11px;
+	padding-right: 11px;
+	margin-left: 2.5px;
+	margin-right: 2.5px;
+}
+
+.btn_calusel:hover {
+	background: #cc4d4d;
+}

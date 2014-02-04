@@ -8,7 +8,12 @@
       <link type="text/css" rel="stylesheet" href="/stylesheets/font_family.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/base_document.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/main_body.css" />
+      <link type="text/css" rel="stylesheet" href="/stylesheets/poster.css" />
+      <link type="text/css" rel="stylesheet" href="/stylesheets/calusel.css" />
       <script>
+
+        var current_page = 1;
+
         function myFunction(movie_id, unix_timestamp) {
           var d = new Date(unix_timestamp*1000);
           var curr_date = d.getDate();
@@ -19,8 +24,82 @@
           $('#time_stamp_div'+movie_id).text(converted_time+'');
         }  
 
+        function removeAllChildInDiv(div) {
+          while(div.hasChildNodes() ){
+            div.removeChild(div.lastChild);
+          }
+        }
+
+        function updateNowShowingData(data) {
+          var nowshowing_wraper_div = document.getElementById('nowshowing_wraper');
+          removeAllChildInDiv(nowshowing_wraper_div);
+          var movie_list = data['movie_list'];
+          for (var i = 0; i < movie_list.length; i++) {
+            var movie_id = movie_list[i]['movie_id'];
+            var name_en = movie_list[i]['name_en'];
+            var name_th = movie_list[i]['name_th'];
+            var link = document.createElement('a');
+            link.href = '/detail?movie_id='+movie_id;
+            var wrapper_div = document.createElement('div');
+            var poster_div_id = 'poster_div';
+            if (i > 4) 
+              poster_div_id = 'poster_div_with_top_margin';
+            wrapper_div.className = poster_div_id;
+            link.appendChild(wrapper_div);
+            var image_div = document.createElement('div');
+            var image = document.createElement('img')
+            image.src = '/image?movie_id='+movie_id;
+            image.className = 'poster_image';
+            image_div.appendChild(image);
+            var title_div = document.createElement('div');
+            title_div.className = 'poster_title';
+            var title_link = document.createElement('a');
+            title_link.id = 'nowshowing_poster_link';
+            title_link.href = '/detail?movie_id='+movie_id;
+            title_link.innerHTML = name_en;
+            title_div.appendChild(title_link);
+            wrapper_div.appendChild(image_div);
+            wrapper_div.appendChild(title_div);
+            nowshowing_wraper_div.appendChild(link);
+          }
+        }
+
+        function getNowShowing(page_count) {
+          current_page = page_count;
+          var formData = new FormData();
+          formData.append('page', page_count);
+          // formData.append('_ajax_nonce', importNonce);
+          $.ajax({
+            url: '/api_get_nowshowing',  //Server script to process data
+            type: 'POST',
+            mimeType:"multipart/form-data",
+            dataType: 'json',
+            // xhr: function() {  // Custom XMLHttpRequest
+            // var myXhr = $.ajaxSettings.xhr();
+            // if(myXhr.upload){ // Check if upload property exists
+            //     myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
+            // }
+            // return myXhr;
+            // },
+            // //Ajax events
+            // beforeSend: beforeSendHandler,
+            // success: completeHandler,
+            // error: errorHandler,
+            success: function(json) {
+              updateNowShowingData(json);
+            },
+            // Form data
+            data: formData,
+            //Options to tell jQuery not to process data or worry about content-type.
+            cache: false,
+            contentType: false,
+            processData: false
+          });
+        }
+
         $( document ).ready(function() {
           $('#nav_home').addClass('active');
+          getNowShowing(current_page);
         });
 
       </script>
@@ -28,56 +107,67 @@
     <body>
       {% include "/main_header.html" with context %}
       <div id="main_body_div">
-        <div id="youtube_div"><iframe id="feature_youtube_frame" src="//www.youtube.com/embed/2zqy21Z29ps?autoplay=1&loop=1" frameborder="0" allowfullscreen></iframe></div>
+        <div id="youtube_div"><iframe id="feature_youtube_frame" src="//www.youtube.com/embed/2zqy21Z29ps?autoplay=0&loop=1" frameborder="0" allowfullscreen></iframe></div>
         <div id="nowshowing_div">
           <div id="nowshowing_caption" class="main_page_caption">NOW SHOWING</div>
-            <div id="nowshowing_wraper_and_button_parent">
-              <div id="btn_prev_div">
-                <input type="image" src="/images/mains/icon_previous.png" class="slide_button" id="date-nav-prev">
-              </div>
-              <div id="btn_next_div">
-                <input type="image" src="/images/mains/icon_next.png" class="slide_button" id="date-nav-next">
-              </div>
-              <div id="nowshowing_wraper_parent">
-                <div id="wrapper">
-                  <div id="slider">
-                    {% for movie in movie_list %}
-                      <a href="/detail?movie_id={{movie.id}}"> 
-                        <div class="nowshowing_poster_div">
-                          <div>
-                            <img class="poster_image" border="0" src="/image?movie_id={{ movie.id }}">
-                          </div>
-                          <div class="poster_title"><a id="nowshowing_poster_link" href="/detail?movie_id={{movie.id}}">  {{movie.name_en}}<a/></div>
+          <div id="nowshowing_wraper"></div>
+          <!-- <div id="nowshowing_wraper_and_button_parent">
+            <div id="btn_prev_div">
+              <input type="image" src="/images/mains/icon_previous.png" class="slide_button" id="date-nav-prev">
+            </div>
+            <div id="btn_next_div">
+              <input type="image" src="/images/mains/icon_next.png" class="slide_button" id="date-nav-next">
+            </div>
+            <div id="nowshowing_wraper_parent">
+              <div id="wrapper">
+                <div id="slider">
+                  {% for movie in movie_list %}
+                    <a href="/detail?movie_id={{movie.id}}"> 
+                      <div class="nowshowing_poster_div">
+                        <div>
+                          <img class="poster_image" border="0" src="/image?movie_id={{ movie.id }}">
                         </div>
-                      <a/>
-                    {% endfor %}
-                  </div>
+                        <div class="poster_title"><a id="nowshowing_poster_link" href="/detail?movie_id={{movie.id}}">  {{movie.name_en}}<a/></div>
+                      </div>
+                    <a/>
+                  {% endfor %}
                 </div>
               </div>
             </div>
+          </div> -->
+          <div id="nowshowing_calusel_div">
+            <div class="btn_calusel_div"><a class="btn_calusel" id="all_page_link">Page 1 of 51</a></div>
+            <div class="btn_calusel_div"><a class="btn_calusel">1</a></div>
+            <div class="btn_calusel_div"><a class="btn_calusel">2</a></div>
+            <div class="btn_calusel_div"><a class="btn_calusel">3</a></div>
+            <div class="btn_calusel_div"><a class="btn_calusel">4</a></div>
+            <div class="btn_calusel_div"><a class="btn_calusel">5</a></div>
+            <div class="btn_calusel_div"><a class="btn_calusel" id="next_page_link">Next ></a></div>
+            <div class="btn_calusel_div"><a class="btn_calusel" id="last_page_link">Last >></a></div>
+          </div>
         </div>
         <script>
-          var count = 0;
-          var sliderWidth = 816 + 39;
-          var slider = $('#slider');
-          var sliderCount = $('div', slider).length;
-          slider.width(sliderCount * sliderWidth);
+          // var count = 0;
+          // var sliderWidth = 816 + 39;
+          // var slider = $('#slider');
+          // var sliderCount = $('div', slider).length;
+          // slider.width(sliderCount * sliderWidth);
 
-          $('#date-nav-prev').click(function () { 
-              if (count == 0)
-                return;
-              $('#slider').animate({left: '+='+sliderWidth}, 500);
-              count -=1;
-          });
+          // $('#date-nav-prev').click(function () { 
+          //     if (count == 0)
+          //       return;
+          //     $('#slider').animate({left: '+='+sliderWidth}, 500);
+          //     count -=1;
+          // });
 
-          $('#date-nav-next').click(function () {
-              if (count == 3)
-                return;
-              $('#slider').animate({left: '-='+sliderWidth}, 500);
-              count +=1;
-          });
+          // $('#date-nav-next').click(function () {
+          //     if (count == 3)
+          //       return;
+          //     $('#slider').animate({left: '-='+sliderWidth}, 500);
+          //     count +=1;
+          // });
         </script>
-        <div id="comingsoon_div">
+        <!-- <div id="comingsoon_div">
           <div id="inner_comingsoon_div" class="round-corner">
             <div id="comingsoon_caption" class="main_page_caption">COMING SOON</div>
             <div id="comingsoon_movie_div">
@@ -105,7 +195,7 @@
             </div>
             <div id="comingsoon_more_div"><a href="#"> MORE ></a></div>
           </div>
-        </div>
+        </div> -->
         {% include "/main_footer.html" with context %}
       </div>
 </body>
