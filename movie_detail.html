@@ -147,12 +147,18 @@
 	<div class="movie-box-comment">
 		<form id="form-comment" action="javascript:submitComment();" method="post">
 		<div class="movie-box-comment-left">
-			<a href='javascript:uploadImage()'><img id="img_avatar" src="/images/details/avatar.png"/></a>
-			<!-- <img id="img_avatar" src="/images/details/avatar.png" /> -->
+			<!-- <a href='javascript:uploadImage()'><img id="img_avatar" src="/images/details/avatar.png"/></a> -->
+			<img id="img_avatar" src="/images/details/avatar.png" />
 
 			<!-- <img id="img_avatar" src="/images/details/avatar.png" href='javascript:uploadContactImage()' /> -->
 			<!-- <a class="btn-post" type="submit" href="javascript:submitComment()" ></a> -->
 
+			<select name="emotion_test" size="4" id="emotion_review">
+			<option value="1">อารม1</option>
+			<option value="2">อารม2</option>
+			<option value="3">อารม3</option>
+			<option value="4">อารม4</option>
+			</select>
 		</div>
 
 
@@ -160,7 +166,11 @@
 			<div class="movie-box-comment-right-top">
 				<img id="img_icon_msg" src="/images/details/icon_msg.png" />
 				<div class="movie-box-comment-right-bg">
-					<textarea id="comment_content" name="content"></textarea>
+				<!--<script type="text/javascript" src="/textedit/nicEdit/nicEdit.js"></script>
+    			<script type="text/javascript">bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });
+				</script>-->
+				<textarea id="comment_content" name="content"></textarea> 
+				<!-- area3 -->
 				</div>
 			</div>
 
@@ -265,10 +275,18 @@
 
 <script>
 	function submitComment() {
-		var author = $("#comment_author").val();
+		// var nicE = new nicEditors.findEditor('comment_content');
+		// var content = nicE.getContent();
 		var content = $("#comment_content").val();
+
+ 		var emotion_review = document.getElementById('emotion_review').value;
+     	alert(emotion_review);
+
+
+		var author = $("#comment_author").val();
 		var recaptcha_challenge_field = $('[name="recaptcha_challenge_field"]').val();
 		var recaptcha_response_field = $('[name="recaptcha_response_field"]').val();
+		// alert(content);
 
 		var postData = {'movie_id':{{ movie_data.id }},
 		 				'author':author,
@@ -277,10 +295,13 @@
 		  				'recaptcha_response_field':recaptcha_response_field,
 		  				};
 		$.getJSON("/api_add_comment", postData, function(data) {
+			// alert(data);
 
 			if(data['success'] == 1){
 				// TODO clear text all
-				$('#comment_content').val("");
+				$('#comment_content').val("");				
+				// nicE.setContent('');
+
 				Recaptcha.reload();
 				// $('#doc_title').val("");
 				// $('#doc_title').val("");

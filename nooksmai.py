@@ -492,11 +492,13 @@ class AddComment(webapp2.RequestHandler):
             content = self.request.get('content')
             movie_id = self.request.get('movie_id')
             author = self.request.get('author')
+            # emotion_review_id = self.request.get('emotion_review_id')
             if content :
                 c = CommentModel()
                 c.movie_id = int(movie_id)
                 c.content = cgi.escape(content)
                 c.author = cgi.escape(author)
+                # c.emotion_review_id = cgi.escape(emotion_review_id)
                 movie_object = MovieModel.get_by_key_name(movie_id)
                 db.run_in_transaction(increment_movie_comment_counter, movie_object.key())
                 record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
