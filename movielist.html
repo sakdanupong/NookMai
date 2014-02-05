@@ -12,7 +12,17 @@
       <link type="text/css" rel="stylesheet" href="/stylesheets/calusel.css" />
       <script>
 
+        var current_page_key = "current_page_key";
         var current_page = 1;
+        var all_nowshowing_count = 0;
+        var all_nowshowing_page = 0; 
+        var btn_nowshowing_count = 0;
+
+        var comingsoon_current_page_key = "comingsoon_current_page_key";
+        var comingsoon_current_page = 1;
+        var all_comingsoon_count = 0;
+        var all_comingsoon_page = 0; 
+        var btn_comingsoon_count = 0;
 
         function myFunction(movie_id, unix_timestamp) {
           var d = new Date(unix_timestamp*1000);
@@ -64,8 +74,43 @@
           }
         }
 
+        function updateComingSoonData(data) {
+          var comingsoon_wraper_div = document.getElementById('comingsoon_wraper');
+          removeAllChildInDiv(comingsoon_wraper_div);
+          var movie_list = data['movie_list'];
+          for (var i = 0; i < movie_list.length; i++) {
+            var movie_id = movie_list[i]['movie_id'];
+            var name_en = movie_list[i]['name_en'];
+            var name_th = movie_list[i]['name_th'];
+            var link = document.createElement('a');
+            link.href = '/detail?movie_id='+movie_id;
+            var wrapper_div = document.createElement('div');
+            var poster_div_id = 'poster_div';
+            if (i > 4) 
+              poster_div_id = 'poster_div_with_top_margin';
+            wrapper_div.className = poster_div_id;
+            link.appendChild(wrapper_div);
+            var image_div = document.createElement('div');
+            var image = document.createElement('img')
+            image.src = '/image?movie_id='+movie_id;
+            image.className = 'poster_image';
+            image_div.appendChild(image);
+            var title_div = document.createElement('div');
+            title_div.className = 'comingsoon_poster_title';
+            var title_link = document.createElement('a');
+            title_link.id = 'nowshowing_poster_link';
+            title_link.href = '/detail?movie_id='+movie_id;
+            title_link.innerHTML = name_en;
+            title_div.appendChild(title_link);
+            wrapper_div.appendChild(image_div);
+            wrapper_div.appendChild(title_div);
+            comingsoon_wraper_div.appendChild(link);
+          }
+        }
+
         function getNowShowing(page_count) {
           current_page = page_count;
+          updatePositionNowShowingCalusel();
           var formData = new FormData();
           formData.append('page', page_count);
           // formData.append('_ajax_nonce', importNonce);
@@ -74,32 +119,224 @@
             type: 'POST',
             mimeType:"multipart/form-data",
             dataType: 'json',
-            // xhr: function() {  // Custom XMLHttpRequest
-            // var myXhr = $.ajaxSettings.xhr();
-            // if(myXhr.upload){ // Check if upload property exists
-            //     myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
-            // }
-            // return myXhr;
-            // },
-            // //Ajax events
-            // beforeSend: beforeSendHandler,
-            // success: completeHandler,
-            // error: errorHandler,
             success: function(json) {
               updateNowShowingData(json);
             },
-            // Form data
             data: formData,
-            //Options to tell jQuery not to process data or worry about content-type.
             cache: false,
             contentType: false,
             processData: false
           });
         }
 
-        $( document ).ready(function() {
+        function getComingSoon(page_count) {
+          comingsoon_current_page = page_count;
+          updatePositionComingSoonCalusel();
+          var formData = new FormData();
+          formData.append('page', page_count);
+          $.ajax({
+            url: '/api_get_comingsoon',  //Server script to process data
+            type: 'POST',
+            mimeType:"multipart/form-data",
+            dataType: 'json',
+            success: function(json) {
+              updateComingSoonData(json);
+            },
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false
+          });
+        }
+
+        function getNowShowingCalusel(index) {
+          var searchEles = document.getElementById("page_btn_div").children;
+          var btnDiv = searchEles[index];
+          var calusel = btnDiv.children[0];
+          return calusel;
+        }
+
+        function getComingSoonCalusel(index) {
+          var searchEles = document.getElementById("comingsoon_page_btn_div").children;
+          var btnDiv = searchEles[index];
+          var calusel = btnDiv.children[0];
+          return calusel;
+        }
+
+        function removeAllNowShowingCaluselHiligh() {
+          var searchEles = document.getElementById("page_btn_div").children;
+          for(var i = 0; i < searchEles.length; i++) {
+            var calusel = getNowShowingCalusel(i);
+            calusel.className = "";
+            calusel.className = "btn_calusel";
+          }
+        }
+
+        function removeAllComingSoonCaluselHiligh() {
+          var searchEles = document.getElementById("comingsoon_page_btn_div").children;
+          for(var i = 0; i < searchEles.length; i++) {
+            var calusel = getComingSoonCalusel(i);
+            calusel.className = "";
+            calusel.className = "btn_calusel";
+          }
+        }
+
+        function updatePositionNowShowingCalusel() {
+          if (current_page > 1)
+            $('#prev_page_link').show();
+          else
+            $('#prev_page_link').hide();
+
+          if (current_page == all_nowshowing_page) {
+            $('#next_page_link').hide();
+            $('#last_page_link').hide();
+          } else {
+            $('#last_page_link').show();
+            $('#next_page_link').show();
+          }
+
+          $("#prev_page_link").attr("href", "javascript:getNowShowing("+ (current_page - 1) +");");
+          $("#next_page_link").attr("href", "javascript:getNowShowing("+ (current_page + 1) +");");
+          $("#last_page_link").attr("href", "javascript:getNowShowing("+ all_nowshowing_page +");");
+
+          var allPageLink = document.getElementById('all_page_link');
+          allPageLink.innerHTML = 'Page '+ current_page + ' of ' +  all_nowshowing_page;
+          removeAllNowShowingCaluselHiligh();
+          if (btn_nowshowing_count >= 5) {
+            var current_margin = all_nowshowing_page - current_page;
+            if (current_margin < 4) {
+              var startPage = all_nowshowing_page - 4;
+              renewNowShowingCalusel(startPage);
+            } else {
+              renewNowShowingCalusel(current_page);
+            }
+          } 
+
+          var searchEles = document.getElementById("page_btn_div").children;
+          for(var i = 0; i < searchEles.length; i++) {
+            var calusel = getNowShowingCalusel(i);
+            var a = parseInt(calusel.innerHTML);
+            if (a == current_page) {
+              calusel.className = "";
+              calusel.className = "btn_calusel_select";
+            }
+          }
+        }
+
+        function updatePositionComingSoonCalusel() {
+          if (comingsoon_current_page > 1)
+            $('#comingsoon_prev_page_link').show();
+          else
+            $('#comingsoon_prev_page_link').hide();
+
+          if (comingsoon_current_page == all_comingsoon_page) {
+            $('#comingsoon_next_page_link').hide();
+            $('#comingsoon_last_page_link').hide();
+          } else {
+            $('#comingsoon_last_page_link').show();
+            $('#comingsoon_next_page_link').show();
+          }
+
+          $("#comingsoon_prev_page_link").attr("href", "javascript:getComingSoon("+ (comingsoon_current_page - 1) +");");
+          $("#comingsoon_next_page_link").attr("href", "javascript:getComingSoon("+ (comingsoon_current_page + 1) +");");
+          $("#comingsoon_last_page_link").attr("href", "javascript:getComingSoon("+ all_comingsoon_page +");");
+
+          var allPageLink = document.getElementById('comingsoon_all_page_link');
+          allPageLink.innerHTML = 'Page '+ comingsoon_current_page + ' of ' +  all_comingsoon_page;
+          removeAllComingSoonCaluselHiligh();
+          if (btn_comingsoon_count >= 5) {
+            var current_margin = all_comingsoon_page - comingsoon_current_page;
+            if (current_margin < 4) {
+              var startPage = all_comingsoon_page - 4;
+              renewComingSoonCalusel(startPage);
+            } else {
+              renewComingSoonCalusel(comingsoon_current_page);
+            }
+          } 
+
+          var searchEles = document.getElementById("comingsoon_page_btn_div").children;
+          for(var i = 0; i < searchEles.length; i++) {
+            var calusel = getComingSoonCalusel(i);
+            var a = parseInt(calusel.innerHTML);
+            if (a == comingsoon_current_page) {
+              calusel.className = "";
+              calusel.className = "btn_calusel_select";
+            }
+          }
+        }
+
+        function renewNowShowingCalusel(first_index) {
+          var searchEles = document.getElementById("page_btn_div").children;
+          for(var i = 0; i < searchEles.length; i++) {
+            var calusel = getNowShowingCalusel(i);
+            var index = (first_index+i);
+            calusel.innerHTML = ""+ index;
+            calusel.href = "javascript:getNowShowing("+ index +");";
+          }
+        }
+
+        function renewComingSoonCalusel(first_index) {
+          var searchEles = document.getElementById("comingsoon_page_btn_div").children;
+          for(var i = 0; i < searchEles.length; i++) {
+            var calusel = getComingSoonCalusel(i);
+            var index = (first_index+i);
+            calusel.innerHTML = ""+ index;
+            calusel.href = "javascript:getComingSoon("+ index +");";
+          }
+        }
+
+        function initPaginationButton() {
+          all_nowshowing_count = {{record_object.nowshowing_count}};
+          all_nowshowing_page = all_nowshowing_count / {{nowshowing_per_page}};
+          all_nowshowing_page = Math.ceil(all_nowshowing_page);
+          btn_nowshowing_count = 5;
+          if (all_nowshowing_page < 5)
+            btn_nowshowing_count = all_nowshowing_page;
+          var btnParentDiv = document.getElementById('page_btn_div');
+          var allPageLink = document.getElementById('all_page_link');
+          allPageLink.innerHTML = 'Page '+ current_page + ' of ' +  all_nowshowing_page;
+          for (var i = 0; i < btn_nowshowing_count; i++) {
+            var btnWrapperDiv = document.createElement('div');
+            btnWrapperDiv.className = 'btn_calusel_div';
+            var btnDiv = document.createElement('a');
+            var pageIndex = (current_page + i);
+            btnDiv.innerHTML = ''+ pageIndex;
+            btnDiv.href = "javascript:getNowShowing("+ pageIndex +");";
+            btnWrapperDiv.appendChild(btnDiv);
+            btnParentDiv.appendChild(btnWrapperDiv);
+          }
+
+        }
+
+        function initComingsoonPaginationButton() {
+          all_comingsoon_count = {{record_object.comingsoon_count}};
+          all_comingsoon_page = all_comingsoon_count / {{comingsoon_per_page}};
+          all_comingsoon_page = Math.ceil(all_comingsoon_page);
+          btn_comingsoon_count = 5;
+          if (all_comingsoon_page < 5)
+            btn_comingsoon_count = all_comingsoon_page;
+
+          var btnParentDiv = document.getElementById('comingsoon_page_btn_div');
+          var allPageLink = document.getElementById('comingsoon_all_page_link');
+          allPageLink.innerHTML = 'Page '+ comingsoon_current_page + ' of ' +  all_comingsoon_page;
+          for (var i = 0; i < btn_comingsoon_count; i++) {
+            var btnWrapperDiv = document.createElement('div');
+            btnWrapperDiv.className = 'btn_calusel_div';
+            var btnDiv = document.createElement('a');
+            var pageIndex = (comingsoon_current_page + i);
+            btnDiv.innerHTML = ''+ pageIndex;
+            btnDiv.href = "javascript:getComingSoon("+ pageIndex +");";
+            btnWrapperDiv.appendChild(btnDiv);
+            btnParentDiv.appendChild(btnWrapperDiv);
+          }
+        }
+
+        $(document).ready(function() {
           $('#nav_home').addClass('active');
+          initPaginationButton();
+          initComingsoonPaginationButton();
           getNowShowing(current_page);
+          getComingSoon(comingsoon_current_page);
         });
 
       </script>
@@ -135,13 +372,10 @@
               </div>
             </div>
           </div> -->
-          <div id="nowshowing_calusel_div">
-            <div class="btn_calusel_div"><a class="btn_calusel" id="all_page_link">Page 1 of 51</a></div>
-            <div class="btn_calusel_div"><a class="btn_calusel">1</a></div>
-            <div class="btn_calusel_div"><a class="btn_calusel">2</a></div>
-            <div class="btn_calusel_div"><a class="btn_calusel">3</a></div>
-            <div class="btn_calusel_div"><a class="btn_calusel">4</a></div>
-            <div class="btn_calusel_div"><a class="btn_calusel">5</a></div>
+          <div class="calusel_div">
+            <div class="btn_calusel_div"><a class="btn_calusel" id="all_page_link"></a></div>
+            <div class="btn_calusel_div"><a class="btn_calusel" id="prev_page_link">< Prev</a></div>
+            <div id="page_btn_div"></div>
             <div class="btn_calusel_div"><a class="btn_calusel" id="next_page_link">Next ></a></div>
             <div class="btn_calusel_div"><a class="btn_calusel" id="last_page_link">Last >></a></div>
           </div>
@@ -167,10 +401,18 @@
           //     count +=1;
           // });
         </script>
-        <!-- <div id="comingsoon_div">
+        <div id="comingsoon_div">
           <div id="inner_comingsoon_div" class="round-corner">
             <div id="comingsoon_caption" class="main_page_caption">COMING SOON</div>
-            <div id="comingsoon_movie_div">
+            <div id="comingsoon_wraper"></div>
+            <div class="calusel_div">
+              <div class="btn_calusel_div"><a class="btn_calusel" id="comingsoon_all_page_link"></a></div>
+              <div class="btn_calusel_div"><a class="btn_calusel" id="comingsoon_prev_page_link">< Prev</a></div>
+              <div id="comingsoon_page_btn_div"></div>
+              <div class="btn_calusel_div"><a class="btn_calusel" id="comingsoon_next_page_link">Next ></a></div>
+              <div class="btn_calusel_div"><a class="btn_calusel" id="comingsoon_last_page_link">Last >></a></div> 
+            </div>
+            <!-- <div id="comingsoon_movie_div">
               {% for movie in comingsoon_list %}
                 {% if loop.index < 6%}
                   <a href="/detail?movie_id={{movie.id}}"> 
@@ -192,10 +434,10 @@
                   </a>
                 {% endif %}
               {% endfor %}
-            </div>
-            <div id="comingsoon_more_div"><a href="#"> MORE ></a></div>
+            </div> -->
+            <!-- <div id="comingsoon_more_div"><a href="#"> MORE ></a></div> -->
           </div>
-        </div> -->
+        </div>
         {% include "/main_footer.html" with context %}
       </div>
 </body>

@@ -100,25 +100,43 @@ JINJA_ENVIRONMENT.filters['decodeHTML']=decodeHTML
 JINJA_ENVIRONMENT.filters['datetime_lctimezone_format']=datetime_lctimezone_format
 
 
-MAINPAGE_DATA_PER_PAGE = 5
+NOWSHOWING_DATA_PER_PAGE = 15
+COMINGSOON_PER_PAGE = 10
 
 class MainPage(webapp2.RequestHandler):
 
     def get(self):
         comingsoon_query = MovieModel.all().order('release_time_timestamp')
         coming_list = comingsoon_query.filter('is_coming_soon =', 1).fetch(limit=10)
+        record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
         template_values = {
              # 'movie_list': movie_list,
              'comingsoon_list' : coming_list,
+             'record_object' : record_object,
+             'nowshowing_per_page' : NOWSHOWING_DATA_PER_PAGE, 
+             'comingsoon_per_page' : COMINGSOON_PER_PAGE,
         }
         template = JINJA_ENVIRONMENT.get_template('movielist.html')
         self.response.write(template.render(template_values))
 
 class RefreshData(webapp2.RequestHandler):
+
+
     def increment_record_movie_counter(self, c_key):
         c = db.get(c_key)
         c.movie_count += 1
         self.new_id = c.movie_count
+        c.put()
+
+
+    def increment_record_nowshowing_counter(self, c_key):
+        c = db.get(c_key)
+        c.nowshowing_count += 1
+        c.put()
+
+    def increment_record_comingsoon_counter(self, c_key):
+        c = db.get(c_key)
+        c.comingsoon_count += 1
         c.put()
 
     def get(self):
@@ -137,6 +155,7 @@ class RefreshData(webapp2.RequestHandler):
             q.filter('original_id =', m['id'])
             if q.count():
                 continue
+            db.run_in_transaction(self.increment_record_nowshowing_counter, record_object.key())
             db.run_in_transaction(self.increment_record_movie_counter, record_object.key())
             movie_id = str(self.new_id)
             e = MovieModel.get_or_insert(key_name=movie_id)
@@ -224,8 +243,9 @@ class RefreshData(webapp2.RequestHandler):
                 q.filter('original_id =', m['id'])
                 if q.count():
                   continue
-                record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)         
-                db.run_in_transaction(self.increment_record_movie_counter, record_object.key())
+                record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
+                db.run_in_transaction(self.increment_record_movie_counter, record_object.key())   
+                db.run_in_transaction(self.increment_record_comingsoon_counter, record_object.key())
                 movie_id = str(self.new_id)
                 e = MovieModel.get_or_insert(key_name=movie_id)
                 e.coming_month_en = g_coming_month_en
@@ -664,10 +684,10 @@ class GetNowShowing(webapp2.RequestHandler):
     def process(self):
         page = int(self.request.get('page'))
         page -= 1
-        data_per_page = 20
+        data_per_page = 15
         l_offset = page * data_per_page
         movie_query = MovieModel.all().order('-release_time_timestamp').filter('is_coming_soon =', 0)
-        movie_list = movie_query.run(offset=l_offset, limit=15)
+        movie_list = movie_query.run(offset=l_offset, limit=data_per_page)
         list = []
         for movie in movie_list:
             movie_json = {
@@ -677,6 +697,33 @@ class GetNowShowing(webapp2.RequestHandler):
             }
             list.append(movie_json)
 
+        r = {
+            'movie_list' : list,   
+        }
+
+        self.response.out.write(json.dumps(r))
+    # movie_list = movie_query.filter('is_coming_soon =', 0).fetch(limit=datape)
+
+class GetComingSoon(webapp2.RequestHandler):
+    def get(self):
+        self.process()
+    def post(self):
+        self.process()
+    def process(self):
+        page = int(self.request.get('page'))
+        page -= 1
+        data_per_page = 10
+        l_offset = page * data_per_page
+        movie_query = MovieModel.all().order('-release_time_timestamp').filter('is_coming_soon =', 1)
+        movie_list = movie_query.run(offset=l_offset, limit=data_per_page)
+        list = []
+        for movie in movie_list:
+            movie_json = {
+                'movie_id' : movie.id,
+                'name_en' : movie.name_en,
+                'name_th' : movie.name_th,
+            }
+            list.append(movie_json)
         r = {
             'movie_list' : list,   
         }
@@ -702,6 +749,7 @@ application = webapp2.WSGIApplication([
     ('/upload_poster', UploadAndCacheImage),
     ('/reset_counter', ResetCounter),
     ('/api_get_nowshowing', GetNowShowing),
+    ('/api_get_comingsoon', GetComingSoon),
 ], debug=True)
 
 
