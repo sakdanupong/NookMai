@@ -33,7 +33,6 @@ body {
    padding-bottom: 10px;
    border-bottom:1px solid #717171;
 }
-
 .movie-synopsis-en {
    padding-top: 10px;
 	margin: 0 auto;
@@ -47,24 +46,18 @@ body {
    width:550px; 
    float:right; 
    color:#666666;
-   /*clear:both;*/
    font-family: montRegular;
 }
 .movie-director-writers-stars-left {
    width: 110px;
-   /*height:35px;*/
    float: left;
    /*background-color: #232323;*/
-
 }
 .movie-director-writers-stars-right {
    width: 440px;
-   /*height:35px;*/
    float: left;
    /*background-color: #232323;*/
 }
-
-
 .movie-synopsis-th {
 	margin: 0 auto;
 	width:860px; 
@@ -91,8 +84,18 @@ body {
 	height:400px; 
 }
 
-/*coment*/
 
+
+
+
+
+
+
+
+
+
+
+/*coment*/
 .movie-comment {
 
    background-color: #d0d0d0;
@@ -245,6 +248,15 @@ iframe[src="about:blank"]{display:none;}
 
 
 
+
+
+
+
+
+
+
+
+
 /*user comment*/
 #comments-template {
    margin: 0 auto;
@@ -252,8 +264,6 @@ iframe[src="about:blank"]{display:none;}
    background-color: #d0d0d0;
    clear:both;
 }
-
-
 .comments-template-box {
    border-bottom: 1px solid #F0F0F0;
    display: block;
@@ -268,12 +278,10 @@ iframe[src="about:blank"]{display:none;}
    border-radius: 10px;
 
 }
-
 .comments-template-left {
    width: 80px;
    float: left;
 }
-
 .comments-template-name {
    float: left;
    color: #cc4d4d;
@@ -282,7 +290,6 @@ iframe[src="about:blank"]{display:none;}
    text-align:center;
    font-size:14px;
 }
-
 .comments-template-right{
 /*   width: 720px;
    float: left;
@@ -290,7 +297,6 @@ iframe[src="about:blank"]{display:none;}
    float: left;
    width: 780px;
 }
-
 .comments-template-count-comment {
    float: left;
    /*width: 720px;*/
@@ -302,7 +308,6 @@ iframe[src="about:blank"]{display:none;}
    padding-bottom: 4px;
    color: #808080;
 }
-
 .comments-template-date-and-time {
    float: left;
    /*width: 720px;*/
@@ -314,9 +319,6 @@ iframe[src="about:blank"]{display:none;}
    padding-bottom: 4px;
    color: #808080;
 }
-
-
-
 .comments-template-content {
    float: left;
    color: #242424;
@@ -327,7 +329,6 @@ iframe[src="about:blank"]{display:none;}
    padding-top: 8px;
    /*margin-right: 10px;*/
 }
-
 .comments-template-box-footer {
    margin: 0 auto;
    width: 1200px;
@@ -336,6 +337,15 @@ iframe[src="about:blank"]{display:none;}
    clear:both;
    display: block;
 }
+
+
+
+
+
+
+
+
+
 
 
 /*spece*/
@@ -355,6 +365,13 @@ iframe[src="about:blank"]{display:none;}
    float:right; 
    /*clear:both;*/
 }
+
+
+
+
+
+
+
 
 /*h*/
 h2 {

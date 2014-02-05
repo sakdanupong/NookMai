@@ -15,6 +15,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>ข้อมูลหนัง</title>
 	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+
+	<script type="text/JavaScript">
+	function setsmile(what) {
+	document.emotion.messages.value = document.emotion.elements.messages.value+" "+what;
+	document.emotion.messages.focus();
+	}
+</script>
 </head>
 
 
@@ -153,12 +160,43 @@
 			<!-- <img id="img_avatar" src="/images/details/avatar.png" href='javascript:uploadContactImage()' /> -->
 			<!-- <a class="btn-post" type="submit" href="javascript:submitComment()" ></a> -->
 
-			<select name="emotion_test" size="4" id="emotion_review">
-			<option value="1">อารม1</option>
+			<select name="emotion_review" size="4" id="emotion_review_id">
+			<option value="1" selected="selected">อารม1</option>
 			<option value="2">อารม2</option>
 			<option value="3">อารม3</option>
 			<option value="4">อารม4</option>
 			</select>
+
+<!-- 			<select name="emotion_comment" size="4" id="emotion_comment_id" action="">
+			<option value="1">อีโม1</option>
+			<option value="2">อีโม2</option>
+			<option value="3">อีโม3</option>
+			<option value="4">อีโม4</option>
+			</select> -->
+			<!-- <input name="action" type="hidden" value="Add"> -->
+			<!-- <from id="emotion_comment_id"> -->
+
+			<script type="text/javascript">
+
+  				function clickAddEmo(id)	
+  				{
+  					var content = $("#comment_content").val();
+  					var path_emo = '<img src="/images/details/emotion/'+id+'" border="0">'
+    		 		$('#comment_content').val(content+path_emo);
+  				}
+
+			</script>
+				<a href="javascript:;" id="angry.gif" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/angry.gif" width="20" height="20" border="0"></a>
+				<a href="javascript:;" id="cry.gif" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/cry.gif" width="20" height="20" border="0"></a>
+				<a href="javascript:;" id="huh.gif" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/huh.gif" width="20" height="20" border="0"></a>
+				<a href="javascript:;" id="wink.gif" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/wink.gif" width="20" height="20" border="0"></a>
+			<!-- </from> -->
+
+
+
+
+		<!-- <a href="#" id="test" onclick="testclick(this.id);">Click</a> -->
+
 		</div>
 
 
@@ -202,8 +240,10 @@
 	<div class="comments-template-box">
 		<div class="comments-template-left">
 			<!-- <img id="img_avatar" src="/images/details/avatar.png" /> -->
-			<img alt="" src="/images/details/avatar.png" id="img_avatar" />
+			<!-- <img alt="" src="/images/details/avatar.png" id="img_avatar" /> -->
 
+			
+			<img id="img_avatar" src="/images/details/avatar-emotion{{comment.emotion_review_id}}.png" />
 			<div class="comments-template-name">{{ comment.author|decodeHTML }}</div>
 		</div>
 		<div class="comments-template-right">
@@ -274,13 +314,18 @@
 
 
 <script>
+	function add_text(x){
+		document.comment_content.message.value = document.comment_content.elements.message.value+" "+x;
+		document.comment_content.message.focus();
+	}
+
 	function submitComment() {
 		// var nicE = new nicEditors.findEditor('comment_content');
 		// var content = nicE.getContent();
 		var content = $("#comment_content").val();
 
- 		var emotion_review = document.getElementById('emotion_review').value;
-     	alert(emotion_review);
+ 		var emotion_review_id = document.getElementById('emotion_review_id').value;
+     	// alert(emotion_review_id);
 
 
 		var author = $("#comment_author").val();
@@ -291,6 +336,7 @@
 		var postData = {'movie_id':{{ movie_data.id }},
 		 				'author':author,
 		  				'content':content,
+		  				'emotion_review_id':emotion_review_id,
 		  				'recaptcha_challenge_field':recaptcha_challenge_field,
 		  				'recaptcha_response_field':recaptcha_response_field,
 		  				};
@@ -326,6 +372,7 @@
 		    	var content = c['content'];
 		    	var date = c['date'];
 		    	var time_crate = c['time_crate'];
+		    	var emotion_review_id = c['emotion_review_id'];
 		    	// h += '<center>';
 		    	// h += '<table width="900" border="1" cellpadding="0" cellspacing="5" bordercolor="#333333">';
 		    	// h += '<br/><br/>';
@@ -339,8 +386,11 @@
 		    		
 				h += '<div style="height:10px;"></div>';
 		    	h += '<div class="comments-template-box">';
-		    		h += '<div class="comments-template-left">';
-		    			h += '<img id="img_avatar" src="/images/details/avatar.png" />';
+		    		h += '<div class="comments-template-left">'; 
+		    			if (emotion_review_id != 0) {
+			    			h += '<img id="img_avatar" src="/images/details/avatar-emotion'+emotion_review_id+'.png" />';
+
+		    			}else {h += '<img id="img_avatar" src="/images/details/avatar.png" />';};
 		    			h += '<div class="comments-template-name">'+author+'</div>';
 		    		h += '</div>';
 		    		h += '<div class="comments-template-right">';		
