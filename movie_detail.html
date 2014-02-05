@@ -181,15 +181,22 @@
   				function clickAddEmo(id)	
   				{
   					var content = $("#comment_content").val();
-  					var path_emo = '<img src="/images/details/emotion/'+id+'" border="0">'
-    		 		$('#comment_content').val(content+path_emo);
+  					// var path_emo = '<img src="/images/details/emotion/'+id+'" border="0">'
+    		 		$('#comment_content').val(content+id);
   				}
-
+  			
 			</script>
-				<a href="javascript:;" id="angry.gif" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/angry.gif" width="20" height="20" border="0"></a>
-				<a href="javascript:;" id="cry.gif" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/cry.gif" width="20" height="20" border="0"></a>
-				<a href="javascript:;" id="huh.gif" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/huh.gif" width="20" height="20" border="0"></a>
-				<a href="javascript:;" id="wink.gif" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/wink.gif" width="20" height="20" border="0"></a>
+
+			<!--emo
+				:emo1_01:
+				:emo1_02:
+				:emo1_03:
+				:emo1_04:
+			-->
+				<a href="javascript:;" id=":emo1_01:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/angry.gif" width="20" height="20" border="0"></a>
+				<a href="javascript:;" id=":emo1_02:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/cry.gif" width="20" height="20" border="0"></a>
+				<a href="javascript:;" id=":emo1_03:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/huh.gif" width="20" height="20" border="0"></a>
+				<a href="javascript:;" id=":emo1_04:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/wink.gif" width="20" height="20" border="0"></a>
 			<!-- </from> -->
 
 
