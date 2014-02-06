@@ -24,6 +24,32 @@
         var all_comingsoon_page = 0; 
         var btn_comingsoon_count = 0;
 
+
+        function nowShowingFadeIn() {
+          setTimeout(function() {
+            $('#nowshowing_wraper').fadeIn();
+            $('#nowshowing_wraper').show();
+          }, 250);
+        }
+
+        function nowShowingFadeOut() {
+          $('#nowshowing_wraper').hide();
+          // setTimeout(function() {
+          //   $('#nowshowing_wraper').fadeOut();
+          // }, 500);
+        }
+
+        function comingSoonFadeIn() {
+          setTimeout(function() {
+            $('#comingsoon_wraper').fadeIn();
+            $('#comingsoon_wraper').show();
+          }, 250);
+        }
+
+        function comingSoonFadeOut() {
+          $('#comingsoon_wraper').hide();
+        }
+
         function myFunction(movie_id, unix_timestamp) {
           var d = new Date(unix_timestamp*1000);
           var curr_date = d.getDate();
@@ -72,6 +98,7 @@
             wrapper_div.appendChild(title_div);
             nowshowing_wraper_div.appendChild(link);
           }
+          nowShowingFadeIn();
         }
 
         function updateComingSoonData(data) {
@@ -106,9 +133,11 @@
             wrapper_div.appendChild(title_div);
             comingsoon_wraper_div.appendChild(link);
           }
+          comingSoonFadeIn();
         }
 
         function getNowShowing(page_count) {
+          nowShowingFadeOut();
           current_page = page_count;
           updatePositionNowShowingCalusel();
           var formData = new FormData();
@@ -130,6 +159,7 @@
         }
 
         function getComingSoon(page_count) {
+          comingSoonFadeOut();
           comingsoon_current_page = page_count;
           updatePositionComingSoonCalusel();
           var formData = new FormData();
@@ -347,7 +377,9 @@
         <div id="youtube_div"><iframe id="feature_youtube_frame" src="//www.youtube.com/embed/2zqy21Z29ps?autoplay=0&loop=1" frameborder="0" allowfullscreen></iframe></div>
         <div id="nowshowing_div">
           <div id="nowshowing_caption" class="main_page_caption">NOW SHOWING</div>
-          <div id="nowshowing_wraper"></div>
+          <div id="nowshowing_wraper_div">
+            <div id="nowshowing_wraper"></div>
+          </div>
           <!-- <div id="nowshowing_wraper_and_button_parent">
             <div id="btn_prev_div">
               <input type="image" src="/images/mains/icon_previous.png" class="slide_button" id="date-nav-prev">
@@ -404,7 +436,9 @@
         <div id="comingsoon_div">
           <div id="inner_comingsoon_div" class="round-corner">
             <div id="comingsoon_caption" class="main_page_caption">COMING SOON</div>
-            <div id="comingsoon_wraper"></div>
+            <div id="comingsoon_wraper_div">
+              <div id="comingsoon_wraper"></div>
+            </div>
             <div class="calusel_div">
               <div class="btn_calusel_div"><a class="btn_calusel" id="comingsoon_all_page_link"></a></div>
               <div class="btn_calusel_div"><a class="btn_calusel" id="comingsoon_prev_page_link">< Prev</a></div>

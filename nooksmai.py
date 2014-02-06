@@ -183,47 +183,7 @@ class RefreshData(webapp2.RequestHandler):
             e.thumbnail = movie_trailer['thumbnail']
             e.types = m['types']
             e.cinemas = m['cinemas']
-            
-            url = 'http://onlinepayment.majorcineplex.com/api/1.0/movie_detail?w=320&h=480&x=2&o=0&pf=iOS&mid=iPhone%20Simulator&indent=0&deflate=1&appv=2.6&rev=2&movie_id='+str(m['id'])
-            result = urlfetch.fetch(url)
-            mJson = json.loads(result.content)
-            
-            movie_detail = mJson['detail']
-            e.detail_duration = movie_detail['duration']
-            e.detail_rate = movie_detail['rate']
-            e.detail_rateWarning = movie_detail['rateWarning']
-            
-            releasedate = movie_detail['releasedate']
-            e.detail_timestamp = releasedate['timestamp']
-            e.detail_text = releasedate['text']
-
-            synopsis = movie_detail['synopsis']
-            e.detail_synopsis_en = synopsis['en']
-            e.detail_synopsis_th = synopsis['th']
-
-            e.detail_image = movie_detail['image']
-
-            trailer = movie_detail['trailer']
-            e.detail_yt_id = trailer['yt_id']
-            e.detail_rtsp = trailer['rtsp']
-            e.detail_thumbnail = trailer['thumbnail']
-
-            genre = movie_detail['genre']
-            e.detail_genre_en = genre['en']
-            e.detail_genre_th = genre['th']
-            
-            director = movie_detail['director']
-            e.detail_director_en = director['en']
-            e.detail_director_th = director['th']
-            
-            cast = movie_detail['cast']
-            e.detail_cast_en = cast['en']
-            e.detail_cast_th = cast['th']
             e.put()
-
-        data = memcache.get(REFRESH_DATA_CACHE)
-        if data is not None:
-            memcache.delete(key=REFRESH_DATA_CACHE)
 
         # coming_soon
 
@@ -275,43 +235,11 @@ class RefreshData(webapp2.RequestHandler):
                 e.thumbnail = movie_trailer['thumbnail']
                 e.types = m['types']
                 e.cinemas = m['cinemas']
-                
-                url = 'http://onlinepayment.majorcineplex.com/api/1.0/movie_detail?w=320&h=480&x=2&o=0&pf=iOS&mid=iPhone%20Simulator&indent=0&deflate=1&appv=2.6&rev=2&movie_id='+str(m['id'])
-                result = urlfetch.fetch(url)
-                mJson = json.loads(result.content)
-                
-                movie_detail = mJson['detail']
-                e.detail_duration = movie_detail['duration']
-                e.detail_rate = movie_detail['rate']
-                e.detail_rateWarning = movie_detail['rateWarning']
-                
-                releasedate = movie_detail['releasedate']
-                e.detail_timestamp = releasedate['timestamp']
-                e.detail_text = releasedate['text']
-
-                synopsis = movie_detail['synopsis']
-                e.detail_synopsis_en = synopsis['en']
-                e.detail_synopsis_th = synopsis['th']
-
-                e.detail_image = movie_detail['image']
-
-                trailer = movie_detail['trailer']
-                e.detail_yt_id = trailer['yt_id']
-                e.detail_rtsp = trailer['rtsp']
-                e.detail_thumbnail = trailer['thumbnail']
-
-                genre = movie_detail['genre']
-                e.detail_genre_en = genre['en']
-                e.detail_genre_th = genre['th']
-                
-                director = movie_detail['director']
-                e.detail_director_en = director['en']
-                e.detail_director_th = director['th']
-                
-                cast = movie_detail['cast']
-                e.detail_cast_en = cast['en']
-                e.detail_cast_th = cast['th']
                 e.put()
+
+        data = memcache.get(REFRESH_DATA_CACHE)
+        if data is not None:
+            memcache.delete(key=REFRESH_DATA_CACHE)
 
 class ResetCounter(webapp2.RequestHandler):
     def get(self):
@@ -423,6 +351,52 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
 
         movie_id = self.request.get('movie_id')
         movie_data = MovieModel.get_or_insert(key_name=movie_id)
+
+        detail_en = movie_data.detail_synopsis_en
+        detail_th = movie_data.detail_synopsis_th
+        detail_director_en = movie_data.detail_genre_en
+        detail_director_th = movie_data.detail_genre_th
+        detail_cast_en = movie_data.detail_cast_en
+        detail_cast_th = movie_data.detail_cast_th
+
+        if detail_th is None and detail_en is None and detail_director_en is None and detail_director_th is None and detail_cast_en is None and detail_cast_th is None:
+            movie_original_id = str(movie_data.original_id)
+            url = 'http://onlinepayment.majorcineplex.com/api/1.0/movie_detail?w=320&h=480&x=2&o=0&pf=iOS&mid=iPhone%20Simulator&indent=0&deflate=1&appv=2.6&rev=2&movie_id='+movie_original_id
+            result = urlfetch.fetch(url)
+            mJson = json.loads(result.content)
+            
+            movie_detail = mJson['detail']
+            movie_data.detail_duration = movie_detail['duration']
+            movie_data.detail_rate = movie_detail['rate']
+            movie_data.detail_rateWarning = movie_detail['rateWarning']
+            
+            releasedate = movie_detail['releasedate']
+            movie_data.detail_timestamp = releasedate['timestamp']
+            movie_data.detail_text = releasedate['text']
+
+            synopsis = movie_detail['synopsis']
+            movie_data.detail_synopsis_en = synopsis['en']
+            movie_data.detail_synopsis_th = synopsis['th']
+
+            movie_data.detail_image = movie_detail['image']
+
+            trailer = movie_detail['trailer']
+            movie_data.detail_yt_id = trailer['yt_id']
+            movie_data.detail_rtsp = trailer['rtsp']
+            movie_data.detail_thumbnail = trailer['thumbnail']
+
+            genre = movie_detail['genre']
+            movie_data.detail_genre_en = genre['en']
+            movie_data.detail_genre_th = genre['th']
+            
+            director = movie_detail['director']
+            movie_data.detail_director_en = director['en']
+            movie_data.detail_director_th = director['th']
+            
+            cast = movie_detail['cast']
+            movie_data.detail_cast_en = cast['en']
+            movie_data.detail_cast_th = cast['th']
+            movie_data.put()
 
 
         #query show comment
