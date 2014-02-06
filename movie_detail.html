@@ -153,57 +153,69 @@
 	<!-- margin-top:20px; display:block; -->
 	<div class="movie-box-comment">
 		<form id="form-comment" action="javascript:submitComment();" method="post">
+
+		<div class="movie-box-comment-emotion-avatar">
+			<script type="text/javascript">
+
+  				function clickAddAvatar(id)	
+  				{
+    		 		$('#img_avatar').attr("src", "/images/details/avatar/image_avatar"+id+".png");
+    		 		$('#img_avatar').attr("alt", id);
+  				}
+  		
+			</script>
+
+
+
+			<div style="width:860px; height:60px; overflow:auto;">
+				<a href="javascript:;" id="1" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar1.png" alt="1" width="60" height="60" border="0"></a>
+				<a href="javascript:;" id="2" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar2.png" alt="2" width="60" height="60" border="0"></a>
+				<a href="javascript:;" id="3" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar3.png" alt="3" width="60" height="60" border="0"></a>
+				<a href="javascript:;" id="4" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar4.png" alt="4" width="60" height="60" border="0"></a>
+				<a href="javascript:;" id="5" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar5.png" alt="5" width="60" height="60" border="0"></a>
+				<a href="javascript:;" id="6" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar6.png" alt="6" width="60" height="60" border="0"></a>
+				<a href="javascript:;" id="7" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar7.png" alt="7" width="60" height="60" border="0"></a>
+				<a href="javascript:;" id="8" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar8.png" alt="8" width="60" height="60" border="0"></a>
+				<a href="javascript:;" id="9" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar9.png" alt="9" width="60" height="60" border="0"></a>
+				<a href="javascript:;" id="10" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar10.png"alt="10" width="60" height="60" border="0"></a>
+				<a href="javascript:;" id="11" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar11.png"alt="11" width="60" height="60" border="0"></a>
+				<a href="javascript:;" id="12" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar12.png"alt="12" width="60" height="60" border="0"></a>
+			</div>
+		</div>
+
+		<div style="height: 10px;"></div>
+
+
 		<div class="movie-box-comment-left">
-			<!-- <a href='javascript:uploadImage()'><img id="img_avatar" src="/images/details/avatar.png"/></a> -->
-			<img id="img_avatar" src="/images/details/avatar.png" />
+
+			<img id="img_avatar" width="60" height="60" src="/images/details/avatar.png" />
+
 
 			<!-- <img id="img_avatar" src="/images/details/avatar.png" href='javascript:uploadContactImage()' /> -->
 			<!-- <a class="btn-post" type="submit" href="javascript:submitComment()" ></a> -->
 
-			<select name="emotion_review" size="4" id="emotion_review_id">
+<!-- 			<select name="emotion_review" size="4" id="emotion_review_id" >
 			<option value="1" selected="selected">อารม1</option>
 			<option value="2">อารม2</option>
 			<option value="3">อารม3</option>
 			<option value="4">อารม4</option>
-			</select>
-
-<!-- 			<select name="emotion_comment" size="4" id="emotion_comment_id" action="">
-			<option value="1">อีโม1</option>
-			<option value="2">อีโม2</option>
-			<option value="3">อีโม3</option>
-			<option value="4">อีโม4</option>
+			<option value="5">อารม5</option>
+			<option value="6">อารม6</option>
+			<option value="7">อารม7</option>
+			<option value="8">อารม8</option>
+			<option value="9">อารม9</option>
+			<option value="10">อารม10</option>
+			<option value="11">อารม11</option>
+			<option value="12">อารม12</option>
 			</select> -->
-			<!-- <input name="action" type="hidden" value="Add"> -->
-			<!-- <from id="emotion_comment_id"> -->
 
-			<script type="text/javascript">
 
-  				function clickAddEmo(id)	
-  				{
-  					var content = $("#comment_content").val();
-  					// var path_emo = '<img src="/images/details/emotion/'+id+'" border="0">'
-    		 		$('#comment_content').val(content+id);
-  				}
-  			
-			</script>
 
-			<!--emo
-				:emo1_01:
-				:emo1_02:
-				:emo1_03:
-				:emo1_04:
-			-->
 				<a href="javascript:;" id=":emo1_01:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/angry.gif" width="20" height="20" border="0"></a>
 				<a href="javascript:;" id=":emo1_02:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/cry.gif" width="20" height="20" border="0"></a>
 				<a href="javascript:;" id=":emo1_03:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/huh.gif" width="20" height="20" border="0"></a>
 				<a href="javascript:;" id=":emo1_04:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/wink.gif" width="20" height="20" border="0"></a>
-			<!-- </from> -->
-
-
-
-
-		<!-- <a href="#" id="test" onclick="testclick(this.id);">Click</a> -->
-
+		
 		</div>
 
 
@@ -249,8 +261,8 @@
 			<!-- <img id="img_avatar" src="/images/details/avatar.png" /> -->
 			<!-- <img alt="" src="/images/details/avatar.png" id="img_avatar" /> -->
 
-			
-			<img id="img_avatar" src="/images/details/avatar-emotion{{comment.emotion_review_id}}.png" />
+			<!-- <img id="img_avatar" src="/images/details/avatar-emotion{{comment.emotion_review_id}}.png" /> -->
+			<img id="img_avatar" width="60" height="60" src="/images/details/avatar/image_avatar{{comment.emotion_review_id}}.png" />
 			<div class="comments-template-name">{{ comment.author|decodeHTML }}</div>
 		</div>
 		<div class="comments-template-right">
@@ -321,20 +333,16 @@
 
 
 <script>
-	function add_text(x){
-		document.comment_content.message.value = document.comment_content.elements.message.value+" "+x;
-		document.comment_content.message.focus();
-	}
 
 	function submitComment() {
 		// var nicE = new nicEditors.findEditor('comment_content');
 		// var content = nicE.getContent();
 		var content = $("#comment_content").val();
+     	// alert(content);
 
- 		var emotion_review_id = document.getElementById('emotion_review_id').value;
+ 		// var emotion_review_id = document.getElementById('emotion_review_id').value; 
+ 		var emotion_review_id = document.getElementById('img_avatar').alt;
      	// alert(emotion_review_id);
-
-
 		var author = $("#comment_author").val();
 		var recaptcha_challenge_field = $('[name="recaptcha_challenge_field"]').val();
 		var recaptcha_response_field = $('[name="recaptcha_response_field"]').val();
@@ -369,7 +377,6 @@
 	function updateComments() {
 		$.getJSON("/api_get_comment", {'movie_id':{{ movie_data.id }}}, function(data) {
 			// alert(data['data']);
-			
 
 			var clist = data['data'];
 			var h = '';
@@ -395,14 +402,28 @@
 		    	h += '<div class="comments-template-box">';
 		    		h += '<div class="comments-template-left">'; 
 		    			if (emotion_review_id != 0) {
-			    			h += '<img id="img_avatar" src="/images/details/avatar-emotion'+emotion_review_id+'.png" />';
-
+			    			h += '<img id="img_avatar" width="60" height="60" src="/images/details/avatar/image_avatar'+emotion_review_id+'.png" />';
+			    			// h += '<img id="img_avatar" src="/images/details/avatar-emotion'+emotion_review_id+'.png" />';
 		    			}else {h += '<img id="img_avatar" src="/images/details/avatar.png" />';};
 		    			h += '<div class="comments-template-name">'+author+'</div>';
 		    		h += '</div>';
 		    		h += '<div class="comments-template-right">';		
 						h += '<div class="comments-template-count-comment">ความคิดเห็นที่ '+count_index+'</div>';
 		    			h += '<div class="comments-template-date-and-time">'+date+':'+time_crate+'น.</div>';
+		    			
+						// now = new Date(); 
+						// now = date;
+						// alert(date)
+
+						// var thmonth = new Array ("มกราคม","กุมภาพันธ์","มีนาคม",
+						// "เมษายน","พฤษภาคม","มิถุนายน", "กรกฎาคม","สิงหาคม","กันยายน",
+						// "ตุลาคม","พฤศจิกายน","ธันวาคม");
+
+						// alert(thmonth[now.getMonth())
+
+						// var datethai = document.write(now.getDate()+ " " + thmonth[now.getMonth()]+ " " + (0+now.getYear()+543));
+		    			// h += '<div class="comments-template-date-and-time">'+thmonth[now.getMonth()+':'+time_crate+'น.</div>';
+
 		    			h += '<div class="comments-template-content">'+content+'</div>';
 		    		h += '</div>';
 		    	h += '</div>';
@@ -416,26 +437,15 @@
 		});
 	}
 
+	function clickAddEmo(id)	
+	{
+		var content = $("#comment_content").val();
+		// var path_emo = '<img src="/images/details/emotion/'+id+'" border="0">'
+		$('#comment_content').val(content+id);
+	}
 
+	
 
-function uploadImage() {
-	// alert('uploadImage')
-
-    $('#uploadContactImage').dialog({
-        title: 'Change contact image',
-        buttons: {
-            "Upload new image": function() {
-                $(this).dialog("close");
-            },
-            "Remove current image": function() {
-                $(this).dialog("close");
-            },
-            "Cancel": function() {
-                $(this).dialog("close");
-            }
-        }
-    });
-}
 </script>
 
 {% include "/main_footer.html" with context %}

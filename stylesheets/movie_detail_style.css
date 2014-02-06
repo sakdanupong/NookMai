@@ -116,31 +116,34 @@ body {
 }
 .movie-box-comment {
    margin: 0 auto;
-   width:860px; 
-   height:220px; 
+   width:860px;
+   height:280px; 
+   /*height:220px; */
    /*250*/
    background-color: #FFFFFF;
    padding: 20px 20px 20px 20px;
    border-radius: 10px;
    clear:both;
 }
+.movie-box-comment-emotion-avatar {
+   width:860px; 
+   height:60px; 
+}
+
 .movie-box-comment-left {
    width:78px;
+   /*height:200px; */
    float:left; 
 }
 
-
 .movie-box-comment-right-top > img {
+
+/*.movie-box-comment-right-top img {*/
    position: relative;
    top: 25px;
    float: left;
 }
 
-/*.movie-box-comment-right > img {
-   position: relative;
-   top: 25px;
-   float: left;
-}*/
 
 .movie-box-comment-right {
    width: 780px;
