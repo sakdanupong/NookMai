@@ -24,12 +24,11 @@
         var all_comingsoon_page = 0; 
         var btn_comingsoon_count = 0;
 
-
         function nowShowingFadeIn() {
           setTimeout(function() {
             $('#nowshowing_wraper').fadeIn();
             $('#nowshowing_wraper').show();
-          }, 250);
+          }, 200);
         }
 
         function nowShowingFadeOut() {
@@ -43,11 +42,21 @@
           setTimeout(function() {
             $('#comingsoon_wraper').fadeIn();
             $('#comingsoon_wraper').show();
-          }, 250);
+          }, 200);
         }
 
         function comingSoonFadeOut() {
           $('#comingsoon_wraper').hide();
+        }
+
+        function randomMovie() {
+          $.getJSON( "/trailer?movie_id={{random_movie['movie_id']}}", function(data) { 
+            var youtube_link = "//www.youtube.com/embed/"+data['videoId'];
+            $("#feature_youtube_frame").get(0).contentWindow.location.replace(youtube_link);
+            document.getElementById("feature_youtube_frame").onload = function() {
+              $("#feature_youtube_frame").show();
+            };
+          });
         }
 
         function myFunction(movie_id, unix_timestamp) {
@@ -362,9 +371,13 @@
         }
 
         $(document).ready(function() {
+          
           $('#nav_home').addClass('active');
           initPaginationButton();
+          randomMovie();
           initComingsoonPaginationButton();
+          // updateNowShowingData(movieList);
+          // updateComingSoonData(comingsoonList);
           getNowShowing(current_page);
           getComingSoon(comingsoon_current_page);
         });
