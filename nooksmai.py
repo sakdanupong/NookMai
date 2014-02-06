@@ -27,8 +27,10 @@ from comingsoonmodel import *
 
 from os import environ
 from recaptcha.client import captcha
+from random import randint
 
 DEFAULT_COMMENT_NAME = 'default_user'
+
 
 CAPTCHA_PUBLICE_KEY = '6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp'
 CAPTCHA_PRIVATE_KEY = '6LcDAO0SAAAAAM4kxOsIOBKRz8oLjj2-dHcBcui5'
@@ -126,6 +128,42 @@ def datetime_lctimezone_format(dt):
     value = datetime.datetime.fromtimestamp(ans_time, tz)
     return value
 
+def getNowShowing(l_offset, data_per_page):
+    movie_query = MovieModel.all().order('-release_time_timestamp').filter('is_coming_soon =', 0)
+    movie_list = movie_query.run(offset=l_offset, limit=data_per_page)
+    list = []
+    for movie in movie_list:
+        movie_json = {
+            'movie_id' : movie.id,
+            'name_en' : movie.name_en,
+            'name_th' : movie.name_th,
+        }
+        list.append(movie_json)
+
+    r = {
+        'movie_list' : list,   
+    }
+
+    return json.dumps(r)
+
+def getComingSoon(l_offset, data_per_page):
+    movie_query = MovieModel.all().order('-release_time_timestamp').filter('is_coming_soon =', 1)
+    movie_list = movie_query.run(offset=l_offset, limit=data_per_page)
+    list = []
+    for movie in movie_list:
+        movie_json = {
+            'movie_id' : movie.id,
+            'name_en' : movie.name_en,
+            'name_th' : movie.name_th,
+        }
+        list.append(movie_json)
+    r = {
+        'movie_list' : list,   
+    }
+    return json.dumps(r)
+    
+
+
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
@@ -140,14 +178,15 @@ NOWSHOWING_DATA_PER_PAGE = 15
 COMINGSOON_PER_PAGE = 10
 
 class MainPage(webapp2.RequestHandler):
-
     def get(self):
-        comingsoon_query = MovieModel.all().order('release_time_timestamp')
-        coming_list = comingsoon_query.filter('is_coming_soon =', 1).fetch(limit=10)
         record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
+        movie_list = getNowShowing(0, NOWSHOWING_DATA_PER_PAGE)
+        movie_json = json.loads(movie_list)
+        movie_list = movie_json['movie_list']
+        magic_number = randint(0, len(movie_list) - 1)
+        random_movie = movie_list[magic_number]
         template_values = {
-             # 'movie_list': movie_list,
-             'comingsoon_list' : coming_list,
+             'random_movie' : random_movie,
              'record_object' : record_object,
              'nowshowing_per_page' : NOWSHOWING_DATA_PER_PAGE, 
              'comingsoon_per_page' : COMINGSOON_PER_PAGE,
@@ -285,16 +324,25 @@ class ResetCounter(webapp2.RequestHandler):
 
 
 class ImageCache(webapp2.RequestHandler):
+    def showImage(self, image):
+        self.response.headers['Content-Type'] = 'image/jpeg'
+        self.response.out.write(image)
+        return image
     def get(self):
         movie_id = self.request.get('movie_id')
-        image_query = CacheImageModel.get_or_insert(key_name=movie_id)
-        if image_query.image is None:
-            movie_model = MovieModel.get_by_key_name(movie_id)
-            image_query.id = movie_model.id
-            image_query.image = db.Blob(urlfetch.Fetch(movie_model.image).content)
-            image_query.put()
-        self.response.headers['Content-Type'] = 'image/*'
-        self.response.out.write(image_query.image)
+        image_cache_key = ''+str(movie_id)
+        image = memcache.get(image_cache_key)
+        if image is not None:
+            self.showImage(image)
+        else:
+            image_query = CacheImageModel.get_or_insert(key_name=movie_id)
+            if image_query.image is None:
+                movie_model = MovieModel.get_by_key_name(movie_id)
+                image_query.id = movie_model.id
+                image_query.image = db.Blob(urlfetch.Fetch(movie_model.image).content)
+                image_query.put()
+            self.showImage(image_query.image)                
+            memcache.add(key=image_cache_key, value=image_query.image)
 
 class UploadAndCacheImage(webapp2.RequestHandler):
     def get(self):
@@ -702,22 +750,8 @@ class GetNowShowing(webapp2.RequestHandler):
         page -= 1
         data_per_page = 15
         l_offset = page * data_per_page
-        movie_query = MovieModel.all().order('-release_time_timestamp').filter('is_coming_soon =', 0)
-        movie_list = movie_query.run(offset=l_offset, limit=data_per_page)
-        list = []
-        for movie in movie_list:
-            movie_json = {
-                'movie_id' : movie.id,
-                'name_en' : movie.name_en,
-                'name_th' : movie.name_th,
-            }
-            list.append(movie_json)
-
-        r = {
-            'movie_list' : list,   
-        }
-
-        self.response.out.write(json.dumps(r))
+        r = getNowShowing(l_offset, data_per_page)
+        self.response.out.write(r)
     # movie_list = movie_query.filter('is_coming_soon =', 0).fetch(limit=datape)
 
 class GetComingSoon(webapp2.RequestHandler):
@@ -730,21 +764,9 @@ class GetComingSoon(webapp2.RequestHandler):
         page -= 1
         data_per_page = 10
         l_offset = page * data_per_page
-        movie_query = MovieModel.all().order('-release_time_timestamp').filter('is_coming_soon =', 1)
-        movie_list = movie_query.run(offset=l_offset, limit=data_per_page)
-        list = []
-        for movie in movie_list:
-            movie_json = {
-                'movie_id' : movie.id,
-                'name_en' : movie.name_en,
-                'name_th' : movie.name_th,
-            }
-            list.append(movie_json)
-        r = {
-            'movie_list' : list,   
-        }
+        r = getComingSoon(l_offset, data_per_page)
 
-        self.response.out.write(json.dumps(r))
+        self.response.out.write(r)
     # movie_list = movie_query.filter('is_coming_soon =', 0).fetch(limit=datape)
 
 
