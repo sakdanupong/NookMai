@@ -79,6 +79,42 @@ def increment_movie_comment_counter(c_key):
     c.comment_count += 1
     c.put()
 
+def increment_movie_comment_avatar_counter(c_key, avatar_id):
+    c = db.get(c_key)
+    logging.warning('!!!!!!!increment_movie_comment_avatar_counter')
+
+
+    if avatar_id == 1:
+        c.avatar_1_count += 1
+    elif avatar_id== 2:
+        c.avatar_2_count += 1
+    elif avatar_id == 3:
+        c.avatar_3_count += 1
+    elif  avatar_id== 4:
+        c.avatar_4_count += 1
+    elif  avatar_id== 5:
+        c.avatar_5_count += 1
+    elif  avatar_id== 6:
+        c.avatar_6_count += 1
+    elif  avatar_id== 7:
+        c.avatar_7_count += 1
+    elif  avatar_id== 8:
+        c.avatar_8_count += 1
+    elif  avatar_id== 9:
+        c.avatar_9_count += 1
+    elif  avatar_id== 10:
+        c.avatar_10_count += 1
+    elif  avatar_id== 11:
+        c.avatar_11_count += 1
+    elif  avatar_id== 12:
+        c.avatar_12_count += 1
+    elif  avatar_id== 13:
+        c.avatar_12_count += 1
+    elif  avatar_id== 14:
+        c.avatar_12_count += 1
+
+    c.put()
+
 def increment_record_comment_counter(c_key):
     c = db.get(c_key)
     c.comment_count += 1
@@ -484,17 +520,21 @@ class AddComment(webapp2.RequestHandler):
             content = self.request.get('content')
             movie_id = self.request.get('movie_id')
             author = self.request.get('author')
-            emotion_review_id = self.request.get('emotion_review_id')
-            # emotion_review_id = self.request.get('emotion_review_id')
+            avatar_review_id = self.request.get('avatar_review_id')
+            # avatar_review_id = self.request.get('avatar_review_id')
             if content :
                 c = CommentModel()
                 c.movie_id = int(movie_id)
                 c.content = cgi.escape(content)
                 c.author = cgi.escape(author)
-                c.emotion_review_id = int(emotion_review_id)
-                # c.emotion_review_id = cgi.escape(emotion_review_id)
+                c.avatar_review_id = int(avatar_review_id)
+                # c.avatar_review_id = cgi.escape(avatar_review_id)
                 movie_object = MovieModel.get_by_key_name(movie_id)
                 db.run_in_transaction(increment_movie_comment_counter, movie_object.key())
+
+
+                db.run_in_transaction(increment_movie_comment_avatar_counter, movie_object.key(), c.avatar_review_id)
+
                 record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
                 db.run_in_transaction(increment_record_comment_counter, record_object.key())
                 c.put()
@@ -527,7 +567,7 @@ class GetComment(webapp2.RequestHandler):
         clist = []
 
         for c in q.fetch(limit=100) :
-            clist.append({'emotion_review_id':c.emotion_review_id,'author':c.author,'content':c.content,'date':datetime_lctimezone_format(c.date).strftime("%B %d, %Y") ,'time_crate':datetime_lctimezone_format(c.date).strftime("%H:%M") })
+            clist.append({'avatar_review_id':c.avatar_review_id,'author':c.author,'content':c.content,'date':datetime_lctimezone_format(c.date).strftime("%B %d, %Y") ,'time_crate':datetime_lctimezone_format(c.date).strftime("%H:%M") })
 
         r = {'data':clist}
         self.response.out.write(json.dumps(r))
