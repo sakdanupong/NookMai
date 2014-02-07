@@ -1,7 +1,11 @@
+body {
+	background-color: #ecedef; 
+}
+
 .movie-title-image {
 	margin: 0 auto;
-/*    	width:900px; 
-	height:450px;*/
+   width:900px; 
+	/*height:450px;*/
 }
 .movie-image {
 	margin: 0 auto;
