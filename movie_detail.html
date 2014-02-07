@@ -13,7 +13,8 @@
     <link type="text/css" rel="stylesheet" href="/stylesheets/main_body.css" />
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>ข้อมูลหนัง</title>
+	<!-- <title>ข้อมูลหนัง</title> -->
+	<title>{{ movie_data.name_en|decodeHTML }}</title>
 	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
 
 	<script type="text/JavaScript">
@@ -40,7 +41,11 @@
 	<!-- <div class="movie-title-image" style="width:900px; ">  -->
 		<!-- clear:both; -->
 		<!-- height:450px; -->
+<!-- start bg -->
+<div class="movie-bg">
 <div class="movie-title-image" style="width:900px;">
+
+
 
 	<div class="movie-image">
 		<a href="/detail?movie_id={{ movie_data.id }}">
@@ -95,7 +100,7 @@
 	</div>
 
 </div>
-	
+<!-- </div> -->
 <div class="movie-spece-1"></div>
 
 <div class="movie-synopsis-th"> 
@@ -150,7 +155,10 @@
 </div>  -->
 
 <div style="height: 80px;"></div>
-	
+
+<!-- end bg -->
+</div> 
+
 <div class="movie-comment">
 	
 	<div class="movie-box-comment-title"><h2>ความคิดเห็น</h2></div>
@@ -166,30 +174,29 @@
     		 		$('#img_avatar').attr("src", "/images/details/avatar/image_avatar"+id+".png");
     		 		$('#img_avatar').attr("alt", id);
   				}
-  		
 			</script>
 
 
 
-			<div style="width:860px; height:60px; overflow:auto;">
-				<a href="javascript:;" id="1" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar1.png" alt="1" width="60" height="60" border="0"></a>
-				<a href="javascript:;" id="2" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar2.png" alt="2" width="60" height="60" border="0"></a>
-				<a href="javascript:;" id="3" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar3.png" alt="3" width="60" height="60" border="0"></a>
-				<a href="javascript:;" id="4" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar4.png" alt="4" width="60" height="60" border="0"></a>
-				<a href="javascript:;" id="5" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar5.png" alt="5" width="60" height="60" border="0"></a>
-				<a href="javascript:;" id="6" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar6.png" alt="6" width="60" height="60" border="0"></a>
-				<a href="javascript:;" id="7" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar7.png" alt="7" width="60" height="60" border="0"></a>
-				<a href="javascript:;" id="8" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar8.png" alt="8" width="60" height="60" border="0"></a>
-				<a href="javascript:;" id="9" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar9.png" alt="9" width="60" height="60" border="0"></a>
-				<a href="javascript:;" id="10" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar10.png"alt="10" width="60" height="60" border="0"></a>
-				<a href="javascript:;" id="11" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar11.png"alt="11" width="60" height="60" border="0"></a>
-				<a href="javascript:;" id="12" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar12.png"alt="12" width="60" height="60" border="0"></a>
-				<a href="javascript:;" id="13" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar13.png"alt="13" width="60" height="60" border="0"></a>
-				<a href="javascript:;" id="14" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar14.png"alt="14" width="60" height="60" border="0"></a>
+			<div style="width:860px; height:40px; overflow:auto;">
+				<a href="javascript:;" title="โหด มันส์ สะใจ" id="1" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar1.png" alt="1" width="40" height="40" border="0"></a>
+				<a href="javascript:;" title="กาก เสียดายตัง" id="2" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar2.png" alt="2" width="40" height="40" border="0"></a>
+				<a href="javascript:;" title="น่ากลัวสยอง" id="3" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar3.png" alt="3" width="40" height="40" border="0"></a>
+				<a href="javascript:;" title="แนวสัด" id="4" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar4.png" alt="4" width="40" height="40" border="0"></a>
+				<a href="javascript:;" title="สนุกตื่นเต้น" id="5" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar5.png" alt="5" width="40" height="40" border="0"></a>
+				<a href="javascript:;" title="น่าเบื่อจะหลับ" id="6" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar6.png" alt="6" width="40" height="40" border="0"></a>
+				<a href="javascript:;" title="ตลกฮากระจาย" id="7" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar7.png" alt="7" width="40" height="40" border="0"></a>
+				<a href="javascript:;" title="อลังการงานสร้าง" id="8" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar8.png" alt="8" width="40" height="40" border="0"></a>
+				<a href="javascript:;" title="sexy สวย หล่อ น่าหลงไหล" id="9" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar9.png" alt="9" width="40" height="40" border="0"></a>
+				<a href="javascript:;" title="เฉยๆ พอใช้ได้ ดูฆ่าเวลา" id="10" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar10.png"alt="10" width="40" height="40" border="0"></a>
+				<a href="javascript:;" title="เนื้อเรื่องดี ให้แง่คิด" id="11" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar11.png"alt="11" width="40" height="40" border="0"></a>
+				<a href="javascript:;" title="งง ดูไม่รู้เรื่อง" id="12" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar12.png"alt="12" width="40" height="40" border="0"></a>
+				<a href="javascript:;" title="น่ารักเหมาะกับเด็ก" id="13" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar13.png"alt="13" width="40" height="40" border="0"></a>
+				<a href="javascript:;" title="ซึ้งกินใจ" id="14" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar14.png"alt="14" width="40" height="40" border="0"></a>
 			</div>
 		</div>
 
-		<div style="height: 10px;"></div>
+		<!-- <div style="height: 10px;"></div> -->
 
 
 		<div class="movie-box-comment-left">
@@ -232,13 +239,45 @@
 				<!--<script type="text/javascript" src="/textedit/nicEdit/nicEdit.js"></script>
     			<script type="text/javascript">bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });
 				</script>-->
-				<textarea id="comment_content" name="content"></textarea> 
+				<!--<script type="text/javascript">
+
+				// var el = document.activeElement;
+
+				// if (el && (el.tagName.toLowerCase() == 'input' && el.type == 'text' || el.tagName.toLowerCase() == 'textarea')) {
+				// 	alert('acive!!!')
+  		// 			// focused element is a text input or textarea
+				// } 
+
+				$('input[type="text"]').focus(function() {
+   					alert('Focused');
+				});
+				</script>-->
+
+
+				<textarea id="comment_content" name="content" onClick="checkActiveTextarea()"></textarea> 
 				<!-- area3 -->
 				</div>
 			</div>
 
 			<div class="movie-box-comment-right-down">
-				<div class="movie-box-comment-captcha">
+				<script type="text/javascript">
+					function checkActiveTextarea(){
+
+
+						// elem.style.display = "block";
+						// alert(elem)
+						// $('#movie-box-comment-captcha').attr("style", "display:block");
+
+
+						$("#movie-box-comment-captcha").css({ display: "block" });
+						// $("#movie-box-comment-captcha").css("display","block");
+						// $("#movie-box-comment-captcha").show()
+					}
+				</script>
+
+				<div class="movie-box-comment-captcha" style="display:none;">
+				<!-- <div class="movie-box-comment-captcha"> -->
+
 					{% autoescape false %}
  					<script type="text/javascript">var RecaptchaOptions = {theme : 'clean'};</script>
 					{{ captchahtml }}
@@ -449,7 +488,6 @@
 		// var path_emo = '<img src="/images/details/emotion/'+id+'" border="0">'
 		$('#comment_content').val(content+id);
 	}
-
 
 
 </script>
