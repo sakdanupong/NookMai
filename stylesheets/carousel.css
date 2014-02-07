@@ -1,4 +1,4 @@
-.btn_calusel {
+.btn_carousel {
 	line-height: 24px;
 	background-color: #ffb400;
 	color: #323232;
@@ -11,11 +11,11 @@
 	margin-right: 2.5px;
 }
 
-.btn_calusel:hover {
+.btn_carousel:hover {
 	background-color: #cc4d4d;
 }
 
-.btn_calusel_select {
+.btn_carousel_select {
 	line-height: 24px;
 	background-color: #cc4d4d;
 	color: #323232;
