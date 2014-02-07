@@ -129,7 +129,7 @@ body {
 .movie-box-comment {
    margin: 0 auto;
    width:860px;
-   height:280px; 
+   height:290px; 
    /*height:220px; */
    /*250*/
    background-color: #FFFFFF;
@@ -209,7 +209,7 @@ iframe[src="about:blank"]{display:none;}
 
 }
 
-.movie-box-comment-captcha {
+#movie-box-comment-captcha {
    top: 25px;
    width:442px;
    height:103px; 
