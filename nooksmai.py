@@ -194,6 +194,23 @@ class MainPage(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('movielist.html')
         self.response.write(template.render(template_values))
 
+class NowShowing(webapp2.RequestHandler):
+    def get(self):
+        self.process()
+    def post(self):
+        self.process()
+    def process(self):
+        data_per_page = NOWSHOWING_DATA_PER_PAGE * 2
+        record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
+        template_values = {
+             'record_object' : record_object, 
+             'data_per_page' : data_per_page,
+        }
+        template = JINJA_ENVIRONMENT.get_template('now_showing.html')
+        self.response.write(template.render(template_values))
+        # self.response.write(template.render(template_values))
+        
+
 class RefreshData(webapp2.RequestHandler):
 
 
@@ -407,7 +424,7 @@ class GetTrailer(webapp2.RequestHandler):
             item_id = video_item['id']
             b = json.dumps(item_id)
             # save youtube url to movie model
-            youtube_url = "//www.youtube.com/embed/"+item_id['videoId'];
+            youtube_url = "//www.youtube.com/embed/"+item_id['videoId']
             movie_model.youtube_url = youtube_url
             movie_model.put()
             return self.response.out.write(b)
@@ -748,7 +765,7 @@ class GetNowShowing(webapp2.RequestHandler):
     def process(self):
         page = int(self.request.get('page'))
         page -= 1
-        data_per_page = 15
+        data_per_page = int(self.request.get('data_per_page'))
         l_offset = page * data_per_page
         r = getNowShowing(l_offset, data_per_page)
         self.response.out.write(r)

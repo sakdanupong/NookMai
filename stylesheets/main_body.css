@@ -10,9 +10,9 @@
 
 #feature_youtube_frame {
 	width: 854px;
-	height: 510px;
-	margin-top: 60px;
-	margin-bottom: 60px;
+	height: 450px;
+	margin-top: 90px;
+	margin-bottom: 90px;
 	margin-left: 173px;
 	margin-right: 173px;
 	display: none;
@@ -69,11 +69,11 @@
 	text-decoration: none;
 }
 
-.calusel_div {
+.carousel_div {
     text-align: center;
 }
 
-.btn_calusel_div {
+.btn_carousel_div {
 	display: inline-block;
 }
 
