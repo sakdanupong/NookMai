@@ -52,8 +52,10 @@
 
         function randomMovie() {
           $.getJSON( "/trailer?movie_id={{random_movie['movie_id']}}", function(data) { 
-            var youtube_link = "//www.youtube.com/embed/"+data['videoId'];
+            // src="//www.youtube.com/embed/2zqy21Z29ps?autoplay=0&loop=1
+            var youtube_link = "//www.youtube.com/embed/"+data['videoId']+"?autoplay=1&html5=1";
             $("#feature_youtube_frame").get(0).contentWindow.location.replace(youtube_link);
+
             document.getElementById("feature_youtube_frame").onload = function() {
               setTimeout(function() {
                 $('#feature_youtube_frame').fadeIn();
@@ -155,6 +157,7 @@
           updatePositionNowShowingcarousel();
           var formData = new FormData();
           formData.append('page', page_count);
+          formData.append('data_per_page', {{nowshowing_per_page}})
           // formData.append('_ajax_nonce', importNonce);
           $.ajax({
             url: '/api_get_nowshowing',  //Server script to process data
@@ -224,27 +227,39 @@
           }
         }
 
-        function enableAllNowShowingCarousel() {
-          
+        function disableCarousel(carousel_id) {
+          var carousel = document.getElementById(carousel_id);
+          carousel.className = 'btn_carousel_disable';
+          carousel.removeAttribute("href")
         }
 
-        function updatePositionNowShowingcarousel() {
-          if (current_page > 1)
-            $('#prev_page_link').show();
-          else
-            $('#prev_page_link').hide();
+        function enableCarousel(carousel_id) {
+          var carousel = document.getElementById(carousel_id);
+          carousel.className = 'btn_carousel';
+        }
 
-          if (current_page == all_nowshowing_page) {
-            $('#next_page_link').hide();
-            $('#last_page_link').hide();
-          } else {
-            $('#last_page_link').show();
-            $('#next_page_link').show();
-          }
-
+        function enableAllNowShowingCarousel() {
           $("#prev_page_link").attr("href", "javascript:getNowShowing("+ (current_page - 1) +");");
           $("#next_page_link").attr("href", "javascript:getNowShowing("+ (current_page + 1) +");");
           $("#last_page_link").attr("href", "javascript:getNowShowing("+ all_nowshowing_page +");");
+          $("#first_page_link").attr("href", "javascript:getNowShowing(1);");
+          enableCarousel('prev_page_link');
+          enableCarousel('next_page_link');
+          enableCarousel('last_page_link');
+          enableCarousel('first_page_link');
+        }
+
+        function updatePositionNowShowingcarousel() {
+          enableAllNowShowingCarousel();
+          if (current_page <= 1) {
+            disableCarousel('prev_page_link');
+            disableCarousel('first_page_link');
+          }
+            
+          if (current_page == all_nowshowing_page) {
+              disableCarousel('next_page_link');
+              disableCarousel('last_page_link');            
+          }
 
           var allPageLink = document.getElementById('all_page_link');
           allPageLink.innerHTML = 'Page '+ current_page + ' of ' +  all_nowshowing_page;
@@ -270,23 +285,28 @@
           }
         }
 
-        function updatePositionComingSooncarousel() {
-          if (comingsoon_current_page > 1)
-            $('#comingsoon_prev_page_link').show();
-          else
-            $('#comingsoon_prev_page_link').hide();
-
-          if (comingsoon_current_page == all_comingsoon_page) {
-            $('#comingsoon_next_page_link').hide();
-            $('#comingsoon_last_page_link').hide();
-          } else {
-            $('#comingsoon_last_page_link').show();
-            $('#comingsoon_next_page_link').show();
-          }
-
+        function enableAllComingSoonCarousel() {
           $("#comingsoon_prev_page_link").attr("href", "javascript:getComingSoon("+ (comingsoon_current_page - 1) +");");
           $("#comingsoon_next_page_link").attr("href", "javascript:getComingSoon("+ (comingsoon_current_page + 1) +");");
           $("#comingsoon_last_page_link").attr("href", "javascript:getComingSoon("+ all_comingsoon_page +");");
+          $("#comingsoon_first_page_link").attr("href", "javascript:getComingSoon(1);");
+          enableCarousel('comingsoon_prev_page_link');
+          enableCarousel('comingsoon_next_page_link');
+          enableCarousel('comingsoon_last_page_link');
+          enableCarousel('comingsoon_first_page_link');
+        }
+
+        function updatePositionComingSooncarousel() {
+          enableAllComingSoonCarousel();
+          if (comingsoon_current_page <= 1) {
+            disableCarousel('comingsoon_prev_page_link');
+            disableCarousel('comingsoon_first_page_link');
+          }
+            
+          if (comingsoon_current_page == all_comingsoon_page) {
+            disableCarousel('comingsoon_next_page_link');
+            disableCarousel('comingsoon_last_page_link');
+          } 
 
           var allPageLink = document.getElementById('comingsoon_all_page_link');
           allPageLink.innerHTML = 'Page '+ comingsoon_current_page + ' of ' +  all_comingsoon_page;
@@ -379,13 +399,10 @@
         }
 
         $(document).ready(function() {
-          
           $('#nav_home').addClass('active');
           initPaginationButton();
           randomMovie();
           initComingsoonPaginationButton();
-          // updateNowShowingData(movieList);
-          // updateComingSoonData(comingsoonList);
           getNowShowing(current_page);
           getComingSoon(comingsoon_current_page);
         });
@@ -395,7 +412,7 @@
     <body>
       {% include "/main_header.html" with context %}
       <div id="main_body_div">
-        <div id="youtube_div"><iframe id="feature_youtube_frame" src="//www.youtube.com/embed/2zqy21Z29ps?autoplay=0&loop=1" frameborder="0" allowfullscreen></iframe></div>
+        <div id="youtube_div"><iframe id="feature_youtube_frame" frameborder="0" allowfullscreen></iframe></div>
         <div id="nowshowing_div">
           <div id="nowshowing_caption" class="main_page_caption">NOW SHOWING</div>
           <div id="nowshowing_wraper_div">
@@ -427,6 +444,7 @@
           </div> -->
           <div class="carousel_div">
             <div class="btn_carousel_div"><a class="btn_carousel" id="all_page_link"></a></div>
+            <div class="btn_carousel_div"><a class="btn_carousel" id="first_page_link"><< First</a></div>
             <div class="btn_carousel_div"><a class="btn_carousel" id="prev_page_link">< Prev</a></div>
             <div id="page_btn_div"></div>
             <div class="btn_carousel_div"><a class="btn_carousel" id="next_page_link">Next ></a></div>
@@ -462,6 +480,7 @@
             </div>
             <div class="carousel_div">
               <div class="btn_carousel_div"><a class="btn_carousel" id="comingsoon_all_page_link"></a></div>
+              <div class="btn_carousel_div"><a class="btn_carousel" id="comingsoon_first_page_link"><< First</a></div>
               <div class="btn_carousel_div"><a class="btn_carousel" id="comingsoon_prev_page_link">< Prev</a></div>
               <div id="comingsoon_page_btn_div"></div>
               <div class="btn_carousel_div"><a class="btn_carousel" id="comingsoon_next_page_link">Next ></a></div>

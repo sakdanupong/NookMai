@@ -105,11 +105,11 @@
 		</p>
 
 		<div style="height: 40px;"></div>
-		<iframe id="youtube_frame" src="{{ movie_data.youtube_url }}" frameborder="0" allowfullscreen style="display: none; width: 855px; height: 510px; margin: 0 auto; border: 0;"></iframe>
+		<iframe id="youtube_frame" src="{{ movie_data.youtube_url }}?autoplay=1&html5=1" frameborder="0" allowfullscreen style="display: none; width: 855px; height: 450px; margin: 0 auto; border: 0;"></iframe>
 		<script>
 		{% if not movie_data.youtube_url %}
 			$.getJSON( "/trailer?movie_id={{ movie_data.id }}", function(data) { 
-				var youtube_link = "//www.youtube.com/embed/"+data['videoId'];
+				var youtube_link = "//www.youtube.com/embed/"+data['videoId']+"?autoplay=1&html5=1";
 					$("#youtube_frame").get(0).contentWindow.location.replace(youtube_link);
 					document.getElementById("youtube_frame").onload = function() {
 					$("#youtube_frame").show();

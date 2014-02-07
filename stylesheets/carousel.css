@@ -27,3 +27,16 @@
 	margin-left: 2.5px;
 	margin-right: 2.5px;
 }
+
+.btn_carousel_disable {
+	line-height: 24px;
+	background-color: #9F7000;
+	color: #FFB400;
+	font-size: 14px;
+	font-family: montRegular;
+	text-decoration: none;
+	padding-left: 11px;
+	padding-right: 11px;
+	margin-left: 2.5px;
+	margin-right: 2.5px;
+}

@@ -59,8 +59,8 @@ li a:hover {
 }
 
 .active {
-	color: #cc4d4d;
-	/*background: #5b5b5b;*/
+	/*color: #cc4d4d;*/
+	background: #5b5b5b;
 }
 .round-corner {
 	-webkit-border-radius: 5px 5px 5px 5px; 
