@@ -3,13 +3,14 @@
 <html>
     <head>
       <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-      <link rel="shortcut icon" href="images/favicon.ico" />  
+      <!-- <link rel="shortcut icon" href="images/favicon.ico" /> -->
       <link type="text/css" rel="stylesheet" href="/stylesheets/main_header.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/font_family.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/base_document.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/main_body.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/poster.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/calusel.css" />
+      <title>nookmai.com หนุกมั้ยดอทคอม</title>
       <script>
 
         var current_page_key = "current_page_key";
@@ -54,7 +55,10 @@
             var youtube_link = "//www.youtube.com/embed/"+data['videoId'];
             $("#feature_youtube_frame").get(0).contentWindow.location.replace(youtube_link);
             document.getElementById("feature_youtube_frame").onload = function() {
-              $("#feature_youtube_frame").show();
+              setTimeout(function() {
+                $('#feature_youtube_frame').fadeIn();
+                $("#feature_youtube_frame").show();
+              }, 200);
             };
           });
         }
