@@ -11,6 +11,11 @@
 	<link type="text/css" rel="stylesheet" href="/stylesheets/main_header.css" />
     <link type="text/css" rel="stylesheet" href="/stylesheets/base_document.css" />
     <link type="text/css" rel="stylesheet" href="/stylesheets/main_body.css" />
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main_body.css" />
+
+    <link type="text/css" rel="stylesheet" href="/stylesheets/demo.css" />
+    <link type="text/css" rel="stylesheet" href="/stylesheets/style.css" />
+
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<!-- <title>ข้อมูลหนัง</title> -->
@@ -126,45 +131,23 @@
 		<div style="height: 20px;"></div>
 </div>
 
-<!-- <div class="movie-spece-1"></div>
-
-<div class="movie-artiste">
-		<h2>นักแสดง</h2>
-</div> -->
-
-<!-- <div class="movie-spece-1"></div>
-
-<div class="movie-youtube">
-	<h2>ตัวอย่างหนัง</h2>
-	<div style="height: 40px;"></div>
-	<iframe id="youtube_frame" src="{{ movie_data.youtube_url }}" frameborder="0" allowfullscreen style="display: block; width: 855px; height: 510px; margin: 0 auto; border: 0;"></iframe>
-	<script>
-		{% if not movie_data.youtube_url %}
-			$.getJSON( "/trailer?movie_id={{ movie_data.id }}", function(data) { 
-				var youtube_link = "//www.youtube.com/embed/"+data['videoId'];
-				$("#youtube_frame").get(0).contentWindow.location.replace(youtube_link);
-				document.getElementById("youtube_frame").onload = function() {
-						$("#youtube_frame").show();
-				};
-			});
-		{% else %}
-			$("#youtube_frame").show();
-		{% endif %}
-	</script>
-</div>  -->
 
 <div style="height: 80px;"></div>
 
 <!-- end bg -->
 </div> 
 
+
+
+
+
 <div class="movie-comment">
 	
 	<div class="movie-box-comment-title"><h2>ความคิดเห็น</h2></div>
 	<!-- margin-top:20px; display:block; -->
 	<div class="movie-box-comment">
-		<form id="form-comment" action="javascript:submitComment();" method="post">
 
+		<form id="form-comment" action="javascript:submitComment();" method="post">
 		<div class="movie-box-comment-emotion-avatar">
 			<script type="text/javascript">
 
@@ -176,8 +159,27 @@
 			</script>
 
 
+			<ul class="tt-wrapper">
+				<li><a href="javascript:;" id="1" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar1.png" alt="1" width="57.5" height="57.5" border="0"><span>โหด มันส์ สะใจ</span></a></li>
+				<li><a href="javascript:;" id="2" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar2.png" alt="2" width="57.5" height="57.5" border="0"><span>กาก เสียดายตัง</span></a></li>
+				<li><a href="javascript:;" id="3" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar3.png" alt="3" width="57.5" height="57.5" border="0"><span>น่ากลัวสยอง</span></a></li>
+				<li><a href="javascript:;" id="4" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar4.png" alt="4" width="57.5" height="57.5" border="0"><span>แนวสัด</span></a></li>
+				<li><a href="javascript:;" id="5" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar5.png" alt="5" width="57.5" height="57.5" border="0"><span>สนุกตื่นเต้น</span></a></li>
+				<li><a href="javascript:;" id="6" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar6.png" alt="6" width="57.5" height="57.5" border="0"><span>น่าเบื่อจะหลับ</span></a></li>
+				<li><a href="javascript:;" id="7" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar7.png" alt="7" width="57.5" height="57.5" border="0"><span>ตลกฮากระจาย</span></a></li>
+				<li><a href="javascript:;" id="8" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar8.png" alt="8" width="57.5" height="57.5" border="0"><span>อลังการงานสร้าง</span></a></li>
+				<li><a href="javascript:;" id="9" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar9.png" alt="9" width="57.5" height="57.5" border="0"><span>sexy สวย หล่อ น่าหลงไหล</span></a></li>
+				<li><a href="javascript:;" id="10" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar10.png" alt="10" width="57.5" height="57.5" border="0"><span>เฉยๆ พอใช้ได้ ดูฆ่าเวลา</span></a></li>
+				<li><a href="javascript:;" id="11" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar11.png" alt="11" width="57.5" height="57.5" border="0"><span>เนื้อเรื่องดี ให้แง่คิด</span></a></li>
+				<li><a href="javascript:;" id="12" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar12.png" alt="12" width="57.5" height="57.5" border="0"><span>งง ดูไม่รู้เรื่อง</span></a></li>
+				<li><a href="javascript:;" id="13" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar13.png" alt="13" width="57.5" height="57.5" border="0"><span>น่ารักเหมาะกับเด็ก</span></a></li>
+				<li><a href="javascript:;" id="14" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar14.png" alt="14" width="57.5" height="57.5" border="0"><span>ซึ้งกินใจ</span></a></li>
+			</ul>
 
-			<div style="width:860px; height:54px; overflow:auto;">
+			<!-- <img src="/images/details/avatar_emo.jpg" width="857" height="54" border="0" ></a> -->
+			<!-- <li><a href="javascript:;" id="1" onClick="clickAddAvatar(this.id)"><span>โหด มันส์ สะใจ</span></a></li> -->
+			<!--<div id="avatar_box" style="width:860px; height:54px; overflow:auto;">
+
 				<a href="javascript:;" title="โหด มันส์ สะใจ" id="1" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar1.png" alt="1" width="57.5" height="57.5" border="0"></a>
 				<a href="javascript:;" title="กาก เสียดายตัง" id="2" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar2.png" alt="2" width="57.5" height="57.5" border="0"></a>
 				<a href="javascript:;" title="น่ากลัวสยอง" id="3" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar3.png" alt="3" width="57.5" height="57.5" border="0"></a>
@@ -187,14 +189,14 @@
 				<a href="javascript:;" title="ตลกฮากระจาย" id="7" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar7.png" alt="7" width="57.5" height="57.5" border="0"></a>
 				<a href="javascript:;" title="อลังการงานสร้าง" id="8" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar8.png" alt="8" width="57.5" height="57.5" border="0"></a>
 				<a href="javascript:;" title="sexy สวย หล่อ น่าหลงไหล" id="9" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar9.png" alt="9" width="57.5" height="57.5" border="0"></a>
-				<a href="javascript:;" title="เฉยๆ พอใช้ได้ ดูฆ่าเวลา" id="10" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar10.png"alt="10" width="57.5" height="57.5" border="0"></a>
-				<a href="javascript:;" title="เนื้อเรื่องดี ให้แง่คิด" id="11" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar11.png"alt="11" width="57.5" height="57.5" border="0"></a>
-				<a href="javascript:;" title="งง ดูไม่รู้เรื่อง" id="12" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar12.png"alt="12" width="57.5" height="57.5" border="0"></a>
-				<a href="javascript:;" title="น่ารักเหมาะกับเด็ก" id="13" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar13.png"alt="13" width="57.5" height="57.5" border="0"></a>
-				<a href="javascript:;" title="ซึ้งกินใจ" id="14" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar14.png"alt="14" width="57.5" height="57.5" border="0"></a>
-
-			</div>
+				<a href="javascript:;" title="เฉยๆ พอใช้ได้ ดูฆ่าเวลา" id="10" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar10.png" alt="10" width="57.5" height="57.5" border="0"></a>
+				<a href="javascript:;" title="เนื้อเรื่องดี ให้แง่คิด" id="11" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar11.png" alt="11" width="57.5" height="57.5" border="0"></a>
+				<a href="javascript:;" title="งง ดูไม่รู้เรื่อง" id="12" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar12.png" alt="12" width="57.5" height="57.5" border="0"></a>
+				<a href="javascript:;" title="น่ารักเหมาะกับเด็ก" id="13" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar13.png" alt="13" width="57.5" height="57.5" border="0"></a>
+				<a href="javascript:;" title="ซึ้งกินใจ" id="14" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar14.png" alt="14" width="57.5" height="57.5" border="0"></a>
+			</div>-->
 		</div>
+
 
 		<div style="height: 10px;"></div>
 
@@ -203,31 +205,10 @@
 
 			<img id="img_avatar" width="60" height="60" src="/images/details/avatar.png" />
 
-
-			<!-- <img id="img_avatar" src="/images/details/avatar.png" href='javascript:uploadContactImage()' /> -->
-			<!-- <a class="btn-post" type="submit" href="javascript:submitComment()" ></a> -->
-
-<!-- 			<select name="emotion_review" size="4" id="avatar_review_id" >
-			<option value="1" selected="selected">อารม1</option>
-			<option value="2">อารม2</option>
-			<option value="3">อารม3</option>
-			<option value="4">อารม4</option>
-			<option value="5">อารม5</option>
-			<option value="6">อารม6</option>
-			<option value="7">อารม7</option>
-			<option value="8">อารม8</option>
-			<option value="9">อารม9</option>
-			<option value="10">อารม10</option>
-			<option value="11">อารม11</option>
-			<option value="12">อารม12</option>
-			</select> -->
-
-
-
-				<a href="javascript:;" id=":emo1_01:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/angry.gif" width="20" height="20" border="0"></a>
-				<a href="javascript:;" id=":emo1_02:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/cry.gif" width="20" height="20" border="0"></a>
-				<a href="javascript:;" id=":emo1_03:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/huh.gif" width="20" height="20" border="0"></a>
-				<a href="javascript:;" id=":emo1_04:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/wink.gif" width="20" height="20" border="0"></a>
+			<a href="javascript:;" id=":emo1_01:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/angry.gif" width="20" height="20" border="0"></a>
+			<a href="javascript:;" id=":emo1_02:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/cry.gif" width="20" height="20" border="0"></a>
+			<a href="javascript:;" id=":emo1_03:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/huh.gif" width="20" height="20" border="0"></a>
+			<a href="javascript:;" id=":emo1_04:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/wink.gif" width="20" height="20" border="0"></a>
 		
 		</div>
 
@@ -306,18 +287,6 @@
 		</div>
 	</div>
 
-
-
-
-<!-- 	<center>
-	<table width="900" border="1" cellpadding="0" cellspacing="5" bordercolor="#333333">
-	<br/><br/>
-    <div>ข้อความ: {{ comment.content|decodeHTML }}</div>
-    <div>ชื่อ: {{ comment.author|decodeHTML }}</div>
-    <div>วันที่: {{ (comment.date | datetime_lctimezone_format).strftime("%B %d, %Y") }} เวลา: {{ (comment.date | datetime_lctimezone_format).strftime("%H:%M") }}</div>
-	<br/><br/>
-    </table>
-    </center> -->
 	{% endfor %}
 
 
@@ -461,10 +430,7 @@
 		    			h += '<div class="comments-template-content">'+content+'</div>';
 		    		h += '</div>';
 		    	h += '</div>';
-
-
 			}
-			
 			$('#comments-template').html(h);
 
 			// $('#comments').html(h);

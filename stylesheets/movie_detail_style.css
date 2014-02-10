@@ -128,7 +128,8 @@ body {
 .movie-box-comment {
    margin: 0 auto;
    width:860px;
-   height:290px; 
+   height:290px;
+   /*height:330px; */
    /*height:220px; */
    /*250*/
    background-color: #FFFFFF;
