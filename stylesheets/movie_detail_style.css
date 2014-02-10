@@ -1,15 +1,10 @@
 body {
-<<<<<<< HEAD
 	/*background-color: #ecedef;*/
    background-color: #5b5b5b;
-=======
-	background-color: #ecedef; 
->>>>>>> fa4cc3856e9c46a56e0de53ae74bc19dcce2d69b
 }
 
 .movie-title-image {
 	margin: 0 auto;
-<<<<<<< HEAD
 /*    	 
 	height:450px;*/
 
@@ -21,10 +16,6 @@ body {
    background-color: #ecedef;
    margin: 0 auto;
    overflow:hidden;
-=======
-   width:900px; 
-	/*height:450px;*/
->>>>>>> fa4cc3856e9c46a56e0de53ae74bc19dcce2d69b
 }
 .movie-image {
 	margin: 0 auto;
