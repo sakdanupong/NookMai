@@ -1,10 +1,35 @@
 .poster_div {
     width:132px; 
-    height:244px;
+    /*height:244px;*/
 }
 
 .poster_image {
 	height: 197px;
+}
+
+.poster_avatar_sub_div {
+	display: inline-block;
+	width: 44px;
+	height: 60px;
+}
+
+.poster_avatar_image {
+	-moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -o-border-radius: 50%;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    /*margin-left: 5px;*/
+    display: block;
+    margin: auto;
+}
+
+.poster_avatar_count {
+	width: 44px;
+    height: 30px;
+    text-align: center;
+    color: #FFFFFF;
 }
 
 .poster_title {

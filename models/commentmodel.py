@@ -11,6 +11,6 @@ from google.appengine.ext import db
 class CommentModel(db.Model):
     movie_id = db.IntegerProperty()
     author = db.StringProperty(indexed=False)
-    content = db.StringProperty(indexed=False)
+    content = db.TextProperty()
     date = db.DateTimeProperty(auto_now_add=True)
     avatar_review_id = db.IntegerProperty()

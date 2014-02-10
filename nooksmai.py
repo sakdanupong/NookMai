@@ -39,6 +39,7 @@ CAPTCHA_PRIVATE_KEY_LOCALHOST = '6LdtC-0SAAAAAKvLvewCc4m0_qb7MxuPgRhg0svA'
 BANGKOK_TIMEZONE = pytz.timezone('Asia/Bangkok')
 ALL_RECORD_COUNTER_KEY = 'allRecordCounter'
 REFRESH_DATA_CACHE = 'REFRESH_DATA_CACHE'
+AVATAR_COUNT = 14
 
 def editMovieData():
     r = {'success':'success'}
@@ -111,9 +112,9 @@ def increment_movie_comment_avatar_counter(c_key, avatar_id):
     elif  avatar_id== 12:
         c.avatar_12_count += 1
     elif  avatar_id== 13:
-        c.avatar_12_count += 1
+        c.avatar_13_count += 1
     elif  avatar_id== 14:
-        c.avatar_12_count += 1
+        c.avatar_14_count += 1
 
     c.put()
 
@@ -137,6 +138,20 @@ def getNowShowing(l_offset, data_per_page):
             'movie_id' : movie.id,
             'name_en' : movie.name_en,
             'name_th' : movie.name_th,
+            'avatar_1_count' : movie.avatar_1_count,
+            'avatar_2_count' : movie.avatar_2_count,
+            'avatar_3_count' : movie.avatar_3_count,
+            'avatar_4_count' : movie.avatar_4_count,
+            'avatar_5_count' : movie.avatar_5_count,
+            'avatar_6_count' : movie.avatar_6_count,
+            'avatar_7_count' : movie.avatar_7_count,
+            'avatar_8_count' : movie.avatar_8_count,
+            'avatar_9_count' : movie.avatar_9_count,
+            'avatar_10_count' : movie.avatar_10_count,
+            'avatar_11_count' : movie.avatar_11_count,
+            'avatar_12_count' : movie.avatar_12_count,
+            'avatar_13_count' : movie.avatar_13_count,
+            'avatar_14_count' : movie.avatar_14_count,
         }
         list.append(movie_json)
 
@@ -161,7 +176,6 @@ def getComingSoon(l_offset, data_per_page):
         'movie_list' : list,   
     }
     return json.dumps(r)
-    
 
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -172,7 +186,6 @@ JINJA_ENVIRONMENT.filters['covertUnixTimeToStrFotmat']=covertUnixTimeToStrFotmat
 JINJA_ENVIRONMENT.filters['editMovieData']=editMovieData
 JINJA_ENVIRONMENT.filters['decodeHTML']=decodeHTML
 JINJA_ENVIRONMENT.filters['datetime_lctimezone_format']=datetime_lctimezone_format
-
 
 NOWSHOWING_DATA_PER_PAGE = 15
 COMINGSOON_PER_PAGE = 10
@@ -188,6 +201,7 @@ class MainPage(webapp2.RequestHandler):
         template_values = {
              'random_movie' : random_movie,
              'record_object' : record_object,
+             'avatar_count' : AVATAR_COUNT,
              'nowshowing_per_page' : NOWSHOWING_DATA_PER_PAGE, 
              'comingsoon_per_page' : COMINGSOON_PER_PAGE,
         }
