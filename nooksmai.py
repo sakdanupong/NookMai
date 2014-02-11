@@ -206,6 +206,7 @@ class MainPage(webapp2.RequestHandler):
              'comingsoon_per_page' : COMINGSOON_PER_PAGE,
         }
         template = JINJA_ENVIRONMENT.get_template('movielist.html')
+        # template = JINJA_ENVIRONMENT.get_template('test_responsive.html')
         self.response.write(template.render(template_values))
 
 class NowShowing(webapp2.RequestHandler):
