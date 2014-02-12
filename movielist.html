@@ -2,16 +2,19 @@
 {% autoescape true %}
 <html>
     <head>
-      <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-      <link rel="shortcut icon" href="images/favicon.ico" />
+      <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+      <script src="//code.jquery.com/jquery-1.9.1.js"></script>
+      <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+      <script src="/javascripts/NumberUtil.js"></script>
+      <link rel="shortcut icon" href="images/favicon.ico"/>
       <link type="text/css" rel="stylesheet" href="/stylesheets/main_header.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/font_family.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/base_document.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/poster.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/carousel.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/main_body.css" />
-      <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
-      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+      <!-- <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> -->
       <title>nookmai.com หนุกมั้ยดอทคอม</title>
       <script>
 
@@ -146,8 +149,9 @@
             avatar_image.className = 'poster_avatar_image';
             avatar_image.src = image_path;
             var avatar_count = document.createElement('div');
-            avatar_count.className = 'poster_avatar_count';
-            avatar_count.innerHTML = ''+ count;
+            avatar_count.className = 'poster_avatar_count'
+            var num = summaryNumber(count);
+            avatar_count.innerHTML = num;
             avatar_sub_div.appendChild(avatar_image);
             avatar_sub_div.appendChild(avatar_count);
             avatar_div.appendChild(avatar_sub_div);
@@ -454,6 +458,12 @@
           }
         }
 
+        function checkScrollTo() {
+          setTimeout(function() {
+            scrollToDiv('{{scroll_to}}');
+          }, 200);
+        }
+
         $(document).ready(function() {
           $('#nav_home').addClass('active');
           initPaginationButton();
@@ -461,7 +471,46 @@
           initComingsoonPaginationButton();
           getNowShowing(current_page);
           getComingSoon(comingsoon_current_page);
+
+          {% if scroll_to %}
+            checkScrollTo();
+          {% endif %}
+
         });
+
+              $(function() {
+        var availableTags = [
+          "ActionScript",
+          "AppleScript",
+          "Asp",
+          "BASIC",
+          "C",
+          "C++",
+          "Clojure",
+          "COBOL",
+          "ColdFusion",
+          "Erlang",
+          "Fortran",
+          "Groovy",
+          "Haskell",
+          "Java",
+          "JavaScript",
+          "Lisp",
+          "Perl",
+          "PHP",
+          "Python",
+          "Ruby",
+          "Scala",
+          "Scheme"
+        ];
+
+        $( "#search_input" ).autocomplete({
+          source: availableTags
+        });
+        
+        });
+
+
 
           // var count = 0;
           // var sliderWidth = 816 + 39;

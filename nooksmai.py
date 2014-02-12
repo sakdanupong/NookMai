@@ -177,6 +177,16 @@ def getComingSoon(l_offset, data_per_page):
     }
     return json.dumps(r)
 
+def summaryNumber(number):
+    result_num = 0
+    number_len = len(str(number))
+    if number_len < 4:
+        return str(number)
+    result_num = number / 1000.0
+    result_num ="%.2f" % result_num
+    str_result = str(result_num) + 'k'
+    return str_result
+
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -186,6 +196,8 @@ JINJA_ENVIRONMENT.filters['covertUnixTimeToStrFotmat']=covertUnixTimeToStrFotmat
 JINJA_ENVIRONMENT.filters['editMovieData']=editMovieData
 JINJA_ENVIRONMENT.filters['decodeHTML']=decodeHTML
 JINJA_ENVIRONMENT.filters['datetime_lctimezone_format']=datetime_lctimezone_format
+JINJA_ENVIRONMENT.filters['summaryNumber']=summaryNumber
+
 
 NOWSHOWING_DATA_PER_PAGE = 15
 COMINGSOON_PER_PAGE = 10
@@ -208,6 +220,28 @@ class MainPage(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('movielist.html')
         # template = JINJA_ENVIRONMENT.get_template('test_responsive.html')
         self.response.write(template.render(template_values))
+    def post(self):
+        record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
+        movie_list = getNowShowing(0, NOWSHOWING_DATA_PER_PAGE)
+        movie_json = json.loads(movie_list)
+        movie_list = movie_json['movie_list']
+        magic_number = randint(0, len(movie_list) - 1)
+        random_movie = movie_list[magic_number]
+
+        scroll_to = self.request.get('scroll_to')
+
+        template_values = {
+             'random_movie' : random_movie,
+             'record_object' : record_object,
+             'avatar_count' : AVATAR_COUNT,
+             'nowshowing_per_page' : NOWSHOWING_DATA_PER_PAGE, 
+             'comingsoon_per_page' : COMINGSOON_PER_PAGE,
+             'scroll_to' : scroll_to,
+        }
+        template = JINJA_ENVIRONMENT.get_template('movielist.html')
+        # template = JINJA_ENVIRONMENT.get_template('test_responsive.html')
+        self.response.write(template.render(template_values))
+        
 
 class NowShowing(webapp2.RequestHandler):
     def get(self):
