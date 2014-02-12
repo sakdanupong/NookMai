@@ -7,9 +7,11 @@
       <link type="text/css" rel="stylesheet" href="/stylesheets/main_header.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/font_family.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/base_document.css" />
-      <link type="text/css" rel="stylesheet" href="/stylesheets/main_body.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/poster.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/carousel.css" />
+      <link type="text/css" rel="stylesheet" href="/stylesheets/main_body.css" />
+      <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
       <title>nookmai.com หนุกมั้ยดอทคอม</title>
       <script>
 
@@ -459,6 +461,26 @@
           getComingSoon(comingsoon_current_page);
         });
 
+          // var count = 0;
+          // var sliderWidth = 816 + 39;
+          // var slider = $('#slider');
+          // var sliderCount = $('div', slider).length;
+          // slider.width(sliderCount * sliderWidth);
+
+          // $('#date-nav-prev').click(function () { 
+          //     if (count == 0)
+          //       return;
+          //     $('#slider').animate({left: '+='+sliderWidth}, 500);
+          //     count -=1;
+          // });
+
+          // $('#date-nav-next').click(function () {
+          //     if (count == 3)
+          //       return;
+          //     $('#slider').animate({left: '-='+sliderWidth}, 500);
+          //     count +=1;
+          // });
+
       </script>
     </head>
     <body>
@@ -470,7 +492,40 @@
           <div id="nowshowing_wraper_div">
             <div id="nowshowing_wraper"></div>
           </div>
-          <!-- <div id="nowshowing_wraper_and_button_parent">
+          
+          <div class="carousel_div">
+            <div class="btn_carousel_div"><a class="btn_carousel" id="all_page_link"></a></div>
+            <div class="btn_carousel_div"><a class="btn_carousel" id="first_page_link"><< First</a></div>
+            <div class="btn_carousel_div"><a class="btn_carousel" id="prev_page_link">< Prev</a></div>
+            <div id="page_btn_div"></div>
+            <div class="btn_carousel_div"><a class="btn_carousel" id="next_page_link">Next ></a></div>
+            <div class="btn_carousel_div"><a class="btn_carousel" id="last_page_link">Last >></a></div>
+          </div>
+        </div>
+        <div id="comingsoon_div">
+          <div id="inner_comingsoon_div" class="round-corner">
+            <div id="comingsoon_caption" class="main_page_caption">COMING SOON</div>
+            <div id="comingsoon_wraper_div">
+              <div id="comingsoon_wraper"></div>
+            </div>
+            <div class="carousel_div">
+              <div class="btn_carousel_div"><a class="btn_carousel" id="comingsoon_all_page_link"></a></div>
+              <div class="btn_carousel_div"><a class="btn_carousel" id="comingsoon_first_page_link"><< First</a></div>
+              <div class="btn_carousel_div"><a class="btn_carousel" id="comingsoon_prev_page_link">< Prev</a></div>
+              <div id="comingsoon_page_btn_div"></div>
+              <div class="btn_carousel_div"><a class="btn_carousel" id="comingsoon_next_page_link">Next ></a></div>
+              <div class="btn_carousel_div"><a class="btn_carousel" id="comingsoon_last_page_link">Last >></a></div> 
+            </div>
+            
+          </div>
+        </div>
+        {% include "/main_footer.html" with context %}
+      </div> 
+  </body>
+</html>
+{% endautoescape %}
+
+      <!-- <div id="nowshowing_wraper_and_button_parent">
             <div id="btn_prev_div">
               <input type="image" src="/images/mains/icon_previous.png" class="slide_button" id="date-nav-prev">
             </div>
@@ -494,78 +549,4 @@
               </div>
             </div>
           </div> -->
-          <div class="carousel_div">
-            <div class="btn_carousel_div"><a class="btn_carousel" id="all_page_link"></a></div>
-            <div class="btn_carousel_div"><a class="btn_carousel" id="first_page_link"><< First</a></div>
-            <div class="btn_carousel_div"><a class="btn_carousel" id="prev_page_link">< Prev</a></div>
-            <div id="page_btn_div"></div>
-            <div class="btn_carousel_div"><a class="btn_carousel" id="next_page_link">Next ></a></div>
-            <div class="btn_carousel_div"><a class="btn_carousel" id="last_page_link">Last >></a></div>
-          </div>
-        </div>
-        <script>
-          // var count = 0;
-          // var sliderWidth = 816 + 39;
-          // var slider = $('#slider');
-          // var sliderCount = $('div', slider).length;
-          // slider.width(sliderCount * sliderWidth);
 
-          // $('#date-nav-prev').click(function () { 
-          //     if (count == 0)
-          //       return;
-          //     $('#slider').animate({left: '+='+sliderWidth}, 500);
-          //     count -=1;
-          // });
-
-          // $('#date-nav-next').click(function () {
-          //     if (count == 3)
-          //       return;
-          //     $('#slider').animate({left: '-='+sliderWidth}, 500);
-          //     count +=1;
-          // });
-        </script>
-        <div id="comingsoon_div">
-          <div id="inner_comingsoon_div" class="round-corner">
-            <div id="comingsoon_caption" class="main_page_caption">COMING SOON</div>
-            <div id="comingsoon_wraper_div">
-              <div id="comingsoon_wraper"></div>
-            </div>
-            <div class="carousel_div">
-              <div class="btn_carousel_div"><a class="btn_carousel" id="comingsoon_all_page_link"></a></div>
-              <div class="btn_carousel_div"><a class="btn_carousel" id="comingsoon_first_page_link"><< First</a></div>
-              <div class="btn_carousel_div"><a class="btn_carousel" id="comingsoon_prev_page_link">< Prev</a></div>
-              <div id="comingsoon_page_btn_div"></div>
-              <div class="btn_carousel_div"><a class="btn_carousel" id="comingsoon_next_page_link">Next ></a></div>
-              <div class="btn_carousel_div"><a class="btn_carousel" id="comingsoon_last_page_link">Last >></a></div> 
-            </div>
-            <!-- <div id="comingsoon_movie_div">
-              {% for movie in comingsoon_list %}
-                {% if loop.index < 6%}
-                  <a href="/detail?movie_id={{movie.id}}"> 
-                    <div class="comingsoon_poster_div">
-                      <div>
-                        <img class="poster_image" border="0" src="/image?movie_id={{ movie.id }}">
-                      </div>
-                      <div class="poster_title"><a id="comingsoon_poster_link" href="/detail?movie_id={{movie.id}}">  {{movie.name_en}}</a></div>
-                    </div>
-                  </a>
-                {% else %}
-                  <a href="/detail?movie_id={{movie.id}}"> 
-                    <div class="comingsoon_poster_lower_div">
-                      <div>
-                        <img class="poster_image" border="0" src="/image?movie_id={{ movie.id }}">
-                      </div>
-                      <div class="poster_title"><a id="comingsoon_poster_link" href="/detail?movie_id={{movie.id}}">  {{movie.name_en}}</a></div>
-                    </div>
-                  </a>
-                {% endif %}
-              {% endfor %}
-            </div> -->
-            <!-- <div id="comingsoon_more_div"><a href="#"> MORE ></a></div> -->
-          </div>
-        </div>
-        {% include "/main_footer.html" with context %}
-      </div>
-</body>
-</html>
-{% endautoescape %}
