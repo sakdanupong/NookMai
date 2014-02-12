@@ -115,17 +115,27 @@
 
 		<div style="height: 40px;"></div>
 		<iframe id="youtube_frame" src="{{ movie_data.youtube_url }}?autoplay=1&html5=1" frameborder="0" allowfullscreen style="display: none; width: 855px; height: 450px; margin: 0 auto; border: 0;"></iframe>
+		<div class="container" style="display: none; margin: 0 auto;">
+			<div class="content">
+    			<div class="circle"></div>
+   				 <div class="circle1"></div>
+    		</div>
+		</div>
+
 		<script>
 		{% if not movie_data.youtube_url %}
+			$(".container").show();
 			$.getJSON( "/trailer?movie_id={{ movie_data.id }}", function(data) { 
 				var youtube_link = "//www.youtube.com/embed/"+data['videoId']+"?autoplay=1&html5=1";
 					$("#youtube_frame").get(0).contentWindow.location.replace(youtube_link);
 					document.getElementById("youtube_frame").onload = function() {
 					$("#youtube_frame").show();
+					$(".container").hide();
 				};
 			});
 		{% else %}
 			$("#youtube_frame").show();
+			$(".container").hide();
 		{% endif %}
 		</script>
 		<div style="height: 20px;"></div>
@@ -205,10 +215,10 @@
 
 			<img id="img_avatar" width="60" height="60" src="/images/details/avatar.png" />
 
-			<a href="javascript:;" id=":emo1_01:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/angry.gif" width="20" height="20" border="0"></a>
+<!-- 			<a href="javascript:;" id=":emo1_01:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/angry.gif" width="20" height="20" border="0"></a>
 			<a href="javascript:;" id=":emo1_02:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/cry.gif" width="20" height="20" border="0"></a>
 			<a href="javascript:;" id=":emo1_03:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/huh.gif" width="20" height="20" border="0"></a>
-			<a href="javascript:;" id=":emo1_04:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/wink.gif" width="20" height="20" border="0"></a>
+			<a href="javascript:;" id=":emo1_04:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/wink.gif" width="20" height="20" border="0"></a> -->
 		
 		</div>
 
@@ -280,9 +290,27 @@
 			<img id="img_avatar" width="60" height="60" src="/images/details/avatar/image_avatar{{comment.avatar_review_id}}.png" />
 			<div class="comments-template-name">{{ comment.author|decodeHTML }}</div>
 		</div>
+
+
+
 		<div class="comments-template-right">
 			<div class="comments-template-count-comment">ความคิดเห็นที่ {{(movie_data.comment_count - loop.index)+1 }}</div>
-			<div class="comments-template-date-and-time">{{ (comment.date | datetime_lctimezone_format).strftime("%B %d, %Y") }} : {{ (comment.date | datetime_lctimezone_format).strftime("%H:%M") }}น.</div>
+			<div class="comments-template-date-and-time" id="{{comment.date}}"></div>
+			<script type="text/javascript">
+
+				function arrMonthName(m) {
+					var arrMonthName = new Array("","มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม");
+					 var str_day = {{comment.date.day}};
+					 var str_year = {{comment.date.year}} + 543;
+					 var str_time = '{{ (comment.date | datetime_lctimezone_format).strftime("%H:%M") }}น.';
+					 var div = document.getElementById('{{comment.date}}');
+					 div.innerHTML = str_day + ' ' + arrMonthName[m] + ' '+ str_year + ' ' +','+ ' ' + str_time;
+				}
+
+				arrMonthName({{ comment.date.month }});
+				
+			</script>
+			<!-- <div class="comments-template-date-and-time">{{ (comment.date | datetime_lctimezone_format).strftime("%m %d, %Y") }} : {{ (comment.date | datetime_lctimezone_format).strftime("%H:%M") }}น.</div> -->
 			<div class="comments-template-content">{{ comment.content|decodeHTML }}</div>
 		</div>
 	</div>
@@ -292,6 +320,7 @@
 
 
 </div>
+
 <div class="comments-template-box-footer"></div>
 
 
@@ -337,19 +366,48 @@
 
 <script>
 
+	function resetBtnPost() {
+		$('.btn-post').css("background", "none repeat scroll 0 0 #999999");
+		$('.btn-post').text("Post")
+	}
+
+	function alertAndResetBtn(txet) {
+ 		alert(txet);
+ 		setTimeout(resetBtnPost,0);
+	}
+
 	function submitComment() {
+
+		$('.btn-post').css("background", "none repeat scroll 0 0 #666666");
+		$('.btn-post').text("Post..")
+
 		// var nicE = new nicEditors.findEditor('comment_content');
 		// var content = nicE.getContent();
-		var content = $("#comment_content").val();
-     	// alert(content);
 
- 		// var avatar_review_id = document.getElementById('avatar_review_id').value; 
- 		var avatar_review_id = document.getElementById('img_avatar').alt;
-     	// alert(avatar_review_id);
+
+		var content = $("#comment_content").val();
+		var avatar_review_id = document.getElementById('img_avatar').alt;
 		var author = $("#comment_author").val();
 		var recaptcha_challenge_field = $('[name="recaptcha_challenge_field"]').val();
 		var recaptcha_response_field = $('[name="recaptcha_response_field"]').val();
-		// alert(content);
+
+		 if (!content) {
+ 			alertAndResetBtn("กรุณากรอกคอมเมนต์")
+ 			return;
+ 		};
+ 		if (!author) {
+ 			alertAndResetBtn("กรุณากรอกชื่อ")
+ 			return;
+ 		};
+ 		if (!avatar_review_id) {
+ 			alertAndResetBtn("กรุณาเลือกอารมของหนัง")
+ 			return;
+ 		};
+ 		if (!recaptcha_response_field) {
+ 			alertAndResetBtn("กรุณากรอกแคปท์ชา")
+ 			return;
+ 		};
+
 
 		var postData = {'movie_id':{{ movie_data.id }},
 		 				'author':author,
@@ -371,8 +429,17 @@
 				// $('#doc_title').val("");
 
 			 	setTimeout(updateComments,100);
-			}else
-			 	alert("The CAPTCHA you entered is invalid. Please try again");
+			}else {
+				// alert(data);
+				// alert("The CAPTCHA you entered is invalid. Please try again");
+				alert("แคปท์ชาผิด กรุณาลองอีกครั้ง");
+				Recaptcha.reload();
+			}
+
+			setTimeout(resetBtnPost,0);
+
+			// $('.btn-post').css("background", "none repeat scroll 0 0 #999999");
+			// $('.btn-post').text("Post")
 		});
 
 	}
@@ -443,6 +510,9 @@
 		// var path_emo = '<img src="/images/details/emotion/'+id+'" border="0">'
 		$('#comment_content').val(content+id);
 	}
+
+
+
 
 
 </script>
