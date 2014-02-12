@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+    <head>
+      <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+      <link rel="shortcut icon" href="images/favicon.ico" />
+      <link type="text/css" rel="stylesheet" href="/stylesheets/main_header.css" />
+      <link type="text/css" rel="stylesheet" href="/stylesheets/font_family.css" />
+      <link type="text/css" rel="stylesheet" href="/stylesheets/base_document.css" />
+      <link type="text/css" rel="stylesheet" href="/stylesheets/poster.css" />
+      <link type="text/css" rel="stylesheet" href="/stylesheets/carousel.css" />
+      <title>nookmai.com หนุกมั้ยดอทคอม</title>
+      <script>
+
+        var current_page = 1;
+
+        function removeAllChildInDiv(div) {
+          while(div.hasChildNodes() ){
+            div.removeChild(div.lastChild);
+          }
+        }
+
+        function updateNowShowingData(data) {
+          var nowshowing_wraper_div = document.getElementById('nowshowing_wraper_div');
+          removeAllChildInDiv(nowshowing_wraper_div);
+          var movie_list = data['movie_list'];
+          for (var i = 0; i < movie_list.length; i++) {
+            var movie_id = movie_list[i]['movie_id'];
+            var name_en = movie_list[i]['name_en'];
+            var name_th = movie_list[i]['name_th'];
+            var link = document.createElement('a');
+            link.href = '/detail?movie_id='+movie_id;
+            var wrapper_div = document.createElement('div');
+            var poster_div_id = 'poster_div';
+            if (i > 4) 
+              poster_div_id = 'poster_div_with_top_margin';
+            wrapper_div.className = poster_div_id;
+            link.appendChild(wrapper_div);
+            var image_div = document.createElement('div');
+            var image = document.createElement('img')
+            image.src = '/image?movie_id='+movie_id;
+            image.className = 'poster_image';
+            image_div.appendChild(image);
+            var title_div = document.createElement('div');
+            title_div.className = 'poster_title';
+            var title_link = document.createElement('a');
+            title_link.id = 'nowshowing_poster_link';
+            title_link.href = '/detail?movie_id='+movie_id;
+            title_link.innerHTML = name_en;
+            title_div.appendChild(title_link);
+            wrapper_div.appendChild(image_div);
+            wrapper_div.appendChild(title_div);
+            nowshowing_wraper_div.appendChild(link);
+          }
+          //nowShowingFadeIn();
+        }
+
+
+        function getNowShowing(page_count) {
+          //nowShowingFadeOut();
+          current_page = page_count;
+          //updatePositionNowShowingcarousel();
+          var formData = new FormData();
+          formData.append('page', page_count);
+          formData.append('data_per_page', {{data_per_page}})
+          // formData.append('_ajax_nonce', importNonce);
+          $.ajax({
+            url: '/api_get_nowshowing',  //Server script to process data
+            type: 'POST',
+            mimeType:"multipart/form-data",
+            dataType: 'json',
+            success: function(json) {
+              updateNowShowingData(json);
+            },
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false
+          });
+        }
+
+        $(document).ready(function() {
+          $('#nav_now_showing').addClass('active');
+          getNowShowing(current_page);
+        });
+
+      </script>
+    </head>
+    <body>
+      {% include "/main_header.html" with context %}
+      <div id = "nowshowing_wraper_div"></div>
+      {% include "/main_footer.html" with context %}
+      </div>
+</body>
+</html>
+{% endautoescape %}
