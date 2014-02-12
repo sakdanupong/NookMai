@@ -9,11 +9,39 @@
 function scrollToDiv(element) {
 	// $("*").animate({ scrollTop: 0}, { duration: 'slow', easing: 'swing'});
 	var p = document.getElementById(element);
-	$("*").animate({ scrollTop: p.offsetTop}, { duration: 'slow', easing: 'swing'});
+	if (p)
+		$("*").animate({ scrollTop: p.offsetTop}, { duration: 'slow', easing: 'swing'});
+	else {
+		var params = {
+			'scroll_to' : element,
+		};
+		post_to_url(params)
+	}
+}
 
-};
+function post_to_url(params) {
+    var method = "post"; // Set method to post by default if not specified.
 
+    // The rest of this code assumes you are not using a library.
+    // It can be made less wordy if you use one.
+    var form = document.createElement("form");
+    form.setAttribute("method", method);
+    form.setAttribute("action", '/');
 
+    for(var key in params) {
+        if(params.hasOwnProperty(key)) {
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", key);
+            hiddenField.setAttribute("value", params[key]);
+
+            form.appendChild(hiddenField);
+         }
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+}
 
 </script>
 </head>
@@ -31,9 +59,10 @@ function scrollToDiv(element) {
 	<div id="nav_div">
 	</div> -->
 	<div id="header_div">
-		<img id="img_header_logo" src="/images/headers/logo1.png" />
+		<a href="/"><img id="img_header_logo" src="/images/headers/logo1.png" /></a>
 		<div class="round-corner" id="search_div">
-			<input id="search_input" type="text" placeholder="Search movies"/>
+			<div class="ui-widget"><input id="search_input" placeholder="Search movies"></div>
+			<!-- <input id="search_input" type="text" /> -->
 			<img id="img_search" src="/images/headers/icon_search.png"/>
 		</div>
 	</div>
@@ -42,7 +71,6 @@ function scrollToDiv(element) {
 			<ul><li><a id="nav_home" class="round-corner" href="/">Home</a></li>
 				<li><a id="nav_now_showing" class="round-corner" href="javascript:scrollToDiv('nowshowing_div')">Now Showing</a></li>
 				<li><a id="nav_coming_soon" class="round-corner" href="javascript:scrollToDiv('comingsoon_div')">Coming Soon</a></li>
-
 				<li><a id="nav_programs" class="round-corner" href="/">Programs</a>
 				</li>
 			</ul>
