@@ -463,9 +463,8 @@ class NookMai(webapp2.RequestHandler):
 
 class NookMaiDetailMovie(webapp2.RequestHandler):
 
-    def get(self):
+    def get(self, movie_id):
 
-        movie_id = self.request.get('movie_id')
         movie_data = MovieModel.get_or_insert(key_name=movie_id)
 
         detail_en = movie_data.detail_synopsis_en
@@ -598,6 +597,9 @@ class AddComment(webapp2.RequestHandler):
             # logging.warning('is_valid')
 
             content = self.request.get('content')
+            logging.warning('content1'+content)
+            logging.warning('content2'+content)
+
             movie_id = self.request.get('movie_id')
             author = self.request.get('author')
             avatar_review_id = self.request.get('avatar_review_id')
@@ -605,7 +607,7 @@ class AddComment(webapp2.RequestHandler):
             if content :
                 c = CommentModel()
                 c.movie_id = int(movie_id)
-                c.content = cgi.escape(content)
+                c.content = cgi.escape(content).replace('\n', '<br/>')
                 c.author = cgi.escape(author)
                 c.avatar_review_id = int(avatar_review_id)
                 # c.avatar_review_id = cgi.escape(avatar_review_id)
@@ -806,7 +808,7 @@ class GetComingSoon(webapp2.RequestHandler):
 application = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/sign', NookMai),
-    ('/detail', NookMaiDetailMovie),
+    ('/detail/(.*)', NookMaiDetailMovie),
     ('/refresh_data', RefreshData),
     ('/image', ImageCache),
     ('/trailer', GetTrailer),

@@ -165,7 +165,8 @@
             var name_en = movie_list[i]['name_en'];
             var name_th = movie_list[i]['name_th'];
             var link = document.createElement('a');
-            link.href = '/detail?movie_id='+movie_id;
+            // link.href = '/detail?movie_id='+movie_id;
+            link.href = '/detail/'+movie_id;
             var wrapper_div = document.createElement('div');
             var poster_div_id = 'poster_div';
             if (i > 4) 
@@ -186,7 +187,8 @@
 
             var title_link = document.createElement('a');
             title_link.id = 'nowshowing_poster_link';
-            title_link.href = '/detail?movie_id='+movie_id;
+            // title_link.href = '/detail?movie_id='+movie_id;
+            title_link.href = '/detail/'+movie_id;
             title_link.innerHTML = name_en;
             title_div.appendChild(title_link);
             wrapper_div.appendChild(image_div);

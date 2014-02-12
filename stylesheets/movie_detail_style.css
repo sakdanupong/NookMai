@@ -344,6 +344,8 @@ iframe[src="about:blank"]{display:none;}
    /*background-color: #242424;*/
    padding-top: 8px;
    /*margin-right: 10px;*/
+/*   word-wrap:break-word;
+   display: block;*/
 }
 .comments-template-box-footer {
    margin: 0 auto;

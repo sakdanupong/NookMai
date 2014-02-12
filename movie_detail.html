@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% autoescape true %}
+{% autoescape false %}
 
 <html>
 
@@ -10,7 +10,6 @@
 	<link type="text/css" rel="stylesheet" href="/stylesheets/font_family.css" />
 	<link type="text/css" rel="stylesheet" href="/stylesheets/main_header.css" />
     <link type="text/css" rel="stylesheet" href="/stylesheets/base_document.css" />
-    <link type="text/css" rel="stylesheet" href="/stylesheets/main_body.css" />
     <link type="text/css" rel="stylesheet" href="/stylesheets/main_body.css" />
 
     <link type="text/css" rel="stylesheet" href="/stylesheets/demo.css" />
@@ -52,7 +51,9 @@
 <div class="movie-title-image" style="width:900px;">
 
 	<div class="movie-image">
-		<a href="/detail?movie_id={{ movie_data.id }}">
+		<!-- <a href="/detail?movie_id={{ movie_data.id }}"> -->
+		<a href="/detail/{{ movie_data.id }}">
+
 		<img border="0" src="/image?movie_id={{ movie_data.id }}" width="288" float:left>
 		</a>
 	</div>
@@ -311,7 +312,24 @@
 				
 			</script>
 			<!-- <div class="comments-template-date-and-time">{{ (comment.date | datetime_lctimezone_format).strftime("%m %d, %Y") }} : {{ (comment.date | datetime_lctimezone_format).strftime("%H:%M") }}น.</div> -->
-			<div class="comments-template-content">{{ comment.content|decodeHTML }}</div>
+
+			<div class="comments-template-content">{{ comment.content }}</div>
+
+			<!--<div class="comments-template-content" id="{{comment.content}}"></div>
+			<script type="text/javascript">
+				function changeNewLine() {
+					var c = '{{ comment.content|decodeHTML }}';
+					alert('1'+c);
+					c.stringContainingNewLines.replace(/(\r\n|\n|\r)/gm, "<br>");
+					alert('2'+c);
+					var div = document.getElementById('{{comment.content}}');
+					alert('3'+c);
+					div.innerHTML = c;
+				}
+
+				changeNewLine();
+			</script>-->
+
 		</div>
 	</div>
 
@@ -386,6 +404,7 @@
 
 
 		var content = $("#comment_content").val();
+
 		var avatar_review_id = document.getElementById('img_avatar').alt;
 		var author = $("#comment_author").val();
 		var recaptcha_challenge_field = $('[name="recaptcha_challenge_field"]').val();
@@ -408,6 +427,7 @@
  			return;
  		};
 
+		// content = str_replace("\n", "<br>\n", content);
 
 		var postData = {'movie_id':{{ movie_data.id }},
 		 				'author':author,
