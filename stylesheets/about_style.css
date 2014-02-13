@@ -30,6 +30,7 @@ body {
    width:600px;
    height:40px; 
    float:left;
+   border-radius: 10px;
 /*   margin-top: 10px;
    margin-left: 10px;*/
 }
@@ -56,14 +57,15 @@ body {
 
 
 
-.about-box-drescription-bg {
+.about-box-description-bg {
  background-color: #d0d0d0;
  width:600px;
  height:200px; 
  float:left;
+ border-radius: 10px;
 }
 
-#about_drescription {
+#about_description {
   width:600px; 
   height:200px;
   background-color: #d0d0d0;

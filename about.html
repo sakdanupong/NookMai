@@ -12,8 +12,8 @@
     <link type="text/css" rel="stylesheet" href="/stylesheets/base_document.css" />
     <link type="text/css" rel="stylesheet" href="/stylesheets/main_body.css" />
 
-    <link type="text/css" rel="stylesheet" href="/stylesheets/demo.css" />
-    <link type="text/css" rel="stylesheet" href="/stylesheets/style.css" />
+<!--     <link type="text/css" rel="stylesheet" href="/stylesheets/demo.css" />
+    <link type="text/css" rel="stylesheet" href="/stylesheets/style.css" /> -->
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,6 +21,11 @@
 	<title>About</title>
 	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
 
+
+<script>
+	$(document).ready(function() {
+		$('#nav_about').addClass('active');
+	});
 </script>
 </head>
 
@@ -30,6 +35,7 @@
 <div class="about-bg">
 	<div class="about-spece-0"></div>
 	<div class="about-box">
+	<form id="form-about" action="javascript:submitAbout();" method="post">
 		<div class="about-box-name-bg">
 			<input id="about_name" name="about_name" placeholder="Name"</input>
 		</div>
@@ -38,19 +44,44 @@
 			<input id="about_email" name="about_email" placeholder="E-mail Address"</input>
 		</div>
 		<div class="about-spece-1"></div>
-		<div class="about-box-drescription-bg">
-			<textarea id="about_drescription" name="drescription" placeholder="Drescription"></textarea> 
+		<div class="about-box-description-bg">
+			<textarea id="about_description" name="description" placeholder="Description"></textarea> 
 		</div>
 		<div class="about-spece-1"></div>
-		<!-- <div class="about-box-btn"> -->
-			<a class="btn-send" type="submit" href="javascript:submitAbout()" >Send</a>
-		<!-- </div> -->
+		<a class="btn-send" type="submit" href="javascript:submitAbout()" >Send</a>
+	</form>
 	</div>
 </div>
 
 
 
 <script>
+	function submitAbout() {
+
+	var name = $("#about_name").val();
+	var description = $("#about_description").val();
+	var email = $("#about_email").val();
+
+
+	var postData = {'name':name,
+	  				'description':description,
+	  				'email':email,
+	  				};
+	$.getJSON("/api_add_about", postData, function(data) {
+		// alert(data);
+
+		if(data['success'] == 1){
+			$('#about_description').val("");				
+		 	alert("ส่งข้อความเรียบร้อย");
+		}else {
+			alert("กรุณาลองอีกครั้ง");
+		}
+	});
+	
+	}
+
+
+
 </script>
 
 {% include "/main_footer.html" with context %}
