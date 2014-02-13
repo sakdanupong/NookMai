@@ -28,6 +28,7 @@ from comingsoonmodel import *
 from os import environ
 from recaptcha.client import captcha
 from random import randint
+from google.appengine.api import search 
 
 DEFAULT_COMMENT_NAME = 'default_user'
 
@@ -840,6 +841,19 @@ class GetComingSoon(webapp2.RequestHandler):
 
         self.response.out.write(r)
     # movie_list = movie_query.filter('is_coming_soon =', 0).fetch(limit=datape)
+class GetSeachMovie(webapp2.RequestHandler):
+    def get(self):
+        self.process()
+    def post(self):
+        self.process()
+    def process(self):
+        word = self.request.get('word')
+        movie_query = MovieModel.all().filter('name_en >=', unicode(word)).filter('name_en <',  unicode(word) + u"\ufffd").fetch(10)
+
+        movie = movie_query[0]
+        logging.warning(movie.name_en)
+
+        # self.response.out.write(r)
 
 
 
@@ -860,6 +874,7 @@ application = webapp2.WSGIApplication([
     ('/reset_counter', ResetCounter),
     ('/api_get_nowshowing', GetNowShowing),
     ('/api_get_comingsoon', GetComingSoon),
+    ('/api_get_searchmovie', GetSeachMovie)
 ], debug=True)
 
 

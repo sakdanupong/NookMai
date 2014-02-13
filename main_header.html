@@ -4,44 +4,79 @@
 <html>
 <head>
 	<!-- <link rel="shortcut icon" href="images/favicon.ico" /> -->
+	<!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"> -->
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <script src="//code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main_header.css" />
 <script>
 
-function scrollToDiv(element) {
-	// $("*").animate({ scrollTop: 0}, { duration: 'slow', easing: 'swing'});
-	var p = document.getElementById(element);
-	if (p)
-		$("*").animate({ scrollTop: p.offsetTop}, { duration: 'slow', easing: 'swing'});
-	else {
-		var params = {
-			'scroll_to' : element,
-		};
-		post_to_url(params)
+	function scrollToDiv(element) {
+		// $("*").animate({ scrollTop: 0}, { duration: 'slow', easing: 'swing'});
+		var p = document.getElementById(element);
+		if (p)
+			$("*").animate({ scrollTop: p.offsetTop}, { duration: 'slow', easing: 'swing'});
+		else {
+			var params = {
+				'scroll_to' : element,
+			};
+			post_to_url(params)
+		}
 	}
-}
 
-function post_to_url(params) {
-    var method = "post"; // Set method to post by default if not specified.
+	function post_to_url(params) {
+	    var method = "post"; // Set method to post by default if not specified.
 
-    // The rest of this code assumes you are not using a library.
-    // It can be made less wordy if you use one.
-    var form = document.createElement("form");
-    form.setAttribute("method", method);
-    form.setAttribute("action", '/');
+	    // The rest of this code assumes you are not using a library.
+	    // It can be made less wordy if you use one.
+	    var form = document.createElement("form");
+	    form.setAttribute("method", method);
+	    form.setAttribute("action", '/');
 
-    for(var key in params) {
-        if(params.hasOwnProperty(key)) {
-            var hiddenField = document.createElement("input");
-            hiddenField.setAttribute("type", "hidden");
-            hiddenField.setAttribute("name", key);
-            hiddenField.setAttribute("value", params[key]);
+	    for(var key in params) {
+	        if(params.hasOwnProperty(key)) {
+	            var hiddenField = document.createElement("input");
+	            hiddenField.setAttribute("type", "hidden");
+	            hiddenField.setAttribute("name", key);
+	            hiddenField.setAttribute("value", params[key]);
 
-            form.appendChild(hiddenField);
-         }
-    }
+	            form.appendChild(hiddenField);
+	         }
+	    }
 
-    document.body.appendChild(form);
-    form.submit();
-}
+	    document.body.appendChild(form);
+	    form.submit();
+	}
+
+	function readyToSearchMovie() {
+		var search_input = $("#search_input");
+    	search_input.autocomplete({
+	    	source: function (request, response) {
+		    	var word = $("#search_input").val();
+				var formData = new FormData();
+          		formData.append('word', word);	
+	    		$.ajax({
+            		url: '/api_get_searchmovie',  //Server script to process data
+            		type: 'POST',
+            		mimeType:"multipart/form-data",
+            		dataType: 'json',
+            		success: function(json) {
+              			//response(data);
+              			// alert('word');
+            		},
+            		data: formData,
+            		cache: false,
+            		contentType: false,
+            		processData: false
+         		 });
+    		},
+    		minLength: 2
+		});
+	}
+
+	$(document).ready(function() {
+    	readyToSearchMovie();
+    });
 
 </script>
 </head>
@@ -61,7 +96,7 @@ function post_to_url(params) {
 	<div id="header_div">
 		<a href="/"><img id="img_header_logo" src="/images/headers/logo1.png" /></a>
 		<div class="round-corner" id="search_div">
-			<div class="ui-widget"><input id="search_input" placeholder="Search movies"></div>
+			<div class="ui-widget"><input id="search_input" placeholder="Search movies" onchange="readyToSearchMovie();"></div>
 			<!-- <input id="search_input" type="text" /> -->
 			<img id="img_search" src="/images/headers/icon_search.png"/>
 		</div>

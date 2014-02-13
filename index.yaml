@@ -38,3 +38,8 @@ indexes:
   - name: is_coming_soon
   - name: release_time_timestamp
     direction: desc
+
+- kind: MovieModel
+  properties:
+  - name: name_en
+  - name: name_en
