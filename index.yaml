@@ -18,6 +18,18 @@ indexes:
 
 - kind: MovieModel
   properties:
+  - name: image
+  - name: is_coming_soon
+  - name: release_time_timestamp
+    direction: desc
+
+- kind: MovieModel
+  properties:
+  - name: is_coming_soon
+  - name: image
+
+- kind: MovieModel
+  properties:
   - name: is_coming_soon
   - name: release_time_timestamp
 

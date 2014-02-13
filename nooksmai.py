@@ -130,7 +130,9 @@ def datetime_lctimezone_format(dt):
     return value
 
 def getNowShowing(l_offset, data_per_page):
-    movie_query = MovieModel.all().order('-release_time_timestamp').filter('is_coming_soon =', 0)
+    movie_query = MovieModel.all().filter('is_coming_soon =', 0)
+    movie_query = movie_query.filter('release_time_timestamp !=', None)
+    movie_query = movie_query.order('-release_time_timestamp')
     movie_list = movie_query.run(offset=l_offset, limit=data_per_page)
     list = []
     for movie in movie_list:
@@ -162,7 +164,9 @@ def getNowShowing(l_offset, data_per_page):
     return json.dumps(r)
 
 def getComingSoon(l_offset, data_per_page):
-    movie_query = MovieModel.all().order('-release_time_timestamp').filter('is_coming_soon =', 1)
+    movie_query = MovieModel.all().filter('is_coming_soon =', 1)
+    movie_query = movie_query.filter('release_time_timestamp !=', None)
+    movie_query = movie_query.order('-release_time_timestamp')
     movie_list = movie_query.run(offset=l_offset, limit=data_per_page)
     list = []
     for movie in movie_list:
