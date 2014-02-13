@@ -78,7 +78,7 @@
 
 	<!-- <div class="movie-director" style="margin: auto; width:550px; height:86px; float:right; color:#666666;"> -->
 	<div class="movie-director-writers-stars">
-		<div class="movie-director-writers-stars-left">Director:</div>
+		<div class="movie-director-writers-stars-left">ผู้กำกับ:</div>
 		<div class="movie-director-writers-stars-right">{{ movie_data.detail_director_en|decodeHTML }}</div>
 		<!-- <strong>Director:{{ movie_data.detail_director_en }}</strong> -->
 	</div>
@@ -86,13 +86,13 @@
 
 	<div class="movie-director-writers-stars">
 		<!-- <strong>Writers:</strong> -->
-		<div class="movie-director-writers-stars-left">Writers:</div>
+		<div class="movie-director-writers-stars-left">ผู้เขียนบท:</div>
 		<div class="movie-director-writers-stars-right"></div>
 	</div>
 
 
 	<div class="movie-director-writers-stars">
-		<div class="movie-director-writers-stars-left">Stars:</div>
+		<div class="movie-director-writers-stars-left">นักแสดง:</div>
 		<div class="movie-director-writers-stars-right">{{ movie_data.detail_cast_en|decodeHTML }}</div>
 		<script>
 			// alert('wqdqwdqwd');
@@ -289,7 +289,7 @@
 
 			<!-- <img id="img_avatar" src="/images/details/avatar-emotion{{comment.avatar_review_id}}.png" /> -->
 			<img id="img_avatar" width="60" height="60" src="/images/details/avatar/image_avatar{{comment.avatar_review_id}}.png" />
-			<div class="comments-template-name">{{ comment.author|decodeHTML }}</div>
+			<div class="comments-template-name">{{ comment.author }}</div>
 		</div>
 
 

@@ -589,7 +589,12 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
 
 
 
+class NookMaiAbout(webapp2.RequestHandler):
 
+    def get(self, ):
+
+        template = JINJA_ENVIRONMENT.get_template('about.html')
+        self.response.write(template.render())
 
 
 
@@ -847,6 +852,7 @@ application = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/sign', NookMai),
     ('/detail/(.*)', NookMaiDetailMovie),
+    ('/about', NookMaiAbout),
     ('/refresh_data', RefreshData),
     ('/image', ImageCache),
     ('/trailer', GetTrailer),
