@@ -21,6 +21,7 @@ from pytz import timezone
 from moviemodel import *
 from cacheimagemodel import *
 from commentmodel import *
+from aboutmodel import *
 from record_count_model import *
 from decimal import *
 from comingsoonmodel import *
@@ -37,6 +38,8 @@ CAPTCHA_PUBLICE_KEY = '6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp'
 CAPTCHA_PRIVATE_KEY = '6LcDAO0SAAAAAM4kxOsIOBKRz8oLjj2-dHcBcui5'
 CAPTCHA_PUBLICE_KEY_LOCALHOST = '6LdtC-0SAAAAAH5bs8gr19lSa896njyCiY1GE3Ti'
 CAPTCHA_PRIVATE_KEY_LOCALHOST = '6LdtC-0SAAAAAKvLvewCc4m0_qb7MxuPgRhg0svA'
+CAPTCHA_PUBLICE_KEY_ON_SITE = '6LeOke4SAAAAAD-1NDoSDLnYiyB6u6LFQMBTLpoI'
+CAPTCHA_PRIVATE_KEY_ON_SITE = '6LeOke4SAAAAADxGWug_wOw14wdX2Ai8EEHcY28B'
 BANGKOK_TIMEZONE = pytz.timezone('Asia/Bangkok')
 ALL_RECORD_COUNTER_KEY = 'allRecordCounter'
 REFRESH_DATA_CACHE = 'REFRESH_DATA_CACHE'
@@ -566,6 +569,10 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
         key = CAPTCHA_PUBLICE_KEY
         if "localhost" in localhost.lower():
             key = CAPTCHA_PUBLICE_KEY_LOCALHOST
+        elif "appspot" in localhost.lower():
+            key = CAPTCHA_PUBLICE_KEY
+        else:
+            key = CAPTCHA_PUBLICE_KEY_ON_SITE
 
         chtml = captcha.displayhtml(
         public_key = key,
@@ -590,7 +597,12 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
 
 
 
+class NookMaiAbout(webapp2.RequestHandler):
 
+    def get(self, ):
+
+        template = JINJA_ENVIRONMENT.get_template('about.html')
+        self.response.write(template.render())
 
 
 
@@ -612,6 +624,11 @@ class AddComment(webapp2.RequestHandler):
         localhost = self.request.host
         if "localhost" in localhost.lower():
             key = CAPTCHA_PRIVATE_KEY_LOCALHOST
+        elif "appspot" in localhost.lower():
+            key = CAPTCHA_PRIVATE_KEY
+        else:
+            key = CAPTCHA_PRIVATE_KEY_ON_SITE
+
 
         cResponse = captcha.submit(
                     challenge,
@@ -619,14 +636,9 @@ class AddComment(webapp2.RequestHandler):
                     key,
                     remoteip)
 
-        # cResponse = captcha.submit(
-        #             challenge,
-        #             response,
-        #             CAPTCHA_PRIVATE_KEY,
-        #             remoteip)
 
-
-
+        if "localhost" in localhost.lower():
+            cResponse.is_valid = True;
 
         success = 0
 
@@ -636,8 +648,8 @@ class AddComment(webapp2.RequestHandler):
             # logging.warning('is_valid')
 
             content = self.request.get('content')
-            logging.warning('content1'+content)
-            logging.warning('content2'+content)
+            # logging.warning('content1'+content)
+            # logging.warning('content2'+content)
 
             movie_id = self.request.get('movie_id')
             author = self.request.get('author')
@@ -692,6 +704,49 @@ class GetComment(webapp2.RequestHandler):
 
         r = {'data':clist}
         self.response.out.write(json.dumps(r))
+
+
+class AddAbout(webapp2.RequestHandler):
+    def get(self):
+        self.process()
+    def post(self):
+        self.process()
+    def process(self):
+        remoteip = self.request.remote_addr
+
+        localhost = self.request.host
+
+
+        success = 0
+
+            # response was valid
+            # other stuff goes here
+            # logging.warning('is_valid')
+        description = self.request.get('description')
+        name = self.request.get('name')
+        email = self.request.get('email')
+
+
+        if description :
+            a = AboutModel()
+            a.description = cgi.escape(description).replace('\n', '<br/>')
+            a.name = cgi.escape(name)
+            a.email = cgi.escape(email)
+
+            a.put()
+            success = 1
+
+        r = {'success':success}
+        self.response.out.write(json.dumps(r))
+
+
+
+
+
+
+
+
+
 
 class NookMaiBackOffice(webapp2.RequestHandler):
     def get(self):
@@ -861,12 +916,14 @@ application = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/sign', NookMai),
     ('/detail/(.*)', NookMaiDetailMovie),
+    ('/about', NookMaiAbout),
     ('/refresh_data', RefreshData),
     ('/image', ImageCache),
     ('/trailer', GetTrailer),
     ('/back_office', NookMaiBackOffice),
     ('/api_add_comment', AddComment),
     ('/api_get_comment', GetComment),
+    ('/api_add_about', AddAbout),
     ('/backoffice', NookMaiBackOffice),
     ('/edit_movie_data', EditMovieData),
     ('/api_edit_movie_data', APIEditMovie),

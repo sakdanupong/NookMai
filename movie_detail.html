@@ -12,7 +12,7 @@
     <link type="text/css" rel="stylesheet" href="/stylesheets/base_document.css" />
     <link type="text/css" rel="stylesheet" href="/stylesheets/main_body.css" />
 
-    <link type="text/css" rel="stylesheet" href="/stylesheets/demo.css" />
+    <!-- <link type="text/css" rel="stylesheet" href="/stylesheets/demo.css" /> -->
     <link type="text/css" rel="stylesheet" href="/stylesheets/style.css" />
 
 	<meta charset="utf-8">
@@ -78,7 +78,7 @@
 
 	<!-- <div class="movie-director" style="margin: auto; width:550px; height:86px; float:right; color:#666666;"> -->
 	<div class="movie-director-writers-stars">
-		<div class="movie-director-writers-stars-left">Director:</div>
+		<div class="movie-director-writers-stars-left">ผู้กำกับ:</div>
 		<div class="movie-director-writers-stars-right">{{ movie_data.detail_director_en|decodeHTML }}</div>
 		<!-- <strong>Director:{{ movie_data.detail_director_en }}</strong> -->
 	</div>
@@ -86,13 +86,13 @@
 
 	<div class="movie-director-writers-stars">
 		<!-- <strong>Writers:</strong> -->
-		<div class="movie-director-writers-stars-left">Writers:</div>
+		<div class="movie-director-writers-stars-left">ผู้เขียนบท:</div>
 		<div class="movie-director-writers-stars-right"></div>
 	</div>
 
 
 	<div class="movie-director-writers-stars">
-		<div class="movie-director-writers-stars-left">Stars:</div>
+		<div class="movie-director-writers-stars-left">นักแสดง:</div>
 		<div class="movie-director-writers-stars-right">{{ movie_data.detail_cast_en|decodeHTML }}</div>
 		<script>
 			// alert('wqdqwdqwd');
@@ -186,26 +186,6 @@
 				<li><a href="javascript:;" id="13" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar13.png" alt="13" width="57.5" height="57.5" border="0"><span>น่ารักเหมาะกับเด็ก</span></a></li>
 				<li><a href="javascript:;" id="14" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar14.png" alt="14" width="57.5" height="57.5" border="0"><span>ซึ้งกินใจ</span></a></li>
 			</ul>
-
-			<!-- <img src="/images/details/avatar_emo.jpg" width="857" height="54" border="0" ></a> -->
-			<!-- <li><a href="javascript:;" id="1" onClick="clickAddAvatar(this.id)"><span>โหด มันส์ สะใจ</span></a></li> -->
-			<!--<div id="avatar_box" style="width:860px; height:54px; overflow:auto;">
-
-				<a href="javascript:;" title="โหด มันส์ สะใจ" id="1" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar1.png" alt="1" width="57.5" height="57.5" border="0"></a>
-				<a href="javascript:;" title="กาก เสียดายตัง" id="2" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar2.png" alt="2" width="57.5" height="57.5" border="0"></a>
-				<a href="javascript:;" title="น่ากลัวสยอง" id="3" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar3.png" alt="3" width="57.5" height="57.5" border="0"></a>
-				<a href="javascript:;" title="แนวสัด" id="4" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar4.png" alt="4" width="57.5" height="57.5" border="0"></a>
-				<a href="javascript:;" title="สนุกตื่นเต้น" id="5" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar5.png" alt="5" width="57.5" height="57.5" border="0"></a>
-				<a href="javascript:;" title="น่าเบื่อจะหลับ" id="6" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar6.png" alt="6" width="57.5" height="57.5" border="0"></a>
-				<a href="javascript:;" title="ตลกฮากระจาย" id="7" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar7.png" alt="7" width="57.5" height="57.5" border="0"></a>
-				<a href="javascript:;" title="อลังการงานสร้าง" id="8" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar8.png" alt="8" width="57.5" height="57.5" border="0"></a>
-				<a href="javascript:;" title="sexy สวย หล่อ น่าหลงไหล" id="9" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar9.png" alt="9" width="57.5" height="57.5" border="0"></a>
-				<a href="javascript:;" title="เฉยๆ พอใช้ได้ ดูฆ่าเวลา" id="10" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar10.png" alt="10" width="57.5" height="57.5" border="0"></a>
-				<a href="javascript:;" title="เนื้อเรื่องดี ให้แง่คิด" id="11" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar11.png" alt="11" width="57.5" height="57.5" border="0"></a>
-				<a href="javascript:;" title="งง ดูไม่รู้เรื่อง" id="12" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar12.png" alt="12" width="57.5" height="57.5" border="0"></a>
-				<a href="javascript:;" title="น่ารักเหมาะกับเด็ก" id="13" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar13.png" alt="13" width="57.5" height="57.5" border="0"></a>
-				<a href="javascript:;" title="ซึ้งกินใจ" id="14" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar14.png" alt="14" width="57.5" height="57.5" border="0"></a>
-			</div>-->
 		</div>
 
 
@@ -228,26 +208,7 @@
 			<div class="movie-box-comment-right-top">
 				<img id="img_icon_msg" src="/images/details/icon_msg.png" />
 				<div class="movie-box-comment-right-bg">
-				<!--<script type="text/javascript" src="/textedit/nicEdit/nicEdit.js"></script>
-    			<script type="text/javascript">bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });
-				</script>-->
-				<!--<script type="text/javascript">
-
-				// var el = document.activeElement;
-
-				// if (el && (el.tagName.toLowerCase() == 'input' && el.type == 'text' || el.tagName.toLowerCase() == 'textarea')) {
-				// 	alert('acive!!!')
-  		// 			// focused element is a text input or textarea
-				// } 
-
-				$('input[type="text"]').focus(function() {
-   					alert('Focused');
-				});
-				</script>-->
-
-
 				<textarea id="comment_content" name="content" onClick="checkActiveTextarea()"></textarea> 
-				<!-- area3 -->
 				</div>
 			</div>
 
@@ -289,7 +250,7 @@
 
 			<!-- <img id="img_avatar" src="/images/details/avatar-emotion{{comment.avatar_review_id}}.png" /> -->
 			<img id="img_avatar" width="60" height="60" src="/images/details/avatar/image_avatar{{comment.avatar_review_id}}.png" />
-			<div class="comments-template-name">{{ comment.author|decodeHTML }}</div>
+			<div class="comments-template-name">{{ comment.author }}</div>
 		</div>
 
 
@@ -410,7 +371,8 @@
 		var recaptcha_challenge_field = $('[name="recaptcha_challenge_field"]').val();
 		var recaptcha_response_field = $('[name="recaptcha_response_field"]').val();
 
-		 if (!content) {
+
+		if (!content) {
  			alertAndResetBtn("กรุณากรอกคอมเมนต์")
  			return;
  		};
@@ -422,12 +384,18 @@
  			alertAndResetBtn("กรุณาเลือกอารมของหนัง")
  			return;
  		};
- 		if (!recaptcha_response_field) {
- 			alertAndResetBtn("กรุณากรอกแคปท์ชา")
- 			return;
- 		};
 
-		// content = str_replace("\n", "<br>\n", content);
+
+		if (document.location.hostname != "localhost") {
+	 		if (!recaptcha_response_field) {
+	 			alertAndResetBtn("กรุณากรอกแคปท์ชา")
+	 			return;
+	 		};
+		}
+
+
+
+
 
 		var postData = {'movie_id':{{ movie_data.id }},
 		 				'author':author,
