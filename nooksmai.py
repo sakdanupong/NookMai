@@ -700,7 +700,7 @@ class GetComment(webapp2.RequestHandler):
         clist = []
 
         for c in q.fetch(limit=100) :
-            clist.append({'avatar_review_id':c.avatar_review_id,'author':c.author,'content':c.content,'date':datetime_lctimezone_format(c.date).strftime("%B %d, %Y") ,'time_crate':datetime_lctimezone_format(c.date).strftime("%H:%M") })
+            clist.append({'avatar_review_id':c.avatar_review_id ,'author':c.author ,'content':c.content ,'vote_count':c.vote_count,'comment_id':c.key().id(),'date':datetime_lctimezone_format(c.date).strftime("%B %d, %Y") ,'time_crate':datetime_lctimezone_format(c.date).strftime("%H:%M") })
 
         r = {'data':clist}
         self.response.out.write(json.dumps(r))
@@ -739,9 +739,64 @@ class AddAbout(webapp2.RequestHandler):
         r = {'success':success}
         self.response.out.write(json.dumps(r))
 
+class VoteComment(webapp2.RequestHandler):
+    def get(self):
+        self.process()
+    def post(self):
+        self.process()
+    def process(self):
+        remoteip = self.request.remote_addr
+        localhost = self.request.host
+        success = 0
+
+        comment_id = self.request.get('comment_id')
+        user_id = self.request.get('user_id')
+        movie_id = self.request.get('movie_id')
+
+        q = CommentModel.all();
+        q = CommentModel.get_by_id(long(comment_id))
+        logging.warning(q)
+
+        if q.vote_count :
+            q.vote_count = q.vote_count+1
+        else :
+            q.vote_count = 1
+
+        q.put()
+        success = 1
+ 
+        r = {'success':success}
+        self.response.out.write(json.dumps(r))
 
 
+class UnvoteComment(webapp2.RequestHandler):
+    def get(self):
+        self.process()
+    def post(self):
+        self.process()
+    def process(self):
+        remoteip = self.request.remote_addr
+        localhost = self.request.host
+        success = 0
 
+        comment_id = self.request.get('comment_id')
+        user_id = self.request.get('user_id')
+        movie_id = self.request.get('movie_id')
+
+        q = CommentModel.all();
+        q = CommentModel.get_by_id(long(comment_id))
+        logging.warning(q)
+
+        if q.vote_count :
+            q.vote_count = q.vote_count-1
+        else :
+            q.vote_count = -1
+
+        q.put()
+        success = 1
+ 
+        r = {'success':success}
+        self.response.out.write(json.dumps(r))
 
 
 
@@ -924,6 +979,8 @@ application = webapp2.WSGIApplication([
     ('/api_add_comment', AddComment),
     ('/api_get_comment', GetComment),
     ('/api_add_about', AddAbout),
+    ('/api_vote_comment', VoteComment),
+    ('/api_unvote_comment', UnvoteComment),
     ('/backoffice', NookMaiBackOffice),
     ('/edit_movie_data', EditMovieData),
     ('/api_edit_movie_data', APIEditMovie),

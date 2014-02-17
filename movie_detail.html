@@ -243,6 +243,14 @@
 <div id="comments-template">
 	{% for comment in comments %}
 	<div style="height:10px;"></div>
+    
+    <div class="comments-template-vote">
+	    <a class="btn-up" type="submit" href="javascript:;" id="{{ comment.key().id() }}" onClick="voteComment(this.id)">up</a>
+	    <div class="comments-vote-count">{{comment.vote_count}}</div>
+	    <a class="btn-down" type="submit" href="javascript:;" id="{{ comment.key().id() }}" onClick="unvoteComment(this.id)">Down</a>
+    </div>
+
+
 	<div class="comments-template-box">
 		<div class="comments-template-left">
 			<!-- <img id="img_avatar" src="/images/details/avatar.png" /> -->
@@ -272,24 +280,11 @@
 				arrMonthName({{ comment.date.month }});
 				
 			</script>
-			<!-- <div class="comments-template-date-and-time">{{ (comment.date | datetime_lctimezone_format).strftime("%m %d, %Y") }} : {{ (comment.date | datetime_lctimezone_format).strftime("%H:%M") }}น.</div> -->
+
 
 			<div class="comments-template-content">{{ comment.content }}</div>
 
-			<!--<div class="comments-template-content" id="{{comment.content}}"></div>
-			<script type="text/javascript">
-				function changeNewLine() {
-					var c = '{{ comment.content|decodeHTML }}';
-					alert('1'+c);
-					c.stringContainingNewLines.replace(/(\r\n|\n|\r)/gm, "<br>");
-					alert('2'+c);
-					var div = document.getElementById('{{comment.content}}');
-					alert('3'+c);
-					div.innerHTML = c;
-				}
 
-				changeNewLine();
-			</script>-->
 
 		</div>
 	</div>
@@ -445,6 +440,9 @@
 		    	var date = c['date'];
 		    	var time_crate = c['time_crate'];
 		    	var avatar_review_id = c['avatar_review_id'];
+		    	var vote_count = c['vote_count'];
+		    	var comment_id = c['comment_id'];
+
 		    	// h += '<center>';
 		    	// h += '<table width="900" border="1" cellpadding="0" cellspacing="5" bordercolor="#333333">';
 		    	// h += '<br/><br/>';
@@ -457,6 +455,13 @@
 		    	var count_index = (clist.length)-i;
 		    		
 				h += '<div style="height:10px;"></div>';
+
+    			h += '<div class="comments-template-vote">'
+				h += '<a class="btn-up" type="submit" href="javascript:;" id="'+comment_id+'" onClick="voteComment(this.id)">up</a>';
+				h += '<div class="comments-vote-count">'+vote_count+'</div>';
+    			h += '<a class="btn-down" type="submit" href="javascript:;" id="'+comment_id+'" onClick="unvoteComment(this.id)">Down</a>';
+				h += '</div>'
+
 		    	h += '<div class="comments-template-box">';
 		    		h += '<div class="comments-template-left">'; 
 		    			if (avatar_review_id != 0) {
@@ -500,7 +505,39 @@
 	}
 
 
+	function voteComment(id) {
+		$('.btn-up').css("background", "none repeat scroll 0 0 #666666");
+		var postData = {'comment_id':id,
+						'user_id':50,
+						'movie_id':{{movie_data.id}}
+		  				};
+		  // user_id
+		$.getJSON("/api_vote_comment", postData, function(data) {
+			if(data['success'] == 1){
+				setTimeout(updateComments,100);
+				alert('vote complete')				
+			}else {
+				alert('not complete')				
+			}
+		});
+	}
 
+
+	function unvoteComment(id) {
+		$('.btn-down').css("background", "none repeat scroll 0 0 #666666");
+		var postData = {'comment_id':id,
+						'user_id':50,
+						'movie_id':{{movie_data.id}}
+		  				};
+		 $.getJSON("/api_unvote_comment", postData, function(data) {
+			if(data['success'] == 1){
+				setTimeout(updateComments,100);
+				alert('vote complete')				
+			}else {
+				alert('not complete')				
+			}
+		});
+	}
 
 
 </script>
