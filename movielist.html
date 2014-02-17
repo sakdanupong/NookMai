@@ -4,16 +4,20 @@
     <head>
       <script src="//code.jquery.com/jquery-1.9.1.js"></script>
       <script src="/javascripts/NumberUtil.js"></script>
+      <script src="/javascripts/LoginDialog.js"></script>
       <link rel="shortcut icon" href="images/favicon.ico"/>
       <link type="text/css" rel="stylesheet" href="/stylesheets/font_family.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/base_document.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/poster.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/carousel.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/main_body.css" />
-      <!-- <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
-      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> -->
+      <!-- <link type="text/css" rel="stylesheet" href="/stylesheets/login_dialog.css" /> -->
+      <!-- <link rel="stylesheet" href="/bootstrap/css/bootstrap.css"> -->
+      <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> -->
       <title>nookmai.com หนุกมั้ยดอทคอม</title>
       <script>
+
+        var gLoginDialog = null;
 
         var current_page_key = "current_page_key";
         var current_page = 1;
@@ -461,6 +465,12 @@
           }, 200);
         }
 
+        function showLoginDialog() {
+          if (!gLoginDialog)
+            gLoginDialog = new LoginDialog();
+          gLoginDialog.show();
+        }
+
         $(document).ready(function() {
           $('#nav_home').addClass('active');
           initPaginationButton();
@@ -501,6 +511,7 @@
     </head>
     <body>
       {% include "/main_header.html" with context %}
+      <div><input type="submit" onClick="showLoginDialog()"/></div>
       <div id="main_body_div">
         <div id="youtube_div"><iframe id="feature_youtube_frame" frameborder="0" allowfullscreen></iframe></div>
         <div id="nowshowing_div">

@@ -931,7 +931,7 @@ application = webapp2.WSGIApplication([
     ('/reset_counter', ResetCounter),
     ('/api_get_nowshowing', GetNowShowing),
     ('/api_get_comingsoon', GetComingSoon),
-    ('/api_get_searchmovie', GetSeachMovie)
+    ('/api_get_searchmovie', GetSeachMovie),
 ], debug=True)
 
 
