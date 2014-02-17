@@ -14,3 +14,5 @@ class CommentModel(db.Model):
     content = db.TextProperty()
     date = db.DateTimeProperty(auto_now_add=True)
     avatar_review_id = db.IntegerProperty()
+    vote_count = db.IntegerProperty(default=0)
+    # id = db.IntegerProperty()
