@@ -21,7 +21,6 @@
 	/*display: block;*/
 }
 
-
 #dialog-box {
 	
 	/* css3 drop shadow */
@@ -58,7 +57,18 @@
 	font-size:11px; 
 }
 
+.hyper_link_no_underline {
+	text-decoration: none;
+	color: #0000FF;
+}
+
+#close_this_window {
+	float: right;
+	margin-top: 10px;
+}
+
 #login_dialog_caption {
+	clear: both;
 	margin-top:13px;
 	font-size: 13pt;
 	height: 35px;
@@ -96,7 +106,7 @@
 }
 
 #privacy_choice {
-	width: 100%;
+	width: 90%;
 	list-style: inside; 
 	padding-top: 5px;
 }
@@ -106,25 +116,40 @@
 }
 
 #register_div {
-	width: 571px;
-	display: inline-block;
+	margin-right: 371px;
+}
+
+#login_div {
+	width: 371px;
+	float: right;
 }
 
 #register_right_div {
-	width: 198px;
+	width: 248px;
 	float: right;
 	margin-top: 40px;
 }
 
 #register_left_div {
-	width: 368px;
-	display: inline-block;
+	margin-right: 248px;
 }
 
-#login_div {
-	width: 271px;
-	display: inline-block;
+#login_right_div {
+	float: right;
+	width: 248px;
 }
+
+#login_left_div {
+	margin-right: 248px;
+}
+
+#vertical_line {
+	margin: auto;
+	background-color: #eee;
+	width: 2px;
+	height: 260px;
+}
+
 
 a.button {
 	/* styles for button */

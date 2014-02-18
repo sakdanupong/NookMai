@@ -5,3 +5,4 @@ class RecordCountModel(db.Model):
 	comingsoon_count = db.IntegerProperty(default=0)
 	movie_count = db.IntegerProperty(default=0)
 	comment_count = db.IntegerProperty(default=0)
+	user_count = db.IntegerProperty(default=0)

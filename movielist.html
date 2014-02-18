@@ -5,6 +5,7 @@
       <script src="//code.jquery.com/jquery-1.9.1.js"></script>
       <script src="/javascripts/NumberUtil.js"></script>
       <script src="/javascripts/LoginDialog.js"></script>
+      <script src="/javascripts/CookieUtils.js"></script>
       <link rel="shortcut icon" href="images/favicon.ico"/>
       <link type="text/css" rel="stylesheet" href="/stylesheets/font_family.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/base_document.css" />
@@ -466,8 +467,7 @@
         }
 
         function showLoginDialog() {
-          if (!gLoginDialog)
-            gLoginDialog = new LoginDialog();
+          gLoginDialog = new LoginDialog();
           gLoginDialog.show();
         }
 

@@ -25,6 +25,7 @@ from aboutmodel import *
 from record_count_model import *
 from decimal import *
 from comingsoonmodel import *
+from usermodel import *
 
 from os import environ
 from recaptcha.client import captcha
@@ -963,7 +964,21 @@ class GetSeachMovie(webapp2.RequestHandler):
         movie = movie_query[0]
         logging.warning(movie.name_en)
 
+
+class GetSeachMovie(webapp2.RequestHandler):
+    def get(self):
+        self.process()
+    def post(self):
+        self.process()
+    def process(self):
+        word = self.request.get('word')
+        movie_query = MovieModel.all().filter('name_en >=', unicode(word)).filter('name_en <',  unicode(word) + u"\ufffd").fetch(10)
+
+        movie = movie_query[0]
+        logging.warning(movie.name_en)
+
         # self.response.out.write(r)
+
 
 
 
@@ -989,6 +1004,7 @@ application = webapp2.WSGIApplication([
     ('/api_get_nowshowing', GetNowShowing),
     ('/api_get_comingsoon', GetComingSoon),
     ('/api_get_searchmovie', GetSeachMovie),
+    ('/api_register', Register),
 ], debug=True)
 
 
