@@ -965,7 +965,7 @@ class GetSeachMovie(webapp2.RequestHandler):
         logging.warning(movie.name_en)
 
 
-class GetSeachMovie(webapp2.RequestHandler):
+class Register(webapp2.RequestHandler):
     def get(self):
         self.process()
     def post(self):
@@ -976,10 +976,6 @@ class GetSeachMovie(webapp2.RequestHandler):
 
         movie = movie_query[0]
         logging.warning(movie.name_en)
-
-        # self.response.out.write(r)
-
-
 
 
 application = webapp2.WSGIApplication([

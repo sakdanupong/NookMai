@@ -1,6 +1,5 @@
 function setCookie(name,value,date) {
   if (date) {
-
     var expires = "; expires="+date.toGMTString();
   }
   else var expires = "";
@@ -38,4 +37,10 @@ function ExpireSecCookie(secs) {
     var date = new Date();
     date.setTime(date.getTime()+(secs*1000));
     return date;
+}
+
+function NoExpireCookie() {
+  var date = new Date();
+  date.setTime(date.getTime() + (-1*24*60*60*1000))
+  return date;
 }
