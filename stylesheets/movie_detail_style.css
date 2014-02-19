@@ -45,13 +45,24 @@ body {
    border-bottom:1px solid #717171;
 }
 .movie-synopsis-en {
-   padding-top: 10px;
+  padding-top: 10px;
 	margin: 0 auto;
 	width:550px; 
 	float:right; 
 	color:#666666;
-   font-family: montRegular;
+  font-family: montRegular;
 }
+.movie-rate {
+  padding-top: 10px;
+  margin: 0 auto;
+  width:550px; 
+  height: 100px;
+  float:right; 
+  color:#666666;
+  font-family: montRegular;
+  background-color: red;
+}
+
 .movie-director-writers-stars {
    margin-top: 20px;
    width:550px; 
