@@ -184,15 +184,12 @@ function clickRegister() {
 		return;
 	}
 
-	var pHash = "";
-	$.getScript("/javascripts/md5.min.js", function(){
-		pHash = md5(p);
-	});
-     
-	 var formData = new FormData();
-     formData.append('username', u);
-     formData.append('password', pHash);
-     formData.append('email', e)
+	var pHash = md5(p);
+
+	var formData = new FormData();
+    formData.append('username', u);
+    formData.append('password', pHash);
+    formData.append('email', e)
 	
 	$.ajax({
             url: '/api_register',  //Server script to process data
@@ -221,14 +218,10 @@ function clickLogin() {
 	if (u.length == 0 || p.length == 0)
 		return;
 
-	var pHash = "";
-	$.getScript("/javascripts/md5.min.js", function(){
-		pHash = md5(p);
-	});
-     
-	 var formData = new FormData();
-     formData.append('username', u);
-     formData.append('password', pHash);
+	var pHash = md5(p);
+	var formData = new FormData();
+    formData.append('username', u);
+    formData.append('password', pHash);
 	
 	$.ajax({
             url: '/api_login',  //Server script to process data

@@ -1072,6 +1072,7 @@ class Login(webapp2.RequestHandler):
         findUser = UserModel.all().filter("username =", username)
         if findUser.count():
             usermodel = findUser[0]
+            logging.warning('password = ' +password + ' database password = ' + usermodel.password)
             if password == usermodel.password:
                 success = 1
                 userData = getUserData(usermodel)
