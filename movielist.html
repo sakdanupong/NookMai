@@ -467,8 +467,29 @@
         }
 
         function showLoginDialog() {
-          gLoginDialog = new LoginDialog();
-          gLoginDialog.show();
+          LoginDialog(function(success, data, reason) {
+            if (success) {
+                 var user_id = data['user_id'];
+                 var username = data['username'];
+                 var email = data['email'];
+                 var session_token = data['session_token'];
+                 alert('user_id = '+ user_id + " username = "+ username + " email = " +email + " session_token = " +session_token);
+                 alert('register success !!!');
+              } else {
+                alert(reason);
+              }
+          } , function(success, data, reason) {
+            if (success) {
+                 var user_id = data['user_id'];
+                 var username = data['username'];
+                 var email = data['email'];
+                 var session_token = data['session_token'];
+                 alert('user_id = '+ user_id + " username = "+ username + " email = " +email + " session_token = " +session_token);
+                 alert('login success !!!');
+              } else {
+                alert(reason);
+              }
+          });
         }
 
         $(document).ready(function() {

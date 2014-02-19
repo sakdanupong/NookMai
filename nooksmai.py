@@ -1,3 +1,4 @@
+# coding=utf-8
 import webapp2
 import cgi
 import json
@@ -8,6 +9,8 @@ import datetime
 import logging
 import HTMLParser
 import time
+import re
+import hashlib
 
 sys.path.append(os.path.abspath('models'))
 from google.appengine.api import users
@@ -26,6 +29,7 @@ from record_count_model import *
 from decimal import *
 from comingsoonmodel import *
 from usermodel import *
+from sessionmodel import *
 
 from os import environ
 from recaptcha.client import captcha
@@ -195,6 +199,15 @@ def summaryNumber(number):
     result_num ="%.2f" % result_num
     str_result = str(result_num) + 'k'
     return str_result
+
+def getUserData(usermodel):
+    userData = {
+        'user_id' : usermodel.user_id,
+        'username' : usermodel.username,
+        'email' : usermodel.email,
+        'session_token' : usermodel.session_token,
+    }
+    return userData;
 
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -966,16 +979,118 @@ class GetSeachMovie(webapp2.RequestHandler):
 
 
 class Register(webapp2.RequestHandler):
+
+    def checkUsername(self, username):
+        success = 0
+        user_regex = re.compile("^[A-Za-z0-9_-]{4,15}$")
+        u = user_regex.search(username)
+        if u:
+            success = 1
+        return success
+
+    def checkEmail(self, email):
+        success = 0
+        if not email:
+            success = 1
+        else:
+            email_regex = re.compile(r"[\w.-]+@[\w.-]+")
+            e = email_regex.search(email)
+            if e:
+                success = 1
+        return success
+
+    
+    def increment_user_counter(self, c_key):
+        c = db.get(c_key)
+        c.user_count += 1
+        self.new_user_id = c.user_count
+        c.put()
+
     def get(self):
         self.process()
     def post(self):
         self.process()
     def process(self):
-        word = self.request.get('word')
-        movie_query = MovieModel.all().filter('name_en >=', unicode(word)).filter('name_en <',  unicode(word) + u"\ufffd").fetch(10)
+        success = 0
+        reason = ""
+        username = self.request.get('username')
+        password = self.request.get('password')
+        email = self.request.get('email')
+        findUser = UserModel.all().filter("username =", username)
+        userData = None
+        if findUser.count() == 0:
+            success = self.checkUsername(username)
+            if success:
+                success = self.checkEmail(email)
+                if success:
+                    record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
+                    db.run_in_transaction(self.increment_user_counter, record_object.key())
+                    usermodel = UserModel.get_or_insert(key_name=str(self.new_user_id))
+                    usermodel.username = username
+                    usermodel.password = password
+                    usermodel.user_id = self.new_user_id
+                    usermodel.email = email
+                    session_token = hashlib.md5(username+"nookmai").hexdigest()
+                    usermodel.session_token = session_token
+                    sessionModel = SessionModel.get_or_insert(key_name=session_token)
+                    sessionModel.session_token = session_token
+                    sessionModel.user_id = self.new_user_id
 
-        movie = movie_query[0]
-        logging.warning(movie.name_en)
+                    usermodel.put()
+                    sessionModel.put()
+
+                    userData = getUserData(usermodel)
+
+                else:
+                    reason = "Email ไม่ถูกต้อง"
+            else:
+                reason = "username กรุณาใช้ภาษาอังกฤษ ตัวเลข _ - และ มีตัวอักษร 4 - 15 ตัว เท่านั้น"
+
+        else:
+            reason = "มี username นี้อยู่แล้วในระบบ"
+
+
+        r = {
+            'success' : success,
+            'reason' : reason,
+            'data' : userData,
+        }
+
+        self.response.out.write(json.dumps(r))
+
+class Login(webapp2.RequestHandler):
+    def get(self):
+        self.process()
+    def post(self):
+        self.process()
+    def process(self):
+        success = 0
+        userData = None
+        reason = ""
+        username = self.request.get('username')
+        password = self.request.get('password')
+        findUser = UserModel.all().filter("username =", username)
+        if findUser.count():
+            usermodel = findUser[0]
+            if password == usermodel.password:
+                success = 1
+                userData = getUserData(usermodel)
+            else:
+                reason = "Password ไม่ถูกต้อง"
+
+        else:
+            reason = "Username นี้ไม่มีอยู่ในระบบ"
+
+
+        r = {
+            'success' : success,
+            'reason' : reason,
+            'data' : userData,
+        }
+
+        self.response.out.write(json.dumps(r))            
+
+        
 
 
 application = webapp2.WSGIApplication([
@@ -1001,6 +1116,7 @@ application = webapp2.WSGIApplication([
     ('/api_get_comingsoon', GetComingSoon),
     ('/api_get_searchmovie', GetSeachMovie),
     ('/api_register', Register),
+    ('/api_login', Login),
 ], debug=True)
 
 

@@ -1,8 +1,10 @@
 var gLoginDialog;
 var width = 900;
 var height = 400;
+var registerCallBack;
+var loginCallBack;
 
-function LoginDialog() {
+function LoginDialog(p_registerCallback, p_loginCallback) {
 	var $ = document;
 	var head  = $.getElementsByTagName('head')[0];
     var link  = $.createElement('link');
@@ -23,7 +25,7 @@ function LoginDialog() {
 				  					<div id='create_account_caption'><b>LOGIN</b></div>\
 				  					<div id='create_account_sub_caption'>already have an account and just want to login?</div>\
 				  					<div class='login_input_wrapper'><p class='login_dialog_title'>username: </p><input class='login_dialog_input' id='login_username' type='text'></input></div>\
-				  					<div class='login_input_wrapper'><p class='login_dialog_title'>password: </p><input class='login_dialog_input' id='login_password' type='text'></input></div>\
+				  					<div class='login_input_wrapper'><p class='login_dialog_title'>password: </p><input class='login_dialog_input' id='login_password' type='password'></input></div>\
 				  					<div class='login_input_wrapper'><input type='checkbox' id='login_rememberme' onClick='loginRememberme();'></input><label class='login_dialog_title'> remember me</label></div>\
 				  					<div class='login_input_wrapper'><a class='hyper_link_no_underline' href='#'>recovery password</a></div>\
 				  					<div class='login_input_wrapper'><input type='submit' value='login' onClick='clickLogin();'></input></div>\
@@ -49,8 +51,8 @@ function LoginDialog() {
 				  					<div id='register_content_div'>\
 				  						<div class='login_input_wrapper'><p class='login_dialog_title'>username: </p><input class='login_dialog_input' id='register_username' type='text'></input></div>\
 				  						<div class='login_input_wrapper'><p class='login_dialog_title'>account recovery email: </p><input class='login_dialog_input' id='register_email' type='text'></input></div>\
-				  						<div class='login_input_wrapper'><p class='login_dialog_title'>password: </p><input class='login_dialog_input' id='register_password' type='text'></input></div>\
-				  						<div class='login_input_wrapper'><p class='login_dialog_title'>verify password: </p><input class='login_dialog_input' id='register_confirm_password' type='text'></input></div>\
+				  						<div class='login_input_wrapper'><p class='login_dialog_title'>password: </p><input class='login_dialog_input' id='register_password' type='password'></input></div>\
+				  						<div class='login_input_wrapper'><p class='login_dialog_title'>verify password: </p><input class='login_dialog_input' id='register_confirm_password' type='password'></input></div>\
 				  						<div class='login_input_wrapper'><input type='checkbox' id='register_rememberme' onClick='registerRememberme();'></input><label class='login_dialog_title'> remember me</label></div>\
 				  						<div class='login_input_wrapper'><input type='submit' value='create account' onClick='clickRegister();'></input></div>\
 				  					</div>\
@@ -62,10 +64,12 @@ function LoginDialog() {
 
 	this.gLoginDialog = $.createElement('div');
     this.gLoginDialog.innerHTML = dialog;
-  	
+    this.loginCallBack = p_loginCallback;
+    registerCallBack = p_registerCallback;
+  	show();
 }
 
-LoginDialog.prototype.show = function() {
+function show() {
 	var _body = document.getElementsByTagName('body') [0];
 	// <body scroll="no"> 
     _body.appendChild(this.gLoginDialog);
@@ -80,26 +84,41 @@ LoginDialog.prototype.show = function() {
 	var dialogTop =  (windowHeight - height) / 2; 
 	var dialogLeft = (maskWidth - width) / 2;//(maskWidth/2) - ($('#dialog-box').width()/2); /
 
+	var beginDialogPost = -height;
 	// // assign values to the overlay and dialog box
 	$('#dialog-overlay').css({height:maskHeight, width:maskWidth});
 	$('#dialog-box').css({height:height, width:width});
-	$('#dialog-box').css({top:dialogTop, left:dialogLeft});
+	$('#dialog-box').css({top:beginDialogPost, left:dialogLeft});
 
-	// display the message
-	$('#dialog-message').html("message");
+	var animateTop = dialogTop + height;
+	$('#dialog-box').animate({top: '+='+animateTop}, 600, function () {
+	});
+
 
 	$('#dialog-overlay, #close_this_window').click(function () {		
-		gLoginDialog.dismissLoginDialog();
+		dismissLoginDialog();
 		return false;
 	});
 
 };
 
-LoginDialog.prototype.dismissLoginDialog = function() {
-	// alert('sdfsdfsfd');
-	if (this.gLoginDialog) {
-		this.gLoginDialog.remove();	
-	}
+function dismissLoginDialog() {
+
+	var windowHeight = $(window).height();
+
+	// calculate the values for center alignment
+	var dialogTop =  (windowHeight - height) / 2; 
+
+	var animateTop = dialogTop + height;
+	$('#dialog-box').animate({top: '-='+animateTop}, 600, function () {
+		setTimeout(function() {
+			if (gLoginDialog) {
+				gLoginDialog.remove();	
+			}
+		} ,100);
+	});
+
+
 };
 
 function getRemember() {
@@ -132,11 +151,101 @@ function getRemember() {
 };
 
 function clickRegister() {
-	alert('register click !!!!');
+
+
+	var u = $("#register_username").val();
+	var p = $("#register_password").val();
+	var cp = $("#register_confirm_password").val();
+	var e = $("#register_email").val();
+
+	if (u.length == 0 || p.length == 0 || cp.length == 0) {
+		if (u.length == 0) 
+			alert("Please fill username.");
+		else if (p.length == 0)
+			alert("Please fill password.");
+		else if (cp.length == 0)
+			alert("Please fill verify password.");
+
+		return;
+	}
+
+	if (u.length < 4) {
+		alert("username must have least 4 letters.");
+		return;
+	}
+
+	if (p.length < 8 || cp.length < 8) {
+		alert("password must have least 8 letters");
+		return;
+	}
+
+	if (p != cp) {
+		alert('Password and verify password mismatch.');
+		return;
+	}
+
+	var pHash = "";
+	$.getScript("/javascripts/md5.min.js", function(){
+		pHash = md5(p);
+	});
+     
+	 var formData = new FormData();
+     formData.append('username', u);
+     formData.append('password', pHash);
+     formData.append('email', e)
+	
+	$.ajax({
+            url: '/api_register',  //Server script to process data
+            type: 'POST',
+            mimeType:"multipart/form-data",
+            dataType: 'json',
+            success: function(json) {
+              var success = json['success'];
+              var data = json['data'];
+              var reason = json['reason'];
+              registerCallBack(success, data, reason);
+            },
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false
+          });
+
+
 };
 
 function clickLogin() {
-	alert('login click!!');
+	var u = $("#login_username").val();
+	var p = $("#login_password").val();
+
+	if (u.length == 0 || p.length == 0)
+		return;
+
+	var pHash = "";
+	$.getScript("/javascripts/md5.min.js", function(){
+		pHash = md5(p);
+	});
+     
+	 var formData = new FormData();
+     formData.append('username', u);
+     formData.append('password', pHash);
+	
+	$.ajax({
+            url: '/api_login',  //Server script to process data
+            type: 'POST',
+            mimeType:"multipart/form-data",
+            dataType: 'json',
+            success: function(json) {
+              var success = json['success'];
+              var data = json['data'];
+              var reason = json['reason'];
+              loginCallBack(success, data, reason);
+            },
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false
+          });
 };
 
 function registerRememberme() {
