@@ -11,11 +11,11 @@ body {
    /*width:1200px;*/
 }
 .movie-bg {
-   width:1200px;
-   /*height: 690px;*/
-   background-color: #ecedef;
-   margin: 0 auto;
-   overflow:hidden;
+ width:1200px;
+ /*height: 690px;*/
+ background-color: #ecedef;
+ margin: 0 auto;
+ overflow:hidden;
 }
 .movie-image {
 	margin: 0 auto;
@@ -30,7 +30,7 @@ body {
 	float:right; 
 	color:#666666; 
 	font-size:50px;
-   font-family: montRegular;
+  font-family: montRegular;
 }
 .movie-date {
 	margin: 0 auto;
@@ -39,10 +39,10 @@ body {
 	float:right; 
 	color:#cc4d4d; 
 	font-size:18px;
-   font-family: montRegular;
-   padding-top: 5px;
-   padding-bottom: 10px;
-   border-bottom:1px solid #717171;
+  font-family: montRegular;
+  padding-top: 5px;
+  padding-bottom: 10px;
+  border-bottom:1px solid #717171;
 }
 .movie-synopsis-en {
   padding-top: 10px;
@@ -60,7 +60,14 @@ body {
   float:right; 
   color:#666666;
   font-family: montRegular;
-  background-color: red;
+  /*background-color: red;*/
+}
+
+.rate-select {
+  width:50px;
+  height: 20px;
+  clear:both;
+  /*background-color: red;*/
 }
 
 .movie-director-writers-stars {
@@ -86,7 +93,7 @@ body {
 	background-color: #FFFFFF;
 	padding: 20px 20px 20px 20px;
 	border-radius: 10px;
-   clear:both;
+  clear:both;
 }
 .movie-artiste {
 	margin: 0 auto;

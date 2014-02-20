@@ -75,10 +75,63 @@
 		<strong>{{ movie_data.detail_synopsis_en|decodeHTML }}</strong>
 	</div>
 
-<!-- 	<div class="movie-rate">
+	<div class="movie-rate">
 		Your rating:
-		<li><a href="javascript:;" id="1" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar1.png" alt="1" width="57.5" height="57.5" border="0"><span>โหด มันส์ สะใจ</span></a></li>
-	</div> -->
+
+
+			<script type="text/javascript">
+
+  				function showVoteStar(alt)	
+  				{
+    		 		
+    		 		alt+1;
+    		 		var abc = alt;
+    		 		for (var i=1; i <= alt ;i++)
+					{ 
+						document.getElementById('star-'+[i]).src='/images/details/pink_star_40x38.png';
+					}
+					document.getElementById("rate-select").innerHTML = abc+'/10';
+  				}
+  				function hideVoteStar()
+  				{
+    		 		for (var i=1; i <= 10 ;i++)
+					{ 
+						document.getElementById('star-'+[i]).src='/images/details/black_star_40x38.png';
+					}
+
+					document.getElementById("rate-select").innerHTML = '-/10';
+  				}
+  				function clickVote(alt)	
+  				{
+  					alert(alt)
+  				}
+			</script>
+
+			<!-- <a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="this.src='/images/details/pink_star_40x38.png'" onmouseout="this.src='/images/details/black_star_40x38.png'" alt="1" width="20" height="20" id="star-1"></img></a> -->
+			
+			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="1" width="20" height="20" id="star-1"></img></a>
+
+			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="2" width="20" height="20" id="star-2"></img></a>
+
+			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="3" width="20" height="20" id="star-3"></img></a>
+
+			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="4" width="20" height="20" id="star-4"></img></a>
+
+			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="5" width="20" height="20" id="star-5"></img></a>
+
+			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="6" width="20" height="20" id="star-6"></img></a>
+
+			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="7" width="20" height="20" id="star-7"></img></a>
+
+			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="8" width="20" height="20" id="star-8"></img></a>
+
+			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="9" width="20" height="20" id="star-9"></img></a>
+
+			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="10" width="20" height="20" id="star-10"></img></a>
+
+			<span id="rate-select">-/10</span>
+
+	</div>
 
 	<!-- <div class="movie-director" style="margin: auto; width:550px; height:86px; float:right; color:#666666;"> -->
 	<div class="movie-director-writers-stars">
