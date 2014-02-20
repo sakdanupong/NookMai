@@ -52,10 +52,23 @@ body {
 	color:#666666;
   font-family: montRegular;
 }
+.movie-rate-total {
+  width:100px; 
+  height: 100px;
+  /*background-color: red;*/
+  margin: 0 auto;
+  float:right;
+  font-family: montRegular;
+  font-size: 35pt;
+  /*margin-top: 20px;*/
+}
+
+
 .movie-rate {
   padding-top: 10px;
   margin: 0 auto;
-  width:550px; 
+  /*width:550px; */
+  width:450px; 
   height: 100px;
   float:right; 
   color:#666666;
@@ -68,6 +81,10 @@ body {
   height: 20px;
   clear:both;
   /*background-color: red;*/
+}
+
+.box-share {
+  margin-top: 20px;
 }
 
 .movie-director-writers-stars {
