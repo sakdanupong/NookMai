@@ -228,6 +228,17 @@ def getCookie(request):
     return cookies
 
 
+def getUserModel(request):
+    userData = None
+    session_token = request.cookies.get("session_token")
+        # logging.warning('#################### ' + session_token)
+    if session_token:
+        sessionModel = SessionModel.get_by_key_name(session_token)
+        if not sessionModel is None:
+            userData = UserModel.get_by_key_name(str(sessionModel.user_id))
+    return userData
+
+
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
@@ -244,16 +255,6 @@ COMINGSOON_PER_PAGE = 10
 
 class MainPage(webapp2.RequestHandler):
 
-    def getUserData(self):
-        userData = None
-        session_token = self.request.cookies.get("session_token")
-        # logging.warning('#################### ' + session_token)
-        if session_token:
-            sessionModel = SessionModel.get_by_key_name(session_token)
-            if not sessionModel is None:
-                userData = UserModel.get_by_key_name(str(sessionModel.user_id))
-        return userData
-
     def get(self):
         record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
         movie_list = getNowShowing(0, NOWSHOWING_DATA_PER_PAGE)
@@ -261,7 +262,7 @@ class MainPage(webapp2.RequestHandler):
         movie_list = movie_json['movie_list']
         magic_number = randint(0, len(movie_list) - 1)
         random_movie = movie_list[magic_number]
-        userData = self.getUserData()
+        userData = getUserModel(self.request)
         template_values = {
              'random_movie' : random_movie,
              'record_object' : record_object,
@@ -283,7 +284,7 @@ class MainPage(webapp2.RequestHandler):
         random_movie = movie_list[magic_number]
 
         scroll_to = self.request.get('scroll_to')
-        userData = self.getUserData()
+        userData = getUserModel(self.request)
 
         template_values = {
              'random_movie' : random_movie,
