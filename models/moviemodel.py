@@ -43,3 +43,6 @@ class MovieModel(db.Model):
     avatar_12_count = db.IntegerProperty(default=0)
     avatar_13_count = db.IntegerProperty(default=0)
     avatar_14_count = db.IntegerProperty(default=0)
+
+    rate_count = db.IntegerProperty(default=0)
+    vote_count = db.IntegerProperty(default=0)

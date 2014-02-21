@@ -40,9 +40,9 @@
 
 #nowshowing_wraper_div {
 	/*height: 806px;*/
-	min-height: 986px;
+	/*min-height: 986px;*/
 	overflow: auto;
-	width: 892px;
+	/*width: 892px;*/
 	margin: auto;
 }
 

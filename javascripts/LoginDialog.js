@@ -142,7 +142,7 @@ function show() {
 
 };
 
-function dismissLoginDialog() {
+function dismissLoginDialog(p_callBack) {
 
 	cancelAllRequest();
 
@@ -157,7 +157,8 @@ function dismissLoginDialog() {
 			if (gLoginDialog) {
 				gLoginDialog.remove();	
 			}
-
+			if (p_callBack)
+				p_callBack();
 		} ,100);
 	});
 

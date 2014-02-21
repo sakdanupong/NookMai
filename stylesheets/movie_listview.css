@@ -1,0 +1,90 @@
+#movie_listview_content {
+	margin: auto;
+	width: 920px;
+	clear:both;
+}
+
+#movie_listview_detail_div {
+	width:870px;
+	float: right;
+}
+
+#movie_listview_vote_div {
+	margin-right: 870px;
+	height: 100%;
+}
+
+#vote_div {
+	margin-top: 25px;
+	display: inline-block;;
+	margin: auto;
+}
+
+.arrow-up {
+	width: 0; 
+	height: 0; 
+	border-left: 15px solid transparent;
+	border-right: 15px solid transparent;
+	
+	border-bottom: 15px solid gray;
+}
+
+.arrow-up:hover {
+	border-bottom: 15px solid lightgray;	
+}
+
+
+.arrow-down {
+	width: 0; 
+	height: 0; 
+	border-left: 15px solid transparent;
+	border-right: 15px solid transparent;
+	
+	border-top: 15px solid gray;
+}
+
+.arrow-down:hover {
+	border-top: 15px solid lightgray;	
+}
+
+.vote_count {
+	font-size: 18pt;
+	text-align: center;
+	font-family: montRegular;
+	color: #ffffff;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+#movie_listview_img_div {
+	margin-right: 658px;
+}
+
+
+#movie_listview_right_img_div {
+	float: right;
+	width: 658px;
+}
+
+#movie_listview_detia_left {
+	margin-right: 329px;
+}
+
+#movie_listview_detia_right {
+	float: right;
+	width: 329px;
+}
+
+.poster_image {
+	width:187px;
+	height: 280px;
+}
+
+#movie_listview_movie_name {
+	font-size: 20pt;
+	text-align: center;
+	font-family: montRegular;
+	color: #ffffff;
+	margin-top: 10px;
+	text-align: left;
+}

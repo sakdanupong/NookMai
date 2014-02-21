@@ -84,11 +84,10 @@
              var username = data['username'];
              var email = data['email'];
              var session_token = data['session_token'];
-             setCookie('session_token', session_token, ExpireDayCookie(30));             
-             logindialog.dismissLoginDialog();
-             setTimeout(function() {
-              location.reload();
-             } , 700);
+             //setCookie('session_token', session_token, ExpireDayCookie(30));             
+             logindialog.dismissLoginDialog(function() {
+                location.reload();
+             });
           } else {
             alert(reason);
           }
@@ -98,11 +97,10 @@
              var username = data['username'];
              var email = data['email'];
              var session_token = data['session_token'];
-             setCookie('session_token', session_token, ExpireDayCookie(30));
-             logindialog.dismissLoginDialog();
-             setTimeout(function() {
-				      location.reload();
-			       } , 700);
+             //setCookie('session_token', session_token, ExpireDayCookie(30));
+             logindialog.dismissLoginDialog(function() {
+                location.reload();
+             });
           } else {
             alert(reason);
           }
@@ -124,41 +122,52 @@
 
     function checkSession() {
     	hideAllUserDiv();
-    	var login_div = $('#login_div');
-    	var user_div = $('#user_div');
-    	var label = $('#username_label');
-    	var session_token = getCookie('session_token');
-    	if (session_token) {
-    		var formData = new FormData();
-    		formData.append('session_token', session_token);
+      var login_div = $('#login_div');
+      var user_div = $('#user_div');
+      var label = $('#username_label');
+       {% if userData %}
+          user_div.show();
+          label.text('{{userData.username}}');
+       {% else %}
+          login_div.show();
+       {% endif %}
 
-		$.ajax({
-            url: '/api_get_userdata',  //Server script to process data
-            type: 'POST',
-            mimeType:"multipart/form-data",
-            dataType: 'json',
-            success: function(json) {
-              var success = json['success'];
-              var data = json['data'];
-              var reason = json['reason'];
-              if (success) {
-              	var username = data['username'];
-              	user_div.show();
-              	label.text(username);
-              } else {
-              	removeCookie('session_token');
-              	login_div.show();
-              }
+
+  //   	var login_div = $('#login_div');
+  //   	var user_div = $('#user_div');
+  //   	var label = $('#username_label');
+  //   	var session_token = getCookie('session_token');
+  //   	if (session_token) {
+  //   		var formData = new FormData();
+  //   		formData.append('session_token', session_token);
+
+		// $.ajax({
+  //           url: '/api_get_userdata',  //Server script to process data
+  //           type: 'POST',
+  //           mimeType:"multipart/form-data",
+  //           dataType: 'json',
+  //           success: function(json) {
+  //             var success = json['success'];
+  //             var data = json['data'];
+  //             var reason = json['reason'];
+  //             if (success) {
+  //             	var username = data['username'];
+  //             	user_div.show();
+  //             	label.text(username);
+  //             } else {
+  //             	removeCookie('session_token');
+  //             	login_div.show();
+  //             }
               	
-            },
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false
-          });
-    	} else {
-    		login_div.show();
-    	}
+  //           },
+  //           data: formData,
+  //           cache: false,
+  //           contentType: false,
+  //           processData: false
+  //         });
+  //   	} else {
+  //   		login_div.show();
+  //   	}
     }
 
 	$(document).ready(function() {
@@ -200,8 +209,8 @@
 		</div>
 	</div>
 	<div id="username_div">
-		<div class="username_inner_div" id="login_div"><input type="submit" onClick="showLoginDialog()" value="Login"></input></div>
-		<div class="username_inner_div" id="user_div"><label id="username_label"></label><input type="submit" onClick="logout()" value="Logout"></input></div>
+		<div class="username_inner_div" id="login_div" style="display:'none';"><input type="submit" onClick="showLoginDialog()" value="Login"></input></div>
+		<div class="username_inner_div" id="user_div" style="display:'none';"><label id="username_label"></label><input type="submit" onClick="logout()" value="Logout"></input></div>
    	</div>
 	
 </body>
