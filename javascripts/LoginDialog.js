@@ -3,6 +3,9 @@ var width = 900;
 var height = 400;
 var registerCallBack;
 var loginCallBack;
+var registerRequest;
+var loginRequest;
+var obj;
 
 function LoginDialog(p_registerCallback, p_loginCallback) {
 	var $ = document;
@@ -11,6 +14,13 @@ function LoginDialog(p_registerCallback, p_loginCallback) {
     link.rel  = 'stylesheet';
     link.type = 'text/css';
     link.href = '/stylesheets/login_dialog.css';
+    link.media = 'all';
+    head.appendChild(link);
+
+    var link  = $.createElement('link');
+    link.rel  = 'stylesheet';
+    link.type = 'text/css';
+    link.href = '/stylesheets/login_loading.css';
     link.media = 'all';
     head.appendChild(link);
 
@@ -28,7 +38,21 @@ function LoginDialog(p_registerCallback, p_loginCallback) {
 				  					<div class='login_input_wrapper'><p class='login_dialog_title'>password: </p><input class='login_dialog_input' id='login_password' type='password'></input></div>\
 				  					<div class='login_input_wrapper'><input type='checkbox' id='login_rememberme' onClick='loginRememberme();'></input><label class='login_dialog_title'> remember me</label></div>\
 				  					<div class='login_input_wrapper'><a class='hyper_link_no_underline' href='#'>recovery password</a></div>\
-				  					<div class='login_input_wrapper'><input type='submit' value='login' onClick='clickLogin();'></input></div>\
+				  					<div class='login_input_wrapper'>\
+				  						<input id='login_btn' type='submit' value='login' onClick='clickLogin();'></input>\
+				  						<div id='login_loading'>\
+				  							<div id='noTrespassingOuterBarG'>\
+												<div id='noTrespassingFrontBarG' class='noTrespassingAnimationG'>\
+													<div class='noTrespassingBarLineG'></div>\
+													<div class='noTrespassingBarLineG'></div>\
+													<div class='noTrespassingBarLineG'></div>\
+													<div class='noTrespassingBarLineG'></div>\
+													<div class='noTrespassingBarLineG'></div>\
+													<div class='noTrespassingBarLineG'></div>\
+												</div>\
+											</div>\
+										</div>\
+				  					</div>\
 				  				</div>\
 				  				<div id='login_left_div'><div id='vertical_line'></div></div>\
 				  			</div>\
@@ -54,7 +78,21 @@ function LoginDialog(p_registerCallback, p_loginCallback) {
 				  						<div class='login_input_wrapper'><p class='login_dialog_title'>password: </p><input class='login_dialog_input' id='register_password' type='password'></input></div>\
 				  						<div class='login_input_wrapper'><p class='login_dialog_title'>verify password: </p><input class='login_dialog_input' id='register_confirm_password' type='password'></input></div>\
 				  						<div class='login_input_wrapper'><input type='checkbox' id='register_rememberme' onClick='registerRememberme();'></input><label class='login_dialog_title'> remember me</label></div>\
-				  						<div class='login_input_wrapper'><input type='submit' value='create account' onClick='clickRegister();'></input></div>\
+				  						<div class='login_input_wrapper'>\
+				  							<input id='create_account_btn' type='submit' value='create account' onClick='clickRegister();'></input>\
+				  							<div id='register_loading'>\
+					  							<div id='noTrespassingOuterBarG'>\
+													<div id='noTrespassingFrontBarG' class='noTrespassingAnimationG'>\
+														<div class='noTrespassingBarLineG'></div>\
+														<div class='noTrespassingBarLineG'></div>\
+														<div class='noTrespassingBarLineG'></div>\
+														<div class='noTrespassingBarLineG'></div>\
+														<div class='noTrespassingBarLineG'></div>\
+														<div class='noTrespassingBarLineG'></div>\
+													</div>\
+												</div>\
+											</div>\
+				  						</div>\
 				  					</div>\
 				  				</div> \
 				  			</div>\
@@ -67,12 +105,14 @@ function LoginDialog(p_registerCallback, p_loginCallback) {
     this.loginCallBack = p_loginCallback;
     registerCallBack = p_registerCallback;
   	show();
+  	obj = this;
 }
 
 function show() {
 	var _body = document.getElementsByTagName('body') [0];
 	// <body scroll="no"> 
-    _body.appendChild(this.gLoginDialog);
+    //_body.appendChild(this.gLoginDialog);
+    document.body.appendChild(gLoginDialog);
 
     getRemember();
 
@@ -104,6 +144,8 @@ function show() {
 
 function dismissLoginDialog() {
 
+	cancelAllRequest();
+
 	var windowHeight = $(window).height();
 
 	// calculate the values for center alignment
@@ -115,6 +157,7 @@ function dismissLoginDialog() {
 			if (gLoginDialog) {
 				gLoginDialog.remove();	
 			}
+
 		} ,100);
 	});
 
@@ -150,9 +193,34 @@ function getRemember() {
 
 };
 
+function cancelAllRequest() {
+	if(registerRequest && registerRequest.readystate != 4){
+        registerRequest.abort();
+        registered();
+    }
+
+    if(loginRequest && loginRequest.readystate != 4){
+        loginRequest.abort();
+        logedin();
+    }
+}
+
+function registering() {
+	var loading = $("#register_loading");
+	var button = $("#create_account_btn");
+	loading.show();
+	button.hide();
+}
+
+function registered() {
+	var loading = $("#register_loading");
+	var button = $("#create_account_btn");
+	loading.hide();
+	button.show();
+}
+
 function clickRegister() {
-
-
+	cancelAllRequest();
 	var u = $("#register_username").val();
 	var p = $("#register_password").val();
 	var cp = $("#register_confirm_password").val();
@@ -190,28 +258,46 @@ function clickRegister() {
     formData.append('username', u);
     formData.append('password', pHash);
     formData.append('email', e)
-	
-	$.ajax({
-            url: '/api_register',  //Server script to process data
-            type: 'POST',
-            mimeType:"multipart/form-data",
-            dataType: 'json',
-            success: function(json) {
-              var success = json['success'];
-              var data = json['data'];
-              var reason = json['reason'];
-              registerCallBack(success, data, reason);
-            },
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false
-          });
+
+	registering();
+
+	registerRequest = $.ajax({
+	            url: '/api_register',  //Server script to process data
+	            type: 'POST',
+	            mimeType:"multipart/form-data",
+	            dataType: 'json',
+	            success: function(json) {
+	              var success = json['success'];
+	              var data = json['data'];
+	              var reason = json['reason'];
+	              registerCallBack(success, data, reason, obj);
+	              registered();
+	            },
+	            data: formData,
+	            cache: false,
+	            contentType: false,
+	            processData: false
+	          });
 
 
 };
 
+function logingin() {
+	var loading = $("#login_loading");
+	var button = $("#login_btn");
+	loading.show();
+	button.hide();
+}
+
+function logedin() {
+	var loading = $("#login_loading");
+	var button = $("#login_btn");
+	loading.hide();
+	button.show();
+}
+
 function clickLogin() {
+	cancelAllRequest();
 	var u = $("#login_username").val();
 	var p = $("#login_password").val();
 
@@ -222,23 +308,26 @@ function clickLogin() {
 	var formData = new FormData();
     formData.append('username', u);
     formData.append('password', pHash);
-	
-	$.ajax({
-            url: '/api_login',  //Server script to process data
-            type: 'POST',
-            mimeType:"multipart/form-data",
-            dataType: 'json',
-            success: function(json) {
-              var success = json['success'];
-              var data = json['data'];
-              var reason = json['reason'];
-              loginCallBack(success, data, reason);
-            },
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false
-          });
+
+	logingin();
+
+	loginRequest = $.ajax({
+	            url: '/api_login',  //Server script to process data
+	            type: 'POST',
+	            mimeType:"multipart/form-data",
+	            dataType: 'json',
+	            success: function(json) {
+	              var success = json['success'];
+	              var data = json['data'];
+	              var reason = json['reason'];
+	              loginCallBack(success, data, reason, obj);
+	              logedin();
+	            },
+	            data: formData,
+	            cache: false,
+	            contentType: false,
+	            processData: false
+	          });
 };
 
 function registerRememberme() {

@@ -119,5 +119,32 @@ li a:hover {
     border: 1px solid #454545;
 }
 
+#username_div {
+	margin: auto;
+	width: 1200px;
+	background-color: #323232;
+	text-align: right;
+	padding-bottom: 10px;
+	height: 20px;
+}
+
+.username_inner_div {
+	margin-right: 15px;
+}
+
+/*#login_div {
+	display: none;
+}
+
+#username_div {
+	display: none;
+}*/
+
+#username_label {
+	color: #ffffff;
+	font-size: 12px;
+	font-family: montRegular;
+	margin-right: 10px;
+}
 
 

@@ -4,9 +4,6 @@
     <head>
       <script src="//code.jquery.com/jquery-1.9.1.js"></script>
       <script src="/javascripts/NumberUtil.js"></script>
-      <script src="/javascripts/LoginDialog.js"></script>
-      <script src="/javascripts/CookieUtils.js"></script>
-      <script src="/javascripts/md5.min.js"></script>
       <link rel="shortcut icon" href="images/favicon.ico"/>
       <link type="text/css" rel="stylesheet" href="/stylesheets/font_family.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/base_document.css" />
@@ -467,32 +464,6 @@
           }, 200);
         }
 
-        function showLoginDialog() {
-          LoginDialog(function(success, data, reason) {
-            if (success) {
-                 var user_id = data['user_id'];
-                 var username = data['username'];
-                 var email = data['email'];
-                 var session_token = data['session_token'];
-                 alert('user_id = '+ user_id + " username = "+ username + " email = " +email + " session_token = " +session_token);
-                 alert('register success !!!');
-              } else {
-                alert(reason);
-              }
-          } , function(success, data, reason) {
-            if (success) {
-                 var user_id = data['user_id'];
-                 var username = data['username'];
-                 var email = data['email'];
-                 var session_token = data['session_token'];
-                 alert('user_id = '+ user_id + " username = "+ username + " email = " +email + " session_token = " +session_token);
-                 alert('login success !!!');
-              } else {
-                alert(reason);
-              }
-          });
-        }
-
         $(document).ready(function() {
           $('#nav_home').addClass('active');
           initPaginationButton();
@@ -533,9 +504,8 @@
     </head>
     <body>
       {% include "/main_header.html" with context %}
-      <div><input type="submit" onClick="showLoginDialog()"/></div>
       <div id="main_body_div">
-        <div id="youtube_div"><iframe id="feature_youtube_frame" frameborder="0" allowfullscreen></iframe></div>
+        <!-- <div id="youtube_div"><iframe id="feature_youtube_frame" frameborder="0" allowfullscreen></iframe></div> -->
         <div id="nowshowing_div">
           <div id="nowshowing_caption" class="main_page_caption">NOW SHOWING</div>
           <div id="nowshowing_wraper_div">

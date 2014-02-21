@@ -302,6 +302,11 @@ class RefreshData(webapp2.RequestHandler):
         c.comingsoon_count += 1
         c.put()
 
+    def decrement_record_comingsoon_counter(self, c_key):
+        c = db.get(c_key)
+        c.comingsoon_count -= 1
+        c.put()
+
     def get(self):
         data = memcache.get(REFRESH_DATA_CACHE)
         if data is not None:
@@ -315,9 +320,16 @@ class RefreshData(webapp2.RequestHandler):
         record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
         for m in mJson['movies']:
             q = MovieModel.all();
-            q.filter('original_id =', m['id'])
+            q.filter('original_id =', m['id']) 
             if q.count():
-                continue
+                comingsoon = q[0];
+                is_comingsoon = comingsoon.is_coming_soon
+                if is_comingsoon:
+                    db.delete(comingsoon);
+                    db.run_in_transaction(self.decrement_record_comingsoon_counter, comingsoon.key())
+                else:
+                    continue
+                
             db.run_in_transaction(self.increment_record_nowshowing_counter, record_object.key())
             db.run_in_transaction(self.increment_record_movie_counter, record_object.key())
             movie_id = str(self.new_id)
@@ -1072,7 +1084,7 @@ class Login(webapp2.RequestHandler):
         findUser = UserModel.all().filter("username =", username)
         if findUser.count():
             usermodel = findUser[0]
-            logging.warning('password = ' +password + ' database password = ' + usermodel.password)
+            # logging.warning('password = ' +password + ' database password = ' + usermodel.password)
             if password == usermodel.password:
                 success = 1
                 userData = getUserData(usermodel)
@@ -1089,7 +1101,32 @@ class Login(webapp2.RequestHandler):
             'data' : userData,
         }
 
-        self.response.out.write(json.dumps(r))            
+        self.response.out.write(json.dumps(r))
+
+class GetUserData(webapp2.RequestHandler):
+    def get(self):
+        self.process()
+    def post(self):
+        self.process()
+    def process(self):
+        success = 0
+        userData = None
+        reason = ""
+        session_token = self.request.get('session_token')
+        sessionModel = SessionModel.get_by_key_name(session_token)
+        if not sessionModel is None:
+            usermodel = UserModel.get_by_key_name(str(sessionModel.user_id))
+            if not sessionModel is None:
+                success = 1
+                userData = getUserData(usermodel)
+
+        r = {
+            'success' : success,
+            'reason' : reason,
+            'data' : userData,
+        }
+
+        self.response.out.write(json.dumps(r))
 
         
 
@@ -1118,6 +1155,7 @@ application = webapp2.WSGIApplication([
     ('/api_get_searchmovie', GetSeachMovie),
     ('/api_register', Register),
     ('/api_login', Login),
+    ('/api_get_userdata', GetUserData),
 ], debug=True)
 
 
