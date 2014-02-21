@@ -210,6 +210,35 @@ def getUserData(usermodel):
     }
     return userData;
 
+def setCookie(response , request, name, value):
+    localhost = request.host
+    expires_date = datetime.datetime.now() + datetime.timedelta(datetime.MAXYEAR)
+    response.set_cookie(name, value, expires=expires_date)
+    # response.set_cookie('name', 'value', expires=datetime.datetime.now(), path='/', domain='example.com')
+
+def getCookie(request):
+    value = None
+    cookies = {}
+    raw_cookies = request.headers.get("Cookie")
+    if raw_cookies:
+        for cookie in raw_cookies.split(";"):
+            name, value = cookie.split("=")
+            for name, value in cookie.split("="):
+                cookies[name] = value
+
+    return cookies
+
+
+def getUserModel(request):
+    userData = None
+    session_token = request.cookies.get("session_token")
+        # logging.warning('#################### ' + session_token)
+    if session_token:
+        sessionModel = SessionModel.get_by_key_name(session_token)
+        if not sessionModel is None:
+            userData = UserModel.get_by_key_name(str(sessionModel.user_id))
+    return userData
+
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -226,6 +255,7 @@ NOWSHOWING_DATA_PER_PAGE = 15
 COMINGSOON_PER_PAGE = 10
 
 class MainPage(webapp2.RequestHandler):
+
     def get(self):
         record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
         movie_list = getNowShowing(0, NOWSHOWING_DATA_PER_PAGE)
@@ -233,12 +263,15 @@ class MainPage(webapp2.RequestHandler):
         movie_list = movie_json['movie_list']
         magic_number = randint(0, len(movie_list) - 1)
         random_movie = movie_list[magic_number]
+        userData = getUserModel(self.request)
         template_values = {
              'random_movie' : random_movie,
              'record_object' : record_object,
              'avatar_count' : AVATAR_COUNT,
              'nowshowing_per_page' : NOWSHOWING_DATA_PER_PAGE, 
              'comingsoon_per_page' : COMINGSOON_PER_PAGE,
+             'userData' : userData,
+
         }
         template = JINJA_ENVIRONMENT.get_template('movielist.html')
         # template = JINJA_ENVIRONMENT.get_template('test_responsive.html')
@@ -252,6 +285,7 @@ class MainPage(webapp2.RequestHandler):
         random_movie = movie_list[magic_number]
 
         scroll_to = self.request.get('scroll_to')
+        userData = getUserModel(self.request)
 
         template_values = {
              'random_movie' : random_movie,
@@ -260,6 +294,7 @@ class MainPage(webapp2.RequestHandler):
              'nowshowing_per_page' : NOWSHOWING_DATA_PER_PAGE, 
              'comingsoon_per_page' : COMINGSOON_PER_PAGE,
              'scroll_to' : scroll_to,
+             'userData' : userData,
         }
         template = JINJA_ENVIRONMENT.get_template('movielist.html')
         # template = JINJA_ENVIRONMENT.get_template('test_responsive.html')
@@ -1143,6 +1178,8 @@ class Register(webapp2.RequestHandler):
 
                     userData = getUserData(usermodel)
 
+                    setCookie(self.response, self.request, 'session_token', session_token)
+
                 else:
                     reason = "Email ไม่ถูกต้อง"
             else:
@@ -1178,6 +1215,7 @@ class Login(webapp2.RequestHandler):
             if password == usermodel.password:
                 success = 1
                 userData = getUserData(usermodel)
+                setCookie(self.response, self.request, 'session_token', usermodel.session_token)
             else:
                 reason = "Password ไม่ถูกต้อง"
 
