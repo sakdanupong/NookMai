@@ -12,6 +12,7 @@
     <link type="text/css" rel="stylesheet" href="/stylesheets/base_document.css" />
     <link type="text/css" rel="stylesheet" href="/stylesheets/main_body.css" />
     <link type="text/css" rel="stylesheet" href="/stylesheets/style.css" />
+    <script src="/javascripts/CookieUtils.js"></script>
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,102 +59,47 @@
 		<strong>{{ movie_data.detail_genre_en }} - {{movie_data.release_time_timestamp|covertUnixTimeToStrFotmat('%d %B %Y')}}</strong>
 	</div>
 
-
-	<div class="movie-synopsis-en">
-		<strong>{{ movie_data.detail_synopsis_en|decodeHTML }}</strong>
-	</div>
-
-
-	<!-- <div class="movie-rate-total"><img src="/images/details/pink_star_40x38.png"></img> -->
 	<div class="movie-rate-total">
 		7.2
 	</div>
 	<div class="movie-rate">
 		Your rating:
 
-
-			<script type="text/javascript">
-
-  				function showVoteStar(alt)	
-  				{
-    		 		
-    		 		alt+1;
-    		 		var abc = alt;
-    		 		for (var i=1; i <= alt ;i++)
-					{ 
-						document.getElementById('star-'+[i]).src='/images/details/pink_star_40x38.png';
-					}
-					document.getElementById("rate-select").innerHTML = abc+'/10';
-  				}
-  				function hideVoteStar()
-  				{
-  					
-    		 		for (var i=1; i <= 10 ;i++)
-					{ 
-						document.getElementById('star-'+[i]).src='/images/details/black_star_40x38.png';
-					}
-
-					document.getElementById("rate-select").innerHTML = '-/10';
-  				}
-  				function clickVote(alt)	
-  				{
-  					alert(alt)
-  				}
-			</script>
-
 			<!-- <a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="this.src='/images/details/pink_star_40x38.png'" onmouseout="this.src='/images/details/black_star_40x38.png'" alt="1" width="20" height="20" id="star-1"></img></a> -->
 			
-			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="1" width="15" height="15" id="star-1"></img></a>
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="1" width="15" height="15" id="star-1"></img></a>
 
-			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="2" width="15" height="15" id="star-2"></img></a>
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="2" width="15" height="15" id="star-2"></img></a>
 
-			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="3" width="15" height="15" id="star-3"></img></a>
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="3" width="15" height="15" id="star-3"></img></a>
 
-			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="4" width="15" height="15" id="star-4"></img></a>
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="4" width="15" height="15" id="star-4"></img></a>
 
-			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="5" width="15" height="15" id="star-5"></img></a>
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="5" width="15" height="15" id="star-5"></img></a>
 
-			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="6" width="15" height="15" id="star-6"></img></a>
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="6" width="15" height="15" id="star-6"></img></a>
 
-			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="7" width="15" height="15" id="star-7"></img></a>
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="7" width="15" height="15" id="star-7"></img></a>
 
-			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="8" width="15" height="15" id="star-8"></img></a>
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="8" width="15" height="15" id="star-8"></img></a>
 
-			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="9" width="15" height="15" id="star-9"></img></a>
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="9" width="15" height="15" id="star-9"></img></a>
 
-			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="10" width="15" height="15" id="star-10"></img></a>
-
-			<span id="rate-select">-/10</span>
-
-<!-- 			<a onmouseover="clickVote()" onmouseout="hideVoteStar()">
-			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" alt="1" width="15" height="15" id="star-1"></img></a>
-
-			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" alt="2" width="15" height="15" id="star-2"></img></a>
-
-			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" alt="3" width="15" height="15" id="star-3"></img></a>
-
-			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" alt="4" width="15" height="15" id="star-4"></img></a>
-
-			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" alt="5" width="15" height="15" id="star-5"></img></a>
-
-			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" alt="6" width="15" height="15" id="star-6"></img></a>
-
-			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" alt="7" width="15" height="15" id="star-7"></img></a>
-
-			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" alt="8" width="15" height="15" id="star-8"></img></a>
-
-			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" alt="9" width="15" height="15" id="star-9"></img></a>
-
-			<a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" alt="10" width="15" height="15" id="star-10"></img></a>
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="10" width="15" height="15" id="star-10"></img></a>
 
 			<span id="rate-select">-/10</span>
-			</a> -->
 
 			<div class="box-share">
 				<a href="#">want to see</a>
 				<a href="#">not interest</a>
 			</div>
 	</div>
+
+
+	<div class="movie-synopsis-en">
+		<strong>{{ movie_data.detail_synopsis_en|decodeHTML }}</strong>
+	</div>
+
 
 	<!-- <div class="movie-director" style="margin: auto; width:550px; height:86px; float:right; color:#666666;"> -->
 	<div class="movie-director-writers-stars">
@@ -239,16 +185,6 @@
 
 		<form id="form-comment" action="javascript:submitComment();" method="post">
 		<div class="movie-box-comment-emotion-avatar">
-			<script type="text/javascript">
-
-  				function clickAddAvatar(id)	
-  				{
-    		 		$('#img_avatar').attr("src", "/images/details/avatar/image_avatar"+id+".png");
-    		 		$('#img_avatar').attr("alt", id);
-  				}
-			</script>
-
-
 			<ul class="tt-wrapper">
 				<li><a href="javascript:;" id="1" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar1.png" alt="1" width="57.5" height="57.5" border="0"><span>โหด มันส์ สะใจ</span></a></li>
 				<li><a href="javascript:;" id="2" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar2.png" alt="2" width="57.5" height="57.5" border="0"><span>กาก เสียดายตัง</span></a></li>
@@ -292,12 +228,6 @@
 			</div>
 
 			<div class="movie-box-comment-right-down">
-				<script type="text/javascript">
-					function checkActiveTextarea(){;
-						$("#movie-box-comment-captcha").show();
-					}
-				</script>
-
 				<div id="movie-box-comment-captcha" style="display:none;">
 					{% autoescape false %}
  					<script type="text/javascript">var RecaptchaOptions = {theme : 'clean'};</script>
@@ -379,45 +309,89 @@
 
 
 
-		<!-- <form action="javascript:submitComment();" method="post">
-		<center> -->
-	    <!-- <textarea id="comment_content" name="content" style="width:450px; height:100px;"></textarea> -->
-    	<!-- <br> -->
-    	<!-- <input id="comment_author" name="author" placeholder="name" style="width:450px" rows="1" cols="60"></input> -->
-
-
-<!-- {% autoescape false %}
- 		<script type="text/javascript">var RecaptchaOptions = {theme : 'clean'};</script>
-		{{ captchahtml }}
-{% endautoescape %} -->
-
-<!-- 
-    	<input type="submit" value="Comment" style="clear:both;"></div>
-    	</center>
-    	</form> -->
-
-
-
-<!-- <div id="comments" style="background-color: #323232; width: 1200px; margin: auto;"> -->
-	<!-- <div><center><font size="20"><b>comment</b></font></center></div> -->
-	<!-- {% for comment in comments %} -->
-<!-- 	<center>
-	<table width="900" border="1" cellpadding="0" cellspacing="5" bordercolor="#333333">
-	<br/><br/>
-    <div>ข้อความ: {{ comment.content|decodeHTML }}</div>
-    <div>ชื่อ: {{ comment.author|decodeHTML }}</div>
-    <div>วันที่: {{ (comment.date | datetime_lctimezone_format).strftime("%B %d, %Y") }} เวลา: {{ (comment.date | datetime_lctimezone_format).strftime("%H:%M") }}</div>
-	<br/><br/>
-    </table>
-    </center> -->
-	<!-- {% endfor %} -->
-<!-- </div> -->
-
-
-
 
 
 <script>
+	$(document).ready(function() {
+    	setupUser();
+    });
+
+
+	function setupUser() {
+		// hideAllUserDiv();
+		var session_token = getCookie('session_token');
+		if (session_token) {
+			var formData = new FormData();
+			formData.append('session_token', session_token);
+
+		$.ajax({
+	        url: '/api_get_userdata',  //Server script to process data
+	        type: 'POST',
+	        mimeType:"multipart/form-data",
+	        dataType: 'json',
+	        success: function(json) {
+	          var success = json['success'];
+	          var data = json['data'];
+	          var reason = json['reason'];
+	          if (success) {
+	          	var username = data['username'];
+	          	$('#comment_author').val(username)
+	          	$('#comment_author').attr({
+                    'disabled': 'disabled'
+                })
+	          } else {
+	          	// alert('no login')
+	          	// show dialog login
+	          	login_div.show();
+	          	removeCookie('session_token');
+	          }
+	          	
+	        },
+	        data: formData,
+	        cache: false,
+	        contentType: false,
+	        processData: false
+	      });
+		} else {
+			login_div.show();
+		}
+	}
+
+	function checkLogin() {
+		// hideAllUserDiv();
+		var session_token = getCookie('session_token');
+		if (session_token) {
+			var formData = new FormData();
+			formData.append('session_token', session_token);
+
+		$.ajax({
+	        url: '/api_get_userdata',  //Server script to process data
+	        type: 'POST',
+	        mimeType:"multipart/form-data",
+	        dataType: 'json',
+	        success: function(json) {
+	          var success = json['success'];
+	          var data = json['data'];
+	          var reason = json['reason'];
+	          if (success) {
+	          	alert('login law')
+	          	// vote
+	          } else {
+	          	removeCookie('session_token');
+	          }
+	          	
+	        },
+	        data: formData,
+	        cache: false,
+	        contentType: false,
+	        processData: false
+	      });
+		} else {
+			showLoginDialog()
+	        // show dialog login
+		}
+	}
+
 
 	function resetBtnPost() {
 		$('.btn-post').css("background", "none repeat scroll 0 0 #999999");
@@ -552,20 +526,6 @@
 		    		h += '<div class="comments-template-right">';		
 						h += '<div class="comments-template-count-comment">ความคิดเห็นที่ '+count_index+'</div>';
 		    			h += '<div class="comments-template-date-and-time">'+date+':'+time_crate+'น.</div>';
-		    			
-						// now = new Date(); 
-						// now = date;
-						// alert(date)
-
-						// var thmonth = new Array ("มกราคม","กุมภาพันธ์","มีนาคม",
-						// "เมษายน","พฤษภาคม","มิถุนายน", "กรกฎาคม","สิงหาคม","กันยายน",
-						// "ตุลาคม","พฤศจิกายน","ธันวาคม");
-
-						// alert(thmonth[now.getMonth())
-
-						// var datethai = document.write(now.getDate()+ " " + thmonth[now.getMonth()]+ " " + (0+now.getYear()+543));
-		    			// h += '<div class="comments-template-date-and-time">'+thmonth[now.getMonth()+':'+time_crate+'น.</div>';
-
 		    			h += '<div class="comments-template-content">'+content+'</div>';
 		    		h += '</div>';
 		    	h += '</div>';
@@ -583,6 +543,15 @@
 		$('#comment_content').val(content+id);
 	}
 
+	function checkActiveTextarea(){;
+		$("#movie-box-comment-captcha").show();
+	}
+
+	function clickAddAvatar(id)	
+	{
+		$('#img_avatar').attr("src", "/images/details/avatar/image_avatar"+id+".png");
+		$('#img_avatar').attr("alt", id);
+	}
 
 	function voteComment(id) {
 		$('.btn-up').css("background", "none repeat scroll 0 0 #666666");
@@ -623,6 +592,41 @@
 		});
 	}
 
+	function showVoteStar(alt) {
+		
+		alt+1;
+		var abc = alt;
+		for (var i=1; i <= alt ;i++)
+		{ 
+			document.getElementById('star-'+[i]).src='/images/details/rate/black_star_40x38.png';
+		}
+		document.getElementById("rate-select").innerHTML = abc+'/10';
+	}
+
+	function hideVoteStar() {
+		// TODO if user vote 
+		// show rate vote 
+		// /images/details/rate/pink_star_40x38.png
+		for (var i=1; i <= 10 ;i++)
+		{ 
+			document.getElementById('star-'+[i]).src='/images/details/rate/grey_star_40x38.png';
+		}
+		document.getElementById("rate-select").innerHTML = '-/10';
+	}
+
+	function clickVote(alt)	{
+		// alert(alt)
+
+		checkLogin();
+
+		// alt+1;
+		// var abc = alt;
+		// for (var i=1; i <= alt ;i++)
+		// { 
+		// 	document.getElementById('star-'+[i]).src='/images/details/rate/pink_star_40x38.png';
+		// }
+		// document.getElementById("rate-select").innerHTML = abc+'/10';
+	}
 
 </script>
 
