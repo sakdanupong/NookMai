@@ -586,14 +586,30 @@
 	}
 
 	function hideRateStar() {
-		// TODO if user vote 
+		// if user vote 
 		// show rate vote 
-		// /images/details/rate/pink_star_40x38.png
-		for (var i=1; i <= 10 ;i++)
-		{ 
-			document.getElementById('star-'+[i]).src='/images/details/rate/grey_star_40x38.png';
+
+		var rate_score = {{ rate_data.rate_score }};
+		if (!rate_score) {
+			for (var i=1; i <= 10 ;i++)
+			{ 
+				document.getElementById('star-'+[i]).src='/images/details/rate/grey_star_40x38.png';
+			}
+			document.getElementById("rate-select").innerHTML = '-/10';
+		}else{
+			for (var i=1; i <= 10 ;i++)
+			{ 
+				document.getElementById('star-'+[i]).src='/images/details/rate/grey_star_40x38.png';
+			}
+
+
+			for (var i=1; i <= rate_score ;i++)
+			{ 
+				document.getElementById('star-'+[i]).src='/images/details/rate/pink_star_40x38.png';
+			}
+
+			document.getElementById("rate-select").innerHTML = rate_score+'/10';
 		}
-		document.getElementById("rate-select").innerHTML = '-/10';
 	}
 
 

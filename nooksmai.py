@@ -631,7 +631,7 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
 
 
         #query show comment
-        q = CommentModel.all();
+        q = CommentModel.all()
         q.filter('movie_id =', int(movie_id))
         q.order('-date')
         comments = []
@@ -640,11 +640,8 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
 
 
         # query user
-        session_token = self.request.cookies.get('session_token')
-        sessionModel = SessionModel.get_by_key_name(session_token)
-        if not sessionModel is None:
-            userdata = UserModel.get_by_key_name(str(sessionModel.user_id))
-        
+        userdata = getUserModel(self.request)
+
 
         # query user rate
         r = RateMovieModel.all()
