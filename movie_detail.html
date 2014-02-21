@@ -17,6 +17,10 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>{{ movie_data.name_en|decodeHTML }}</title>
+	<!-- <title>{{ rate_data.user_id }}</title> -->
+
+	
+	
 	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
 
 	<script type="text/JavaScript">
@@ -53,6 +57,8 @@
 
 	<div class="movie-title">
 		<strong>{{ movie_data.name_en|decodeHTML }}</strong>
+		<!-- <strong>{{ rate_data.username }}</strong> -->
+		
 	</div>
 			
 	<div class="movie-date">
@@ -65,27 +71,27 @@
 	<div class="movie-rate">
 		Your rating:
 
-			<!-- <a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="this.src='/images/details/pink_star_40x38.png'" onmouseout="this.src='/images/details/black_star_40x38.png'" alt="1" width="20" height="20" id="star-1"></img></a> -->
+			<!-- <a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="this.src='/images/details/pink_star_40x38.png'" onmouseout="this.src='/images/details/black_star_40x38.png'" alt="1" width="20" height="20" id="star-1"></img></a> -->
 			
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="1" width="15" height="15" id="star-1"></img></a>
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="1" width="15" height="15" id="star-1"></img></a>
 
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="2" width="15" height="15" id="star-2"></img></a>
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="2" width="15" height="15" id="star-2"></img></a>
 
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="3" width="15" height="15" id="star-3"></img></a>
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="3" width="15" height="15" id="star-3"></img></a>
 
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="4" width="15" height="15" id="star-4"></img></a>
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="4" width="15" height="15" id="star-4"></img></a>
 
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="5" width="15" height="15" id="star-5"></img></a>
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="5" width="15" height="15" id="star-5"></img></a>
 
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="6" width="15" height="15" id="star-6"></img></a>
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="6" width="15" height="15" id="star-6"></img></a>
 
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="7" width="15" height="15" id="star-7"></img></a>
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="7" width="15" height="15" id="star-7"></img></a>
 
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="8" width="15" height="15" id="star-8"></img></a>
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="8" width="15" height="15" id="star-8"></img></a>
 
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="9" width="15" height="15" id="star-9"></img></a>
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="9" width="15" height="15" id="star-9"></img></a>
 
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickVote(this.alt)" onmouseover="showVoteStar(this.alt)" onmouseout="hideVoteStar()" alt="10" width="15" height="15" id="star-10"></img></a>
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="10" width="15" height="15" id="star-10"></img></a>
 
 			<span id="rate-select">-/10</span>
 
@@ -339,6 +345,12 @@
 	          	$('#comment_author').attr({
                     'disabled': 'disabled'
                 })
+
+                // TODO show rate if user rate this moive
+
+                setRateStar({{ rate_data.rate_score }})
+                
+
 	          } else {
 	          	// alert('no login')
 	          	// show dialog login
@@ -357,40 +369,7 @@
 		}
 	}
 
-	function checkLogin() {
-		// hideAllUserDiv();
-		var session_token = getCookie('session_token');
-		if (session_token) {
-			var formData = new FormData();
-			formData.append('session_token', session_token);
 
-		$.ajax({
-	        url: '/api_get_userdata',  //Server script to process data
-	        type: 'POST',
-	        mimeType:"multipart/form-data",
-	        dataType: 'json',
-	        success: function(json) {
-	          var success = json['success'];
-	          var data = json['data'];
-	          var reason = json['reason'];
-	          if (success) {
-	          	alert('login law')
-	          	// vote
-	          } else {
-	          	removeCookie('session_token');
-	          }
-	          	
-	        },
-	        data: formData,
-	        cache: false,
-	        contentType: false,
-	        processData: false
-	      });
-		} else {
-			showLoginDialog()
-	        // show dialog login
-		}
-	}
 
 
 	function resetBtnPost() {
@@ -495,16 +474,6 @@
 		    	var avatar_review_id = c['avatar_review_id'];
 		    	var vote_count = c['vote_count'];
 		    	var comment_id = c['comment_id'];
-
-		    	// h += '<center>';
-		    	// h += '<table width="900" border="1" cellpadding="0" cellspacing="5" bordercolor="#333333">';
-		    	// h += '<br/><br/>';
-		    	// h += '<div>ข้อความ:'+content+'</div>';
-		    	// h += '<div>ชื่อ:'+author+'</div>';
-		    	// h += '<div>วันที่:'+date+' เวลา:'+time_crate+'</div>';
-		    	// h += '<br/><br/>';
-		    	// h += '</table>';
-		    	// h += '</center>';
 		    	var count_index = (clist.length)-i;
 		    		
 				h += '<div style="height:10px;"></div>';
@@ -559,6 +528,7 @@
 		// document.getElementById(id).style.cssText = 'background", "none repeat scroll 0 0 #666666;';
 		// document.getElementById(id).setAttribute('style', 'background", "none repeat scroll 0 0 #666666;');
 
+		// check user vote
 
 		var postData = {'comment_id':id,
 						'user_id':50,
@@ -592,7 +562,19 @@
 		});
 	}
 
-	function showVoteStar(alt) {
+
+	function setRateStar(alt) {
+		
+		alt+1;
+		var abc = alt;
+		for (var i=1; i <= alt ;i++)
+		{ 
+			document.getElementById('star-'+[i]).src='/images/details/rate/pink_star_40x38.png';
+		}
+		document.getElementById("rate-select").innerHTML = abc+'/10';
+	}
+
+	function showRateStar(alt) {
 		
 		alt+1;
 		var abc = alt;
@@ -603,7 +585,7 @@
 		document.getElementById("rate-select").innerHTML = abc+'/10';
 	}
 
-	function hideVoteStar() {
+	function hideRateStar() {
 		// TODO if user vote 
 		// show rate vote 
 		// /images/details/rate/pink_star_40x38.png
@@ -614,19 +596,76 @@
 		document.getElementById("rate-select").innerHTML = '-/10';
 	}
 
-	function clickVote(alt)	{
+
+	function clickRate(alt)	{
 		// alert(alt)
 
-		checkLogin();
+		var session_token = getCookie('session_token');
+		if (session_token) {
+			var formData = new FormData();
+			formData.append('session_token', session_token);
 
-		// alt+1;
-		// var abc = alt;
-		// for (var i=1; i <= alt ;i++)
-		// { 
-		// 	document.getElementById('star-'+[i]).src='/images/details/rate/pink_star_40x38.png';
-		// }
-		// document.getElementById("rate-select").innerHTML = abc+'/10';
+			$.ajax({
+			    url: '/api_get_userdata',  //Server script to process data
+			    type: 'POST',
+			    mimeType:"multipart/form-data",
+			    dataType: 'json',
+			    success: function(json) {
+			      var success = json['success'];
+			      var data = json['data'];
+			      var reason = json['reason'];
+			      if (success) {
+			      	// alert('login law')
+
+			      	// TODO call api vote
+			      	alt+1;
+					var abc = alt;
+					for (var i=1; i <= alt ;i++)
+					{ 
+						document.getElementById('star-'+[i]).src='/images/details/rate/pink_star_40x38.png';
+					}
+					document.getElementById("rate-select").innerHTML = abc+'/10';
+
+
+					var user_id = data['user_id'];
+             		var username = data['username'];
+
+					addRate(alt, user_id, username);
+
+			      } else {
+			      	removeCookie('session_token');
+			      }
+		      	
+		    	},
+			    data: formData,
+			    cache: false,
+			    contentType: false,
+			    processData: false
+		 	});
+		} else {
+			showLoginDialog()
+		    // show dialog login
+		}
 	}
+
+
+	function addRate(score, user_id, username) {
+		//TODO
+		var postData = {'movie_id':{{ movie_data.id }},
+		 				'user_id':user_id,
+		  				'username':username,
+		  				'rate_score':score,
+		  				};
+		$.getJSON("/api_add_rate_movie", postData, function(data) {
+			if(data['success'] == 1){
+				alert("rate movie complete");
+				//
+			}else {
+				alert("rate movie not complete");
+			}
+		});
+	}
+
 
 </script>
 

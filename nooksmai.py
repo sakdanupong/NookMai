@@ -24,6 +24,7 @@ from pytz import timezone
 from moviemodel import *
 from cacheimagemodel import *
 from commentmodel import *
+from ratemoviemodel import *
 from aboutmodel import *
 from record_count_model import *
 from decimal import *
@@ -529,6 +530,16 @@ class NookMai(webapp2.RequestHandler):
         self.response.write(self.request.get('content'))
         self.response.write('</pre></body></html>')
 
+def get_cookies(request):
+    cookies = {}
+    raw_cookies = request.headers.get("Cookie")
+    if raw_cookies:
+        for cookie in raw_cookies.split(";"):
+            name, value = cookie.split("=")
+            for name, value in cookie.split("="):
+                cookies[name] = value
+    return cookies
+
 class NookMaiDetailMovie(webapp2.RequestHandler):
 
     def get(self, movie_id):
@@ -541,6 +552,8 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
         detail_director_th = movie_data.detail_genre_th
         detail_cast_en = movie_data.detail_cast_en
         detail_cast_th = movie_data.detail_cast_th
+
+
 
         if detail_th is None and detail_en is None and detail_director_en is None and detail_director_th is None and detail_cast_en is None and detail_cast_th is None:
             movie_original_id = str(movie_data.original_id)
@@ -591,6 +604,25 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
             comments.append(c)
 
 
+        # query user
+        session_token = self.request.cookies.get('session_token')
+        sessionModel = SessionModel.get_by_key_name(session_token)
+        if not sessionModel is None:
+            userdata = UserModel.get_by_key_name(str(sessionModel.user_id))
+        
+
+        # query user rate
+        r = RateMovieModel.all()
+        r.filter('username =', userdata.username)
+        r.filter('movie_id =', int(movie_id))
+
+        if r.count() > 0 :
+            result = r.fetch(limit=10)
+            rate_data = result[0]
+
+        # query user vote comment
+
+
         localhost = self.request.host
         key = CAPTCHA_PUBLICE_KEY
         if "localhost" in localhost.lower():
@@ -615,6 +647,8 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
             'movie_data': movie_data,
             'comments':comments,
             'captchahtml': chtml,
+            'userdata': userdata,
+            'rate_data': rate_data,
         }
 
         
@@ -732,38 +766,63 @@ class GetComment(webapp2.RequestHandler):
         self.response.out.write(json.dumps(r))
 
 
-class AddAbout(webapp2.RequestHandler):
+class AddRateMovie(webapp2.RequestHandler):
     def get(self):
         self.process()
     def post(self):
         self.process()
     def process(self):
+        logging.warning('AddRateMovie!!!!!!!!!')
+
         remoteip = self.request.remote_addr
-
         localhost = self.request.host
-
-
         success = 0
 
-            # response was valid
-            # other stuff goes here
-            # logging.warning('is_valid')
-        description = self.request.get('description')
-        name = self.request.get('name')
-        email = self.request.get('email')
+        movie_id = self.request.get('movie_id')
+        user_id = self.request.get('user_id')
+        username = self.request.get('username')
+        rate_score = self.request.get('rate_score')
 
+        q = RateMovieModel()
+        q.movie_id = int(movie_id)
+        q.user_id = int(user_id)
+        q.username = cgi.escape(username)
+        q.rate_score = int(rate_score)
 
-        if description :
-            a = AboutModel()
-            a.description = cgi.escape(description).replace('\n', '<br/>')
-            a.name = cgi.escape(name)
-            a.email = cgi.escape(email)
-
-            a.put()
-            success = 1
-
+        q.put()
+        success = 1
+ 
         r = {'success':success}
         self.response.out.write(json.dumps(r))
+
+ # class GetRateMoive(webapp2.RequestHandler):
+ #    def get(self):
+ #        self.process()
+ #    def post(self):
+ #        self.process()
+ #    def process(self):
+        # remoteip = self.request.remote_addr
+        # localhost = self.request.host
+        # success = 0
+
+        # comment_id = self.request.get('comment_id')
+        # user_id = self.request.get('user_id')
+        # movie_id = self.request.get('movie_id')
+
+        # q = CommentModel.all();
+        # q = CommentModel.get_by_id(long(comment_id))
+        # logging.warning(q)
+
+        # if q.vote_count :
+        #     q.vote_count = q.vote_count+1
+        # else :
+        #     q.vote_count = 1
+
+        # q.put()
+        # success = 1
+ 
+        # r = {'success':success}
+        # self.response.out.write(json.dumps(r))       
 
 class VoteComment(webapp2.RequestHandler):
     def get(self):
@@ -826,7 +885,38 @@ class UnvoteComment(webapp2.RequestHandler):
 
 
 
+class AddAbout(webapp2.RequestHandler):
+    def get(self):
+        self.process()
+    def post(self):
+        self.process()
+    def process(self):
+        remoteip = self.request.remote_addr
 
+        localhost = self.request.host
+
+
+        success = 0
+
+            # response was valid
+            # other stuff goes here
+            # logging.warning('is_valid')
+        description = self.request.get('description')
+        name = self.request.get('name')
+        email = self.request.get('email')
+
+
+        if description :
+            a = AboutModel()
+            a.description = cgi.escape(description).replace('\n', '<br/>')
+            a.name = cgi.escape(name)
+            a.email = cgi.escape(email)
+
+            a.put()
+            success = 1
+
+        r = {'success':success}
+        self.response.out.write(json.dumps(r))
 
 
 class NookMaiBackOffice(webapp2.RequestHandler):
@@ -1142,9 +1232,11 @@ application = webapp2.WSGIApplication([
     ('/back_office', NookMaiBackOffice),
     ('/api_add_comment', AddComment),
     ('/api_get_comment', GetComment),
-    ('/api_add_about', AddAbout),
+    ('/api_add_rate_movie', AddRateMovie),
+    # ('/api_get_rate_movie', GetRateMovie),
     ('/api_vote_comment', VoteComment),
     ('/api_unvote_comment', UnvoteComment),
+    ('/api_add_about', AddAbout),
     ('/backoffice', NookMaiBackOffice),
     ('/edit_movie_data', EditMovieData),
     ('/api_edit_movie_data', APIEditMovie),
