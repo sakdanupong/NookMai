@@ -45,7 +45,7 @@ body {
   border-bottom:1px solid #717171;
 }
 .movie-synopsis-en {
-  padding-top: 10px;
+/*  padding-top: 10px;*/
 	margin: 0 auto;
 	width:550px; 
 	float:right; 
@@ -53,6 +53,7 @@ body {
   font-family: montRegular;
 }
 .movie-rate-total {
+  padding-top: 20px;
   width:100px; 
   height: 100px;
   /*background-color: red;*/
@@ -65,13 +66,13 @@ body {
 
 
 .movie-rate {
-  padding-top: 10px;
+  padding-top: 20px;
   margin: 0 auto;
   /*width:550px; */
   width:450px; 
-  height: 100px;
+  height: 60px;
   float:right; 
-  color:#666666;
+  color:black;
   font-family: montRegular;
   /*background-color: red;*/
 }
