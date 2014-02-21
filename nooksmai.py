@@ -652,7 +652,7 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
             result = r.fetch(limit=10)
             rate_data = result[0]
 
-        # query user vote comment
+        # TODO query user vote comment
 
 
         localhost = self.request.host
