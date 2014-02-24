@@ -1300,7 +1300,7 @@ application = webapp2.WSGIApplication([
 
 
 
-
+# http://stackoverflow.com/questions/7716331/calculating-arithmetic-mean-average-in-python
 
 
 
