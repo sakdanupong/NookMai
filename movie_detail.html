@@ -14,15 +14,12 @@
     <link type="text/css" rel="stylesheet" href="/stylesheets/style.css" />
     <script src="/javascripts/CookieUtils.js"></script>
 
+
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>{{ movie_data.name_en|decodeHTML }}</title>
-	<!-- <title>{{ rate_data.user_id }}</title> -->
-
-	
 	
 	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-
 	<script type="text/JavaScript">
 	function setsmile(what) {
 	document.emotion.messages.value = document.emotion.elements.messages.value+" "+what;
@@ -56,9 +53,7 @@
 	</div>
 
 	<div class="movie-title">
-		<strong>{{ movie_data.name_en|decodeHTML }}</strong>
-		<!-- <strong>{{ rate_data.username }}</strong> -->
-		
+		<strong>{{ movie_data.name_en|decodeHTML }}</strong>	
 	</div>
 			
 	<div class="movie-date">
@@ -71,8 +66,28 @@
 	<div class="movie-rate">
 		Your rating:
 
-			<!-- <a href="#"><img src="/images/details/black_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="this.src='/images/details/pink_star_40x38.png'" onmouseout="this.src='/images/details/black_star_40x38.png'" alt="1" width="20" height="20" id="star-1"></img></a> -->
-			
+<!-- 			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" alt="1" width="15" height="15" id="star-1"></img></a>
+
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" alt="2" width="15" height="15" id="star-2"></img></a>
+
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" alt="3" width="15" height="15" id="star-3"></img></a>
+
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" alt="4" width="15" height="15" id="star-4"></img></a>
+
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" alt="5" width="15" height="15" id="star-5"></img></a>
+
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" alt="6" width="15" height="15" id="star-6"></img></a>
+
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" alt="7" width="15" height="15" id="star-7"></img></a>
+
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" alt="8" width="15" height="15" id="star-8"></img></a>
+
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)"  alt="9" width="15" height="15" id="star-9"></img></a>
+
+			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" alt="10" width="15" height="15" id="star-10"></img></a> -->
+
+
+
 			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="1" width="15" height="15" id="star-1"></img></a>
 
 			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="2" width="15" height="15" id="star-2"></img></a>
@@ -92,6 +107,8 @@
 			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="9" width="15" height="15" id="star-9"></img></a>
 
 			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="10" width="15" height="15" id="star-10"></img></a>
+
+		
 
 			<span id="rate-select">-/10</span>
 
@@ -322,51 +339,83 @@
     	setupUser();
     });
 
+	var rate_score = 0;
+
+
+
+
+
 
 	function setupUser() {
+
+		 // $(".movie-rate a").hover(function(){
+   //      	hideRateStar();
+   //  	});
+
+
+      	$('#comment_author').val('{{userdata.username}}')
+      	$('#comment_author').attr({
+            'disabled': 'disabled'
+        })
+
+      	rate_score = '{{ rate_data.rate_score }}';
+
+        // TODO show rate if user rate this moive
+        if (rate_score !=0) {
+        	setRateStar(rate_score)
+        }
+
+
 		// hideAllUserDiv();
-		var session_token = getCookie('session_token');
-		if (session_token) {
-			var formData = new FormData();
-			formData.append('session_token', session_token);
 
-		$.ajax({
-	        url: '/api_get_userdata',  //Server script to process data
-	        type: 'POST',
-	        mimeType:"multipart/form-data",
-	        dataType: 'json',
-	        success: function(json) {
-	          var success = json['success'];
-	          var data = json['data'];
-	          var reason = json['reason'];
-	          if (success) {
-	          	var username = data['username'];
-	          	$('#comment_author').val(username)
-	          	$('#comment_author').attr({
-                    'disabled': 'disabled'
-                })
+		// var session_token = getCookie('session_token');
+		// if (session_token) {
+		// 	var formData = new FormData();
+		// 	formData.append('session_token', session_token);
 
-                // TODO show rate if user rate this moive
+		// 	$.ajax({
+		//         url: '/api_get_userdata',  //Server script to process data
+		//         type: 'POST',
+		//         mimeType:"multipart/form-data",
+		//         dataType: 'json',
+		//         success: function(json) {
+		//           var success = json['success'];
+		//           var data = json['data'];
+		//           var reason = json['reason'];
+		//           if (success) {
 
-                setRateStar({{ rate_data.rate_score }})
-                
+		//           	var username = data['username'];
+		//           	$('#comment_author').val(username)
+		//           	$('#comment_author').attr({
+	 //                    'disabled': 'disabled'
+	 //                })
 
-	          } else {
-	          	// alert('no login')
-	          	// show dialog login
-	          	login_div.show();
-	          	removeCookie('session_token');
-	          }
-	          	
-	        },
-	        data: formData,
-	        cache: false,
-	        contentType: false,
-	        processData: false
-	      });
-		} else {
-			login_div.show();
-		}
+		//           	rate_score = {{ rate_data.rate_score }};
+
+	 //                // TODO show rate if user rate this moive
+
+	 //                if (rate_score !=0) {
+	 //                	setRateStar(rate_score)
+	 //                }
+	                
+	                
+
+		//           } else {
+		//           	// alert('no login')
+		//           	// show dialog login
+		//           	login_div.show();
+		//           	removeCookie('session_token');
+		//           }
+		          	
+		//         },
+		//         data: formData,
+		//         cache: false,
+		//         contentType: false,
+		//         processData: false
+	 //      	});
+		// } else {
+		// 	login_div.show();
+		// }
 	}
 
 
@@ -564,7 +613,7 @@
 
 
 	function setRateStar(alt) {
-		
+		// alert(alt)
 		alt+1;
 		var abc = alt;
 		for (var i=1; i <= alt ;i++)
@@ -575,22 +624,42 @@
 	}
 
 	function showRateStar(alt) {
-		
 		alt+1;
-		var abc = alt;
-		for (var i=1; i <= alt ;i++)
-		{ 
-			document.getElementById('star-'+[i]).src='/images/details/rate/black_star_40x38.png';
+		var count_rate = alt;
+
+		// var rate_score = {{ rate_data.rate_score }};
+		if (rate_score == 0) {
+			for (var i=1; i <= alt ;i++)
+			{ 
+				document.getElementById('star-'+[i]).src='/images/details/rate/black_star_40x38.png';
+			}
+			document.getElementById("rate-select").innerHTML = count_rate+'/10';
+		}else{
+			for (var i=1; i <= 10 ;i++)
+			{ 
+				document.getElementById('star-'+[i]).src='/images/details/rate/grey_star_40x38.png';
+			}
+			for (var i=1; i <= alt ;i++)
+			{ 
+				document.getElementById('star-'+[i]).src='/images/details/rate/black_star_40x38.png';
+			}
+			document.getElementById("rate-select").innerHTML = count_rate+'/10';
 		}
-		document.getElementById("rate-select").innerHTML = abc+'/10';
+
+		// for (var i=1; i <= alt ;i++)
+		// { 
+		// 	document.getElementById('star-'+[i]).src='/images/details/rate/black_star_40x38.png';
+		// }
+		// document.getElementById("rate-select").innerHTML = abc+'/10';
 	}
 
 	function hideRateStar() {
+		// alert('hideRateStar')
 		// if user vote 
 		// show rate vote 
-
-		var rate_score = {{ rate_data.rate_score }};
-		if (!rate_score) {
+		// var rate_score = {{ rate_data.rate_score }};
+		if (rate_score == 0) {
+			
 			for (var i=1; i <= 10 ;i++)
 			{ 
 				document.getElementById('star-'+[i]).src='/images/details/rate/grey_star_40x38.png';
@@ -601,8 +670,6 @@
 			{ 
 				document.getElementById('star-'+[i]).src='/images/details/rate/grey_star_40x38.png';
 			}
-
-
 			for (var i=1; i <= rate_score ;i++)
 			{ 
 				document.getElementById('star-'+[i]).src='/images/details/rate/pink_star_40x38.png';
@@ -635,22 +702,22 @@
 
 			      	// TODO call api vote
 			      	alt+1;
-					var abc = alt;
+					var count_rate = alt;
 					for (var i=1; i <= alt ;i++)
 					{ 
 						document.getElementById('star-'+[i]).src='/images/details/rate/pink_star_40x38.png';
 					}
-					document.getElementById("rate-select").innerHTML = abc+'/10';
+					document.getElementById("rate-select").innerHTML = count_rate+'/10';
 
-
+					
 					var user_id = data['user_id'];
              		var username = data['username'];
 
 					addRate(alt, user_id, username);
 
 			      } else {
-			      	removeCookie('session_token');
-			      }
+			      removeCookie('session_token');
+			    }
 		      	
 		    	},
 			    data: formData,
@@ -675,7 +742,9 @@
 		$.getJSON("/api_add_rate_movie", postData, function(data) {
 			if(data['success'] == 1){
 				alert("rate movie complete");
-				//
+				// update ui
+				rate_score = score;
+				setRateStar(score)
 			}else {
 				alert("rate movie not complete");
 			}

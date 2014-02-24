@@ -640,17 +640,21 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
 
 
         # query user
+        userdata = None
         userdata = getUserModel(self.request)
 
-
         # query user rate
+        rate_data = None
         r = RateMovieModel.all()
-        r.filter('username =', userdata.username)
-        r.filter('movie_id =', int(movie_id))
 
-        if r.count() > 0 :
-            result = r.fetch(limit=10)
-            rate_data = result[0]
+        # if userdata:
+        if userdata is not None:
+            r.filter('username =', userdata.username)
+            r.filter('movie_id =', int(movie_id))
+
+            if r.count() > 0 :
+                result = r.fetch(limit=10)
+                rate_data = result[0]
 
         # TODO query user vote comment
 
@@ -668,11 +672,6 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
         public_key = key,
         use_ssl = False,
         error = None)
-
-        # chtml = captcha.displayhtml(
-        # public_key = CAPTCHA_PUBLICE_KEY,
-        # use_ssl = False,
-        # error = None)
 
 
         template_values = {
@@ -815,13 +814,26 @@ class AddRateMovie(webapp2.RequestHandler):
         username = self.request.get('username')
         rate_score = self.request.get('rate_score')
 
-        q = RateMovieModel()
-        q.movie_id = int(movie_id)
-        q.user_id = int(user_id)
-        q.username = cgi.escape(username)
-        q.rate_score = int(rate_score)
+        # TODO check user vote again replace old value
+        r = RateMovieModel.all()
+        r.filter('username =', username)
+        r.filter('movie_id =', int(movie_id))
+        if r.count() > 0 :
+            result = r.fetch(limit=10)
+            rate_data = result[0]
+            rate_data.rate_score = int(rate_score)
+            rate_data.put()
+        # rate_model = RateMovieModel.get_by_key_name(username)
+        # if rate_model:
 
-        q.put()
+        else :
+            q = RateMovieModel()
+            q.movie_id = int(movie_id)
+            q.user_id = int(user_id)
+            q.username = cgi.escape(username)
+            q.rate_score = int(rate_score)
+
+            q.put()
         success = 1
  
         r = {'success':success}
