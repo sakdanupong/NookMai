@@ -31,6 +31,8 @@ from decimal import *
 from comingsoonmodel import *
 from usermodel import *
 from sessionmodel import *
+from uservotemodel import *
+from userratemodel import *
 
 from os import environ
 from recaptcha.client import captcha
@@ -139,13 +141,27 @@ def datetime_lctimezone_format(dt):
     value = datetime.datetime.fromtimestamp(ans_time, tz)
     return value
 
-def getNowShowing(l_offset, data_per_page):
+def getNowShowing(userModel ,l_offset, data_per_page):
     movie_query = MovieModel.all().filter('is_coming_soon =', 0)
     movie_query = movie_query.filter('release_time_timestamp !=', None)
     movie_query = movie_query.order('-release_time_timestamp')
     movie_list = movie_query.run(offset=l_offset, limit=data_per_page)
+
     list = []
     for movie in movie_list:
+        user_vote_data = None
+        if userModel:
+            user_id = userModel.user_id
+            user_votes = movie.user_votes.filter('user_id =', user_id)
+            if user_votes.count():
+                user_vote = user_votes[0]
+                if user_vote:
+                    user_vote_data = {
+                        'user_id' : user_vote.user_id,
+                        'username' : user_vote.username,
+                        'crate_date' : user_vote.create_date,
+                        'vote_state' : user_vote.vote_state,
+                    }
         movie_json = {
             'movie_id' : movie.id,
             'name_en' : movie.name_en,
@@ -164,6 +180,7 @@ def getNowShowing(l_offset, data_per_page):
             'avatar_12_count' : movie.avatar_12_count,
             'avatar_13_count' : movie.avatar_13_count,
             'avatar_14_count' : movie.avatar_14_count,
+            'user_vote_data' : user_vote_data,
         }
         list.append(movie_json)
 
@@ -258,12 +275,12 @@ class MainPage(webapp2.RequestHandler):
 
     def get(self):
         record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
-        movie_list = getNowShowing(0, NOWSHOWING_DATA_PER_PAGE)
+        userData = getUserModel(self.request)
+        movie_list = getNowShowing(userData , 0, NOWSHOWING_DATA_PER_PAGE)
         movie_json = json.loads(movie_list)
         movie_list = movie_json['movie_list']
         magic_number = randint(0, len(movie_list) - 1)
         random_movie = movie_list[magic_number]
-        userData = getUserModel(self.request)
         template_values = {
              'random_movie' : random_movie,
              'record_object' : record_object,
@@ -1093,7 +1110,7 @@ class GetNowShowing(webapp2.RequestHandler):
         page -= 1
         data_per_page = int(self.request.get('data_per_page'))
         l_offset = page * data_per_page
-        r = getNowShowing(l_offset, data_per_page)
+        r = getNowShowing(None, l_offset, data_per_page)
         self.response.out.write(r)
     # movie_list = movie_query.filter('is_coming_soon =', 0).fetch(limit=datape)
 
@@ -1265,8 +1282,22 @@ class GetUserData(webapp2.RequestHandler):
 
         self.response.out.write(json.dumps(r))
 
-        
 
+class VoteMovie(webapp2.RequestHandler):
+    def get(self):
+        self.process()
+    def post(self):
+        self.process()
+    def process(self):
+        test = ""
+
+class UnVoteMovie(webapp2.RequestHandler):
+    def get(self):
+        self.process()
+    def post(self):
+        self.process()
+    def process(self):
+        test = ""
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
@@ -1295,6 +1326,8 @@ application = webapp2.WSGIApplication([
     ('/api_register', Register),
     ('/api_login', Login),
     ('/api_get_userdata', GetUserData),
+    ('/api_vote_movie', VoteMovie),
+    ('/api_unvote_movie', UnVoteMovie),
 ], debug=True)
 
 

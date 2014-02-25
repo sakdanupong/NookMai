@@ -33,6 +33,18 @@
 	border-bottom: 15px solid lightgray;	
 }
 
+.arrow-up-selected {
+	width: 0; 
+	height: 0; 
+	border-left: 15px solid transparent;
+	border-right: 15px solid transparent;
+	
+	border-bottom: 15px solid #cc4d4d;
+}
+
+.arrow-up-selected:hover {
+	border-bottom: 15px solid #fc4d4d;	
+}
 
 .arrow-down {
 	width: 0; 
@@ -45,6 +57,19 @@
 
 .arrow-down:hover {
 	border-top: 15px solid lightgray;	
+}
+
+.arrow-down-selected {
+	width: 0; 
+	height: 0; 
+	border-left: 15px solid transparent;
+	border-right: 15px solid transparent;
+	
+	border-top: 15px solid #cc4d4d;
+}
+
+.arrow-down-selected:hover {
+	border-top: 15px solid #fc4d4d;	
 }
 
 .vote_count {

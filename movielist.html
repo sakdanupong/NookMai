@@ -217,7 +217,7 @@
           var movie_list = json['movie_list'];
           for (var i = 0; i < movie_list.length; i++) {
             var movie_data = movie_list[i];
-            div.appendChild(MoviewListView(movie_data));
+            div.appendChild(new MoviewListView(movie_data));
           }
         }
 
