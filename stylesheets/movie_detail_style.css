@@ -78,7 +78,7 @@ body {
 }
 
 .movie-rate:hover {
-
+  
 }
 
 .rate-select {
@@ -322,18 +322,18 @@ iframe[src="about:blank"]{display:none;}
 
 .comments-template-vote {
   /*clear:both;*/
-  width: 120px;
-  height: auto;
+  width: 30px;
+  /*height: auto;*/
+  height: 80px;
   /*background-color: red;*/
   display: block;
   position:absolute;
-  margin-left: 15px;
+  margin-left: 100px;
 }
 
 .btn-up {
-  background: none repeat scroll 0 0 #999999;
+/*  background: none repeat scroll 0 0 #999999;
   border-radius: 10px;
-  /*clear: both;*/
   color: #FFFFFF;
   display: block;
 
@@ -346,30 +346,44 @@ iframe[src="about:blank"]{display:none;}
   text-decoration: none;
   font-size: 20px;
   color: #FFFFFF;
-  /*margin-top: 10px;*/
   font-family: montRegular;
   float: left;
   margin-left: 10px;
-  text-align: center;
-  /*margin: 0 auto;*/
+  text-align: center;*/
+
+  width: 0; 
+  height: 0; 
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  
+  border-bottom: 15px solid gray;
+}
+
+.btn-up:hover {
+  border-bottom: 15px solid darkgray;  
 }
 
 .comments-vote-count {
-  width: 120px;
+/*  width: 120px;
   height: 25px;
   display: block;
-  /*background-color: green;*/
   clear:both;
   text-align: center;
   font-size: 20px;
   color: #FFFFFF;
-  padding-top: 5px;
+  padding-top: 5px;*/
+
+  font-size: 18pt;
+  text-align: center;
+  font-family: montRegular;
+  color: #ffffff;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .btn-down {
-   background: none repeat scroll 0 0 #999999;
+/*   background: none repeat scroll 0 0 #999999;
    border-radius: 10px;
-   /*clear: both;*/
    color: #FFFFFF;
    display: block;
 
@@ -382,14 +396,20 @@ iframe[src="about:blank"]{display:none;}
    text-decoration: none;
    font-size: 20px;
    color: #FFFFFF;
-   /*margin-top: 10px;*/
    font-family: montRegular;
    float: left;
-   /*margin-left: 10px;*/
    text-align: center;
-   clear:both;
+   clear:both;*/
+  width: 0; 
+  height: 0; 
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  
+  border-top: 15px solid gray;
 }
-
+.btn-down:hover {
+  border-top: 15px solid darkgray; 
+}
 
 
 
