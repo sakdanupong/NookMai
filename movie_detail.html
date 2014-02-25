@@ -277,9 +277,9 @@
 	<div style="height:10px;"></div>
     
     <div class="comments-template-vote">
-	    <a class="btn-up" type="submit" href="javascript:;" id="{{ comment.key().id() }}" onClick="voteComment(this.id)">up</a>
+	    <a class="btn-up" type="submit" href="javascript:;" id="{{ comment.key().id() }}" onClick="voteComment(this.id)"></a>
 	    <div class="comments-vote-count">{{comment.vote_count}}</div>
-	    <a class="btn-down" type="submit" href="javascript:;" id="{{ comment.key().id() }}" onClick="unvoteComment(this.id)">Down</a>
+	    <a class="btn-down" type="submit" href="javascript:;" id="{{ comment.key().id() }}" onClick="unvoteComment(this.id)"></a>
     </div>
 
 
@@ -365,7 +365,7 @@
         	setRateStar(rate_score)
         }
 
-
+        use
 		// hideAllUserDiv();
 
 		// var session_token = getCookie('session_token');
@@ -528,9 +528,9 @@
 				h += '<div style="height:10px;"></div>';
 
     			h += '<div class="comments-template-vote">'
-				h += '<a class="btn-up" type="submit" href="javascript:;" id="'+comment_id+'" onClick="voteComment(this.id)">up</a>';
+				h += '<a class="btn-up" type="submit" href="javascript:;" id="'+comment_id+'" onClick="voteComment(this.id)"></a>';
 				h += '<div class="comments-vote-count">'+vote_count+'</div>';
-    			h += '<a class="btn-down" type="submit" href="javascript:;" id="'+comment_id+'" onClick="unvoteComment(this.id)">Down</a>';
+    			h += '<a class="btn-down" type="submit" href="javascript:;" id="'+comment_id+'" onClick="unvoteComment(this.id)"></a>';
 				h += '</div>'
 
 		    	h += '<div class="comments-template-box">';
@@ -572,7 +572,7 @@
 	}
 
 	function voteComment(id) {
-		$('.btn-up').css("background", "none repeat scroll 0 0 #666666");
+		// $('.btn-up').css("background", "none repeat scroll 0 0 #666666");
 
 		// document.getElementById(id).style.cssText = 'background", "none repeat scroll 0 0 #666666;';
 		// document.getElementById(id).setAttribute('style', 'background", "none repeat scroll 0 0 #666666;');
@@ -580,7 +580,7 @@
 		// check user vote
 
 		var postData = {'comment_id':id,
-						'user_id':50,
+						'user_id':{{userdata.user_id}},
 						'movie_id':{{movie_data.id}}
 		  				};
 		  // user_id
@@ -596,9 +596,9 @@
 
 
 	function unvoteComment(id) {
-		$('.btn-down').css("background", "none repeat scroll 0 0 #666666");
+		// $('.btn-down').css("background", "none repeat scroll 0 0 #666666");
 		var postData = {'comment_id':id,
-						'user_id':50,
+						'user_id':{{userdata.user_id}},
 						'movie_id':{{movie_data.id}}
 		  				};
 		 $.getJSON("/api_unvote_comment", postData, function(data) {
