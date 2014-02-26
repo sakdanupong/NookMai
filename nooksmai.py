@@ -666,7 +666,7 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
         r = RateMovieModel.all()
 
 
-        logging.warning('#################')
+        # logging.warning('#################')
 
         # if userdata:
         if userdata is not None:
@@ -860,34 +860,29 @@ class AddRateMovie(webapp2.RequestHandler):
         r = {'success':success}
         self.response.out.write(json.dumps(r))
 
- # class GetRateMoive(webapp2.RequestHandler):
- #    def get(self):
- #        self.process()
- #    def post(self):
- #        self.process()
- #    def process(self):
-        # remoteip = self.request.remote_addr
-        # localhost = self.request.host
-        # success = 0
 
-        # comment_id = self.request.get('comment_id')
-        # user_id = self.request.get('user_id')
-        # movie_id = self.request.get('movie_id')
 
-        # q = CommentModel.all();
-        # q = CommentModel.get_by_id(long(comment_id))
-        # logging.warning(q)
+class GetRateMovie(webapp2.RequestHandler):
+    def get(self):
+        self.process()
+    def post(self):
+        self.process()
+    def process(self):
 
-        # if q.vote_count :
-        #     q.vote_count = q.vote_count+1
-        # else :
-        #     q.vote_count = 1
+        movie_id = self.request.get('movie_id')
+        q = RateMovieModel.all();
+        q.filter('movie_id =', int(movie_id)) 
+        clist = []
 
-        # q.put()
-        # success = 1
- 
-        # r = {'success':success}
-        # self.response.out.write(json.dumps(r))       
+        logging.warning('GetRateMovie #############')
+
+        result = q.fetch(limit=10)
+
+        for c in q.fetch(limit=100) :
+            clist.append({ 'rate_score':c.rate_score })
+        r = {'data':clist}
+        self.response.out.write(json.dumps(r))
+
 
 class VoteComment(webapp2.RequestHandler):
     def get(self):
@@ -904,7 +899,7 @@ class VoteComment(webapp2.RequestHandler):
         movie_id = self.request.get('movie_id')
 
 
-        logging.warning('####################')
+        # logging.warning('####################')
         r = UserVoteCommentModel.all()
         r.filter('movie_id =', int(movie_id))
         r.filter('comment_id =', comment_id)
@@ -1396,7 +1391,7 @@ application = webapp2.WSGIApplication([
     ('/api_add_comment', AddComment),
     ('/api_get_comment', GetComment),
     ('/api_add_rate_movie', AddRateMovie),
-    # ('/api_get_rate_movie', GetRateMovie),
+    ('/api_get_rate_movie', GetRateMovie),
     ('/api_vote_comment', VoteComment),
     ('/api_unvote_comment', UnvoteComment),
     ('/api_add_about', AddAbout),

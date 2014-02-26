@@ -45,12 +45,14 @@ body {
   border-bottom:1px solid #717171;
 }
 .movie-synopsis-en {
-/*  padding-top: 10px;*/
+  padding-top: 10px;
 	margin: 0 auto;
 	width:550px; 
 	float:right; 
 	color:#666666;
   font-family: montRegular;
+   /*clear:both;*/
+  overflow:hidden
 }
 .movie-rate-total {
   padding-top: 20px;
@@ -70,7 +72,7 @@ body {
   margin: 0 auto;
   /*width:550px; */
   width:450px; 
-  height: 60px;
+  /*height: 60px;*/
   float:right; 
   color:black;
   font-family: montRegular;
@@ -88,8 +90,17 @@ body {
   /*background-color: red;*/
 }
 
+.box-rate-detail {
+  margin-top: 20px;
+}
+
+.box-comment-detail {
+  margin-top: 20px;
+}
+
 .box-share {
   margin-top: 20px;
+  clear:both
 }
 
 .movie-director-writers-stars {
