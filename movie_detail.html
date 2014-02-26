@@ -60,62 +60,26 @@
 		<strong>{{ movie_data.detail_genre_en }} - {{movie_data.release_time_timestamp|covertUnixTimeToStrFotmat('%d %B %Y')}}</strong>
 	</div>
 
-	<div class="movie-rate-total">
-		7.2
-	</div>
+	<div class="movie-rate-total"></div>
 	<div class="movie-rate">
 		Your rating:
 
-<!-- 			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" alt="1" width="15" height="15" id="star-1"></img></a>
+		<img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="1" width="15" height="15" id="star-1"  border="0" style="cursor: pointer; padding-right: 1px; padding-left: 1px;"></img></img><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="2" width="15" height="15" id="star-2" border="0" style="cursor: pointer; padding-right: 1px; padding-left: 1px;"></img><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="3" width="15" height="15" id="star-3" border="0" style="cursor: pointer; padding-right: 1px; padding-left: 1px;"></img><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="4" width="15" height="15" id="star-4" border="0" style="cursor: pointer; padding-right: 1px; padding-left: 1px;"></img><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="5" width="15" height="15" id="star-5" border="0" style="cursor: pointer; padding-right: 1px; padding-left: 1px;"></img><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="6" width="15" height="15" id="star-6" border="0" style="cursor: pointer; padding-right: 1px; padding-left: 1px;"></img><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="7" width="15" height="15" id="star-7" border="0" style="cursor: pointer; padding-right: 1px; padding-left: 1px;"></img><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="8" width="15" height="15" id="star-8" border="0" style="cursor: pointer; padding-right: 1px; padding-left: 1px;"></img><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="9" width="15" height="15" id="star-9" border="0" style="cursor: pointer; padding-right: 1px; padding-left: 1px;"></img><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="10" width="15" height="15" id="star-10" border="0" style="cursor: pointer; padding-right: 1px; padding-left: 1px;"></img>
 
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" alt="2" width="15" height="15" id="star-2"></img></a>
-
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" alt="3" width="15" height="15" id="star-3"></img></a>
-
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" alt="4" width="15" height="15" id="star-4"></img></a>
-
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" alt="5" width="15" height="15" id="star-5"></img></a>
-
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" alt="6" width="15" height="15" id="star-6"></img></a>
-
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" alt="7" width="15" height="15" id="star-7"></img></a>
-
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" alt="8" width="15" height="15" id="star-8"></img></a>
-
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)"  alt="9" width="15" height="15" id="star-9"></img></a>
-
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" alt="10" width="15" height="15" id="star-10"></img></a> -->
-
-
-
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="1" width="15" height="15" id="star-1"></img></a>
-
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="2" width="15" height="15" id="star-2"></img></a>
-
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="3" width="15" height="15" id="star-3"></img></a>
-
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="4" width="15" height="15" id="star-4"></img></a>
-
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="5" width="15" height="15" id="star-5"></img></a>
-
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="6" width="15" height="15" id="star-6"></img></a>
-
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="7" width="15" height="15" id="star-7"></img></a>
-
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="8" width="15" height="15" id="star-8"></img></a>
-
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="9" width="15" height="15" id="star-9"></img></a>
-
-			<a href="javascript:;"><img src="/images/details/rate/grey_star_40x38.png" onClick="clickRate(this.alt)" onmouseover="showRateStar(this.alt)" onmouseout="hideRateStar()" alt="10" width="15" height="15" id="star-10"></img></a>
-
+		<span id="rate-select">-/10</span>
 		
+		<div class="box-rate-detail">
+			Ratings : 5/10 from 5 users
+		</div>
 
-			<span id="rate-select">-/10</span>
+		<div class="box-comment-detail">
+			Comments : 5 users
+		</div>
 
-			<div class="box-share">
-				<a href="#">want to see</a>
-				<a href="#">not interest</a>
-			</div>
+		<div class="box-share">
+			<a href="#">want to see</a>
+			<a href="#">not interest</a>
+		</div>
 	</div>
 
 
@@ -342,8 +306,6 @@
 	var rate_score = 0;
 	// var userdata;
 
-
-
 	function setupUser() {
 		{% if userdata %} 
 		    $('#comment_author').val('{{userdata.username}}')
@@ -355,12 +317,34 @@
 
 		{% if rate_data %} 
 		    rate_score = '{{ rate_data.rate_score }}';
-
-        	// TODO show rate if user rate this moive
+        	// show rate if user rate this moive
         	if (rate_score !=0) {
         		setRateStar(rate_score)
         	}
 		{% endif %}
+
+
+		$.getJSON("/api_get_rate_movie", {'movie_id':{{ movie_data.id }}}, function(data) {
+			// alert(data['data']);
+			var clist = data['data'];
+			var sum = 0;
+			var avg = 10;
+			if (clist.length > 0) {
+				for(var i = 0; i < clist.length; i++){
+				var c = clist[i];
+				var rate_score = c['rate_score'];
+    			sum += parseInt(rate_score);
+				}
+				avg = sum/clist.length;
+			};
+
+			// alert(avg);
+
+			var h ='';
+			h += avg
+			$('.movie-rate-total').html(h);
+		});
+
 	}
 
 
@@ -386,7 +370,6 @@
 
 
 		var content = $("#comment_content").val();
-
 		var avatar_review_id = document.getElementById('img_avatar').alt;
 		var author = $("#comment_author").val();
 		var recaptcha_challenge_field = $('[name="recaptcha_challenge_field"]').val();
@@ -413,9 +396,6 @@
 	 			return;
 	 		};
 		}
-
-
-
 
 
 		var postData = {'movie_id':{{ movie_data.id }},
