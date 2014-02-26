@@ -163,6 +163,12 @@ def getNowShowing(userModel ,l_offset, data_per_page):
                         'crate_date' : user_vote.create_date,
                         'vote_state' : user_vote.vote_state,
                     }
+        movie_vote = {
+            'rate_count' : movie.rate_count,
+            'vote_count' : movie.vote_count,
+            'vote_comment_count' : movie.vote_comment_count,
+        }
+
         movie_json = {
             'movie_id' : movie.id,
             'name_en' : movie.name_en,
@@ -182,6 +188,7 @@ def getNowShowing(userModel ,l_offset, data_per_page):
             'avatar_13_count' : movie.avatar_13_count,
             'avatar_14_count' : movie.avatar_14_count,
             'user_vote_data' : user_vote_data,
+            'movie_vote' : movie_vote,
         }
         list.append(movie_json)
 
