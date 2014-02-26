@@ -667,12 +667,9 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
 
 
         logging.warning('#################')
-        logging.warning('1##########userdata'+str(userdata))
 
         # if userdata:
-        # if userdata is not None:
-        if userdata :
-            logging.warning('2##########userdata'+str(userdata))
+        if userdata is not None:
             r.filter('username =', userdata.username)
             r.filter('movie_id =', int(movie_id))
 
