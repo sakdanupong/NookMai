@@ -340,82 +340,27 @@
     });
 
 	var rate_score = 0;
-
-
-
+	// var userdata;
 
 
 
 	function setupUser() {
+		{% if userdata %} 
+		    $('#comment_author').val('{{userdata.username}}')
+      		$('#comment_author').attr({
+            	'disabled': 'disabled'
+        	})
+		{% endif %}
 
-		 // $(".movie-rate a").hover(function(){
-   //      	hideRateStar();
-   //  	});
 
+		{% if rate_data %} 
+		    rate_score = '{{ rate_data.rate_score }}';
 
-      	$('#comment_author').val('{{userdata.username}}')
-      	$('#comment_author').attr({
-            'disabled': 'disabled'
-        })
-
-      	rate_score = '{{ rate_data.rate_score }}';
-
-        // TODO show rate if user rate this moive
-        if (rate_score !=0) {
-        	setRateStar(rate_score)
-        }
-
-        use
-		// hideAllUserDiv();
-
-		// var session_token = getCookie('session_token');
-		// if (session_token) {
-		// 	var formData = new FormData();
-		// 	formData.append('session_token', session_token);
-
-		// 	$.ajax({
-		//         url: '/api_get_userdata',  //Server script to process data
-		//         type: 'POST',
-		//         mimeType:"multipart/form-data",
-		//         dataType: 'json',
-		//         success: function(json) {
-		//           var success = json['success'];
-		//           var data = json['data'];
-		//           var reason = json['reason'];
-		//           if (success) {
-
-		//           	var username = data['username'];
-		//           	$('#comment_author').val(username)
-		//           	$('#comment_author').attr({
-	 //                    'disabled': 'disabled'
-	 //                })
-
-		//           	rate_score = {{ rate_data.rate_score }};
-
-	 //                // TODO show rate if user rate this moive
-
-	 //                if (rate_score !=0) {
-	 //                	setRateStar(rate_score)
-	 //                }
-	                
-	                
-
-		//           } else {
-		//           	// alert('no login')
-		//           	// show dialog login
-		//           	login_div.show();
-		//           	removeCookie('session_token');
-		//           }
-		          	
-		//         },
-		//         data: formData,
-		//         cache: false,
-		//         contentType: false,
-		//         processData: false
-	 //      	});
-		// } else {
-		// 	login_div.show();
-		// }
+        	// TODO show rate if user rate this moive
+        	if (rate_score !=0) {
+        		setRateStar(rate_score)
+        	}
+		{% endif %}
 	}
 
 
@@ -578,37 +523,40 @@
 		// document.getElementById(id).setAttribute('style', 'background", "none repeat scroll 0 0 #666666;');
 
 		// check user vote
-
-		var postData = {'comment_id':id,
+		{% if userdata %} 
+			var postData = {'comment_id':id,
 						'user_id':{{userdata.user_id}},
 						'movie_id':{{movie_data.id}}
 		  				};
 		  // user_id
-		$.getJSON("/api_vote_comment", postData, function(data) {
-			if(data['success'] == 1){
-				setTimeout(updateComments,100);
-				alert('vote complete')				
-			}else {
-				alert('vote not complete')				
-			}
-		});
+			$.getJSON("/api_vote_comment", postData, function(data) {
+				if(data['success'] == 1){
+					setTimeout(updateComments,100);
+					alert('vote complete')				
+				}else {
+					alert('vote not complete')				
+				}
+			});
+		{% endif %}
 	}
 
 
 	function unvoteComment(id) {
 		// $('.btn-down').css("background", "none repeat scroll 0 0 #666666");
-		var postData = {'comment_id':id,
+		{% if userdata %} 
+			var postData = {'comment_id':id,
 						'user_id':{{userdata.user_id}},
 						'movie_id':{{movie_data.id}}
 		  				};
-		 $.getJSON("/api_unvote_comment", postData, function(data) {
-			if(data['success'] == 1){
+		 	$.getJSON("/api_unvote_comment", postData, function(data) {
+				if(data['success'] == 1){
 				setTimeout(updateComments,100);
 				alert('unvote complete')				
-			}else {
+				}else {
 				alert('unvote not complete')				
-			}
-		});
+				}
+			});
+		{% endif %}
 	}
 
 

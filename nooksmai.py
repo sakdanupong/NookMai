@@ -672,6 +672,9 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
         rate_data = None
         r = RateMovieModel.all()
 
+
+        logging.warning('#################')
+
         # if userdata:
         if userdata is not None:
             r.filter('username =', userdata.username)
