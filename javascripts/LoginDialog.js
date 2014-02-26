@@ -170,8 +170,8 @@ function getRemember() {
 	if (login_username)
      	$("#login_username").val(login_username);
 	var login_password = getCookie('login_password');
-	if (login_password)
-		$("#login_password").val(login_password);
+	// if (login_password)
+	// 	$("#login_password").val(login_password);
 	var login_check = getCookie('logincheckbox');
 	if (login_check)
 		$("#login_rememberme").prop("checked", true);
@@ -179,12 +179,12 @@ function getRemember() {
 	var register_username = getCookie('register_username');
 	if (register_username)
 		$("#register_username").val(register_username);
-	var register_password = getCookie('register_password');
-	if (register_password)
-		$("#register_password").val(register_password);
-	var register_confirm_password = getCookie('register_confirm_password');
-	if (register_confirm_password)
-		$("#register_confirm_password").val(register_confirm_password);
+	// var register_password = getCookie('register_password');
+	// if (register_password)
+	// 	$("#register_password").val(register_password);
+	// var register_confirm_password = getCookie('register_confirm_password');
+	// if (register_confirm_password)
+	// 	$("#register_confirm_password").val(register_confirm_password);
 	var register_email = getCookie('register_email');
 	if (register_email)
 		$("#register_email").val(register_email);
@@ -335,18 +335,21 @@ function registerRememberme() {
 	var c = $("#register_rememberme");
    if(c.is(":checked")){
      var u = $("#register_username").val();
-     var p = $("#register_password").val();
+     // var p = $("#register_password").val();
      var cp = $("#register_confirm_password").val();
      var e = $("#register_email").val();
 
+     // password to md5
+     // var pHash = md5(p);
+
      setCookie("register_username", u, ExpireMinCookie(5));
-     setCookie("register_password", p, ExpireMinCookie(5));
+     // setCookie("register_password", pHash, ExpireMinCookie(5));
      setCookie("register_confirm_password", cp, ExpireMinCookie(5));
      setCookie("register_email", e, ExpireMinCookie(5));
      setCookie("registercheckbox", 1, ExpireMinCookie(5))
    } else {
 	 removeCookie('register_username');
-	 removeCookie('register_password');
+	 // removeCookie('register_password');
      removeCookie('register_confirm_password');
      removeCookie('register_email');
      removeCookie('registercheckbox');
@@ -357,13 +360,17 @@ function registerRememberme() {
 	var c = $("#login_rememberme");
    if(c.is(":checked")){
    	 var u = $("#login_username").val();
-     var p = $("#login_password").val();
+     // var p = $("#login_password").val();
+
+     // password to md5
+     // var pHash = md5(p);
+
      setCookie("login_username", u, ExpireDayCookie(2));
-     setCookie("login_password", p, ExpireDayCookie(2));
+     // setCookie("login_password", pHash, ExpireDayCookie(2));
      setCookie("logincheckbox", 1, ExpireDayCookie(2))
    } else {
 		removeCookie('login_username');
-		removeCookie('login_password');
+		// removeCookie('login_password');
 		removeCookie('logincheckbox');
    } 
 };
