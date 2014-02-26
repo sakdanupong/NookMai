@@ -46,3 +46,4 @@ class MovieModel(db.Model):
 
     rate_count = db.IntegerProperty(default=0)
     vote_count = db.IntegerProperty(default=0)
+    vote_comment_count = db.IntegerProperty(default=0)

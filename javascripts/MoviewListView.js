@@ -95,6 +95,14 @@ function increseVote(data) {
     vote_data_dict[key_name] = getDictValue(vote_state);
 }
 
+function decreseVote(data) {
+    var key_name = 'movie_id' + data['movie_id']
+    var vote_dict = vote_data_dict[key_name];
+    var vote_state = vote_dict['vote_state'];
+    vote_state = vote_state - 1;
+    vote_data_dict[key_name] = getDictValue(vote_state);
+}
+
 function getDownArrowIdByData(data) {
     var movie_id = data['movie_id'];
     var down_id = 'down' + movie_id;
@@ -134,11 +142,16 @@ function voteMovie(data) {
     var vote_state = getUserVoteData(data);
     if (vote_state == 1)
         return;
-    alert('voteMovie');
     increseVote(data);
-    setVoteState(1, data);
+    vote_state = getUserVoteData(data);
+    setVoteState(vote_state, data);
 }
 
 function unVoteMovie(data) {
-     setVoteState(-1, data);
+    var vote_state = getUserVoteData(data);
+    if (vote_state == -1)
+        return;
+    decreseVote(data);
+    vote_state = getUserVoteData(data);
+    setVoteState(vote_state, data);
 }

@@ -380,7 +380,7 @@ class RefreshData(webapp2.RequestHandler):
                 is_comingsoon = comingsoon.is_coming_soon
                 if is_comingsoon:
                     db.delete(comingsoon);
-                    db.run_in_transaction(self.decrement_record_comingsoon_counter, comingsoon.key())
+                    db.run_in_transaction(self.decrement_record_comingsoon_counter, record_object.key())
                 else:
                     continue
                 
