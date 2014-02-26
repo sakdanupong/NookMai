@@ -1,6 +1,6 @@
 var vote_data_dict = {};
 var vote_score = 1;
-function MoviewListView(movie_data) {
+function MoviewListView(movie_data, user_id) {
 	var $ = document;
 	var head  = $.getElementsByTagName('head')[0];
     var link  = $.createElement('link');
@@ -47,20 +47,19 @@ function MoviewListView(movie_data) {
     initVoteData(data);
 
     setTimeout(function() {
-        setVoteState(data);
-        var arrow_up = getUpArrowDivByData(data);
-        var arrow_down = getDownArrowDivByData(data);
+        setVoteState(movie_id);
+        setVoteCount(movie_id);
+        var arrow_up = getUpArrowDivByData(movie_id);
+        var arrow_down = getDownArrowDivByData(movie_id);
         arrow_up.onclick = function() { 
-            voteMovie(data);
+            voteMovie(movie_id, user_id);
         };
         arrow_down.onclick = function() { 
-            unVoteMovie(data);
+            unVoteMovie(movie_id, user_id);
         };
-        var vote_count = getUserVoteCount(data);
-        setVoteCount(vote_count, data);
+        
     }, 0); 
     
-
     return div;
 }
 
@@ -70,13 +69,18 @@ function getVoteCountId(movie_id) {
 }
 
 function initVoteData(data) {
-    var key_name = getUserVoteKeyName(data);
-    var user_vote_data = data['user_vote_data'];
+    var movie_id = data['movie_id'];
+    var key_name = getUserVoteKeyName(movie_id);
+    
     var movie_vote = data['movie_vote'];
     var rate_count = movie_vote['rate_count'];
     var vote_count = movie_vote['vote_count'];
     var vote_comment_count = movie_vote['vote_comment_count'];
-    if (user_vote_data) {
+
+    var user_vote_data = data['user_vote_data'];
+    var user_id = user_vote_data['user_id'];
+
+    if (user_id) {
         var voteState = user_vote_data['vote_state'];
         vote_data_dict[key_name] = createDict(voteState, rate_count, vote_count, vote_comment_count);
     } else {
@@ -99,34 +103,32 @@ function getUpArrowId(movie_id) {
     return up_id;
 }
 
-function getUserVoteKeyName(data) {
-    var key_name = 'movie_id' + data['movie_id'];
+function getUserVoteKeyName(movie_id) {
+    var key_name = 'movie_id' + movie_id;
     return key_name;
 }
 
-function getUserVoteState(data) {
-    var key_name = getUserVoteKeyName(data);
+function getUserVoteState(movie_id) {
+    var key_name = getUserVoteKeyName(movie_id);
     var vote_dict = vote_data_dict[key_name];
     var vote_state = vote_dict['vote_state'];
     return vote_state;
 }
 
-function getUserVoteCount(data) {
-    var key_name = getUserVoteKeyName(data);
+function getUserVoteCount(movie_id) {
+    var key_name = getUserVoteKeyName(movie_id);
     var vote_dict = vote_data_dict[key_name];
     var vote_count = vote_dict['vote_count'];
     return vote_count;
 }
 
-function getDownArrowDivByData(data) {
-    var movie_id = data['movie_id'];
+function getDownArrowDivByData(movie_id) {
     var down_id = getDownArrowId(movie_id);
     var arrow_down = document.getElementById(down_id);
     return arrow_down;
 }
 
-function getUpArrowDivByData(data) {
-    var movie_id = data['movie_id'];
+function getUpArrowDivByData(movie_id) {
     var up_id = getUpArrowId(movie_id);
     var arrow_up = document.getElementById(up_id);
     return arrow_up;
@@ -141,41 +143,31 @@ function createDict(state, rate_count, vote_count, vote_comment_count) {
     return dict;
 }
 
-function setVoteStateDict(data ,state) {
-    var key_name = getUserVoteKeyName(data);
+function setVoteStateDict(movie_id, state) {
+    var key_name = getUserVoteKeyName(movie_id);
     var dict = vote_data_dict[key_name];
     dict['vote_state'] = state;
 }
 
-function increseVote(data) {
-    var key_name = getUserVoteKeyName(data);
-    var vote_dict = vote_data_dict[key_name];
-    var vote_state = vote_dict['vote_state'];
-    vote_state = vote_state + 1;
-    setVoteStateDict(data, vote_state);
+function setVoteCountDict(movie_id, count) {
+    var key_name = getUserVoteKeyName(movie_id);
+    var dict = vote_data_dict[key_name];
+    dict['vote_count'] = count;
 }
 
-function decreseVote(data) {
-    var key_name = getUserVoteKeyName(data);
-    var vote_dict = vote_data_dict[key_name];
-    var vote_state = vote_dict['vote_state'];
-    vote_state = vote_state - 1;
-    setVoteStateDict(data, vote_state);
-}
-
-function unSelectAllArrow(data) {
-    var arrow_up = getUpArrowDivByData(data);
-    var arrow_down = getDownArrowDivByData(data);
+function unSelectAllArrow(movie_id) {
+    var arrow_up = getUpArrowDivByData(movie_id);
+    var arrow_down = getDownArrowDivByData(movie_id);
     arrow_up.className = 'arrow-up';
     arrow_down.className = 'arrow-down';
 }
 
-function setVoteState(data) {
-    var voteState = getUserVoteState(data);
-    var arrow_up = getUpArrowDivByData(data);
-    var arrow_down = getDownArrowDivByData(data);
+function setVoteState(movie_id) {
+    var voteState = getUserVoteState(movie_id);
+    var arrow_up = getUpArrowDivByData(movie_id);
+    var arrow_down = getDownArrowDivByData(movie_id);
 
-    unSelectAllArrow(data);
+    unSelectAllArrow(movie_id);
     if (voteState == 1) {
         arrow_up.className = 'arrow-up-selected';
     } else if (voteState == -1) {
@@ -184,37 +176,106 @@ function setVoteState(data) {
 
 }
 
-function setVoteCount(count, data) {
-    var movie_id = data['movie_id'];
+function setVoteCount(movie_id) {
+    var vote_count = getUserVoteCount(movie_id);
     var count_id = getVoteCountId(movie_id);
     var div = document.getElementById(count_id);
-    div.innerHTML = '' + count;
+    div.innerHTML = '' + vote_count;
 }
 
-function voteMovie(data) {
-    // STATE
-    var vote_state = getUserVoteState(data);
+function increseVote(movie_id) {
+    var key_name = getUserVoteKeyName(movie_id);
+    var vote_dict = vote_data_dict[key_name];
+    var vote_state = vote_dict['vote_state'];
+    vote_state = vote_state + 1;
+    setVoteStateDict(movie_id, vote_state);
+
+    var vote_count = vote_dict['vote_count'];
+    vote_count = vote_count + vote_score;
+    setVoteCountDict(movie_id, vote_count)
+
+    setVoteState(movie_id);
+    setVoteCount(movie_id);
+}
+
+function decreseVote(movie_id) {
+    var key_name = getUserVoteKeyName(movie_id);
+    var vote_dict = vote_data_dict[key_name];
+    var vote_state = vote_dict['vote_state'];
+    vote_state = vote_state - 1;
+    setVoteStateDict(movie_id, vote_state);
+
+    var vote_count = vote_dict['vote_count'];
+    vote_count = vote_count - vote_score;
+    setVoteCountDict(movie_id, vote_count)
+
+    setVoteState(movie_id);
+    setVoteCount(movie_id);
+}
+
+function voteMovie(movie_id, user_id) {
+    if (!user_id) {
+        showLoginDialog();
+        return;
+    }
+
+    var vote_state = getUserVoteState(movie_id);
     if (vote_state == 1)
         return;
-    increseVote(data);
-    setVoteState(data);
+    increseVote(movie_id);
 
-    // VOTE_COUNT
-    var vote_count = getUserVoteCount(data);
-    setVoteCount(vote_count, data);
+    var formData = new FormData();
+    formData.append('user_id', user_id);
+    formData.append('movie_id', movie_id);
+    var vote_state = getUserVoteState(movie_id);
+    formData.append('vote_state', vote_state);
 
+    $.ajax({
+        url: '/api_vote_movie',  //Server script to process data
+        type: 'POST',
+        mimeType:"multipart/form-data",
+        dataType: 'json',
+        success: function(json) {
+            
+        },
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+    
 }
 
-function unVoteMovie(data) {
+function unVoteMovie(movie_id, user_id) {
+    if (!user_id) {
+        showLoginDialog();
+        return;
+    }
     // STATE
-    var vote_state = getUserVoteState(data);
+    var vote_state = getUserVoteState(movie_id);
     if (vote_state == -1)
         return;
-    decreseVote(data);
-    setVoteState(data);
+    decreseVote(movie_id);
 
-    // VOTE_COUNT
-    var vote_count = getUserVoteCount(data);
-    setVoteCount(vote_count, data);
+
+    var formData = new FormData();
+    formData.append('user_id', user_id);
+    formData.append('movie_id', movie_id);
+    var vote_state = getUserVoteState(movie_id);
+    formData.append('vote_state', vote_state);
+
+    $.ajax({
+        url: '/api_unvote_movie',  //Server script to process data
+        type: 'POST',
+        mimeType:"multipart/form-data",
+        dataType: 'json',
+        success: function(json) {
+            
+        },
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false
+    });
 
 }

@@ -217,7 +217,11 @@
           var movie_list = json['movie_list'];
           for (var i = 0; i < movie_list.length; i++) {
             var movie_data = movie_list[i];
-            div.appendChild(new MoviewListView(movie_data));
+            var user_id = 0;
+            {% if userData %}
+              user_id = {{userData.user_id}};
+            {% endif %}
+            div.appendChild(new MoviewListView(movie_data, user_id));
           }
         }
 

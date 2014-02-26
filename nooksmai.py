@@ -97,8 +97,6 @@ def increment_movie_comment_counter(c_key):
 
 def increment_movie_comment_avatar_counter(c_key, avatar_id):
     c = db.get(c_key)
-    logging.warning('!!!!!!!increment_movie_comment_avatar_counter')
-
 
     if avatar_id == 1:
         c.avatar_1_count += 1
@@ -150,19 +148,28 @@ def getNowShowing(userModel ,l_offset, data_per_page):
 
     list = []
     for movie in movie_list:
-        user_vote_data = None
+
+        user_id = 0
+        username = ''
+        vote_state = 0
+
         if userModel:
             user_id = userModel.user_id
             user_votes = movie.user_votes.filter('user_id =', user_id)
             if user_votes.count():
                 user_vote = user_votes[0]
                 if user_vote:
-                    user_vote_data = {
-                        'user_id' : user_vote.user_id,
-                        'username' : user_vote.username,
-                        'crate_date' : user_vote.create_date,
-                        'vote_state' : user_vote.vote_state,
-                    }
+                    user_id = user_vote.user_id
+                    username = user_vote.username
+                    vote_state = user_vote.vote_state
+
+        user_vote_data = {
+            'user_id' : user_id,
+            'username' : username,
+            'vote_state' : vote_state,
+        }
+
+
         movie_vote = {
             'rate_count' : movie.rate_count,
             'vote_count' : movie.vote_count,
@@ -190,6 +197,9 @@ def getNowShowing(userModel ,l_offset, data_per_page):
             'user_vote_data' : user_vote_data,
             'movie_vote' : movie_vote,
         }
+
+
+
         list.append(movie_json)
 
     r = {
@@ -1202,7 +1212,8 @@ class GetNowShowing(webapp2.RequestHandler):
         page -= 1
         data_per_page = int(self.request.get('data_per_page'))
         l_offset = page * data_per_page
-        r = getNowShowing(None, l_offset, data_per_page)
+        userData = getUserModel(self.request)
+        r = getNowShowing(userData, l_offset, data_per_page)
         self.response.out.write(r)
     # movie_list = movie_query.filter('is_coming_soon =', 0).fetch(limit=datape)
 
@@ -1375,21 +1386,60 @@ class GetUserData(webapp2.RequestHandler):
         self.response.out.write(json.dumps(r))
 
 
+def updateUserVoteMovieState(c_key, user_id, vote_state):
+    moviemodel = db.get(c_key)
+    user_votes = moviemodel.user_votes.filter('user_id =', user_id)
+    userModel = UserModel.get_by_key_name(str(user_id))
+    if user_votes.count():
+        user_vote = user_votes[0]
+        user_vote.vote_state = vote_state
+    else:
+        UserVoteModel(movie_model = moviemodel,
+            username = userModel.username,
+            user_id = userModel.user_id,
+            vote_state = vote_state
+        ).put()
+    
+
 class VoteMovie(webapp2.RequestHandler):
+
+    def increment_movie_vote_counter(self, c_key):
+        c = db.get(c_key)
+        c.vote_count += 1
+        c.put()
+
     def get(self):
         self.process()
     def post(self):
         self.process()
     def process(self):
-        test = ""
+        user_id = self.request.get('user_id')
+        movie_id = self.request.get('movie_id')
+        vote_state = int(self.request.get('vote_state'))
+        moviemodel = MovieModel.get_by_key_name(movie_id)
+        updateUserVoteMovieState(moviemodel.key(), user_id, vote_state)
+        db.run_in_transaction(self.increment_movie_vote_counter, moviemodel.key())
+
 
 class UnVoteMovie(webapp2.RequestHandler):
+
+    def decrement_movie_vote_counter(self, c_key):
+        c = db.get(c_key)
+        c.vote_count -= 1
+        c.put()
+
     def get(self):
         self.process()
     def post(self):
         self.process()
     def process(self):
-        test = ""
+        user_id = self.request.get('user_id')
+        movie_id = self.request.get('movie_id')
+        vote_state = int(self.request.get('vote_state'))
+        moviemodel = MovieModel.get_by_key_name(movie_id)
+        updateUserVoteMovieState(moviemodel.key(), user_id, vote_state)
+        db.run_in_transaction(self.decrement_movie_vote_counter, moviemodel.key())
+
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
