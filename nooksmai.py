@@ -93,21 +93,25 @@ def splitStr(str_to_split, split):
 def increment_movie_comment_counter(c_key):
     c = db.get(c_key)
     c.comment_count += 1
+    c.vote_result = get_movie_result(c.vote_count, c.vote_comment_count, c.vote_count)
     c.put()
 
 def increment_movie_rate_counter(c_key):
     c = db.get(c_key)
     c.rate_count += 1
+    c.vote_result = get_movie_result(c.vote_count, c.vote_comment_count, c.vote_count)
     c.put()
 
 def increment_movie_vote_comment_counter(c_key):
     c = db.get(c_key)
     c.vote_comment_count += 1
+    c.vote_result = get_movie_result(c.vote_count, c.vote_comment_count, c.vote_count)
     c.put() 
 
 def decrease_movie_vote_comment_counter(c_key):
     c = db.get(c_key)
     c.vote_comment_count += -1
+    c.vote_result = get_movie_result(c.vote_count, c.vote_comment_count, c.vote_count)
     c.put()      
 
 def increment_movie_comment_avatar_counter(c_key, avatar_id):
@@ -155,6 +159,10 @@ def datetime_lctimezone_format(dt):
     value = datetime.datetime.fromtimestamp(ans_time, tz)
     return value
 
+def get_movie_result(rate_count, vote_comment_count, vote_count):
+    result = (rate_count * vote_comment_count) + vote_count
+    return result
+
 
 # def editMovieData(vote_count, rate_count, vote_comment_count):
 #     vote_result = (rate_count * vote_comment_count) + vote_count;
@@ -162,10 +170,11 @@ def datetime_lctimezone_format(dt):
 
 def getNowShowing(userModel ,l_offset, data_per_page):
     movie_query = MovieModel.all().filter('is_coming_soon =', 0)
-    # movie_query = movie_query.filter('release_time_timestamp !=', None)
-    # movie_query = movie_query.order('-release_time_timestamp')
-    movie_query = movie_query.order('-vote_result')
+    movie_query = movie_query.filter('release_time_timestamp != ', None)
+    movie_query = movie_query.order('-release_time_timestamp')
     movie_list = movie_query.run(offset=l_offset, limit=data_per_page)
+
+    movie_list = sorted(movie_list, key=lambda k: k.vote_result, reverse=True)
 
     list = []
     for movie in movie_list:
@@ -1422,10 +1431,11 @@ def updateUserVoteMovieState(c_key, user_id, vote_state):
     if user_votes.count():
         user_vote = user_votes[0]
         user_vote.vote_state = vote_state
+        user_vote.put()
     else:
         UserVoteModel(movie_model = moviemodel,
             username = userModel.username,
-            user_id = userModel.user_id,
+            user_id = user_id,
             vote_state = vote_state
         ).put()
     
@@ -1435,6 +1445,7 @@ class VoteMovie(webapp2.RequestHandler):
     def increment_movie_vote_counter(self, c_key):
         c = db.get(c_key)
         c.vote_count += 1
+        c.vote_result = get_movie_result(c.vote_count, c.vote_comment_count, c.vote_count)
         c.put()
 
     def get(self):
@@ -1446,7 +1457,7 @@ class VoteMovie(webapp2.RequestHandler):
         movie_id = self.request.get('movie_id')
         vote_state = int(self.request.get('vote_state'))
         moviemodel = MovieModel.get_by_key_name(movie_id)
-        updateUserVoteMovieState(moviemodel.key(), user_id, vote_state)
+        updateUserVoteMovieState(moviemodel.key(), int(user_id), vote_state)
         db.run_in_transaction(self.increment_movie_vote_counter, moviemodel.key())
 
 
@@ -1455,6 +1466,7 @@ class UnVoteMovie(webapp2.RequestHandler):
     def decrement_movie_vote_counter(self, c_key):
         c = db.get(c_key)
         c.vote_count -= 1
+        c.vote_result = get_movie_result(c.vote_count, c.vote_comment_count, c.vote_count)
         c.put()
 
     def get(self):
@@ -1466,7 +1478,7 @@ class UnVoteMovie(webapp2.RequestHandler):
         movie_id = self.request.get('movie_id')
         vote_state = int(self.request.get('vote_state'))
         moviemodel = MovieModel.get_by_key_name(movie_id)
-        updateUserVoteMovieState(moviemodel.key(), user_id, vote_state)
+        updateUserVoteMovieState(moviemodel.key(), int(user_id), vote_state)
         db.run_in_transaction(self.decrement_movie_vote_counter, moviemodel.key())
 
 

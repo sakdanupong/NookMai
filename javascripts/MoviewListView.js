@@ -230,6 +230,8 @@ function voteMovie(movie_id, user_id) {
     var vote_state = getUserVoteState(movie_id);
     formData.append('vote_state', vote_state);
 
+    // alert(''+vote_state);
+
     $.ajax({
         url: '/api_vote_movie',  //Server script to process data
         type: 'POST',
@@ -263,6 +265,8 @@ function unVoteMovie(movie_id, user_id) {
     formData.append('movie_id', movie_id);
     var vote_state = getUserVoteState(movie_id);
     formData.append('vote_state', vote_state);
+
+    // alert(''+vote_state);
 
     $.ajax({
         url: '/api_unvote_movie',  //Server script to process data
