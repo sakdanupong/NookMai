@@ -839,21 +839,38 @@ class GetComment(webapp2.RequestHandler):
         self.process()
     def process(self):
         movie_id = self.request.get('movie_id')
-        q = CommentModel.all();
+        q = CommentModel.all()
         q.filter('movie_id =', int(movie_id)) 
         q.order('-date')
         clist = []
 
         for c in q.fetch(limit=100) :
-            logging.warning('getMonthName!!!!!!!!!'+getMonthName(2))
-            clist.append({'avatar_review_id':c.avatar_review_id ,'author':c.author ,'content':c.content ,'vote_count':c.vote_count,'comment_id':c.key().id(),'date':datetime_lctimezone_format(c.date).strftime("%B %d, %Y") ,'time_crate':datetime_lctimezone_format(c.date).strftime("%H:%M") })
+            logging.warning('!!!!!!!!!'+ getDateFormat(c.date))
+            # clist.append({'avatar_review_id':c.avatar_review_id ,'author':c.author ,'content':c.content ,'vote_count':c.vote_count,'comment_id':c.key().id(),'date':datetime_lctimezone_format(c.date).strftime("%B %d, %Y") ,'time_crate':datetime_lctimezone_format(c.date).strftime("%H:%M") })
+            clist.append({'avatar_review_id':c.avatar_review_id ,'author':c.author ,'content':c.content ,'vote_count':c.vote_count,'comment_id':c.key().id(),'date':getDateFormat(c.date) ,'time_crate':datetime_lctimezone_format(c.date).strftime("%H:%M") })
 
         r = {'data':clist}
         self.response.out.write(json.dumps(r))
+        
 
-def getMonthName(month):
+def getDateFormat(date):
     arrMonthName = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"]
-    return arrMonthName[month]
+    
+    m = 0
+    m = datetime_lctimezone_format(date).strftime("%m")
+    m_str = ''
+    m_str = arrMonthName[int(m)-1]
+
+    d_str = datetime_lctimezone_format(date).strftime("%d")
+
+    y = 0
+    y = datetime_lctimezone_format(date).strftime("%Y")
+    y_str = ''
+    y_str = int(y)+543
+
+    date_str = str(d_str)+' '+str(m_str)+' '+str(y_str)
+    return date_str
+
 
 class AddRateMovie(webapp2.RequestHandler):
     def get(self):
@@ -861,7 +878,7 @@ class AddRateMovie(webapp2.RequestHandler):
     def post(self):
         self.process()
     def process(self):
-        logging.warning('AddRateMovie!!!!!!!!!')
+        # logging.warning('AddRateMovie!!!!!!!!!')
 
         remoteip = self.request.remote_addr
         localhost = self.request.host
