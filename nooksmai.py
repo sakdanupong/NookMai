@@ -95,6 +95,21 @@ def increment_movie_comment_counter(c_key):
     c.comment_count += 1
     c.put()
 
+def increment_movie_rate_counter(c_key):
+    c = db.get(c_key)
+    c.rate_count += 1
+    c.put()
+
+def increment_movie_vote_comment_counter(c_key):
+    c = db.get(c_key)
+    c.vote_comment_count += 1
+    c.put() 
+
+def decrease_movie_vote_comment_counter(c_key):
+    c = db.get(c_key)
+    c.vote_comment_count += -1
+    c.put()      
+
 def increment_movie_comment_avatar_counter(c_key, avatar_id):
     c = db.get(c_key)
 
@@ -675,6 +690,7 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
         q.filter('movie_id =', int(movie_id))
         q.order('-date')
         comments = []
+
         for c in q.fetch(limit=100) :
             comments.append(c)
 
@@ -799,7 +815,6 @@ class AddComment(webapp2.RequestHandler):
                 movie_object = MovieModel.get_by_key_name(movie_id)
                 db.run_in_transaction(increment_movie_comment_counter, movie_object.key())
 
-
                 db.run_in_transaction(increment_movie_comment_avatar_counter, movie_object.key(), c.avatar_review_id)
 
                 record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
@@ -807,7 +822,8 @@ class AddComment(webapp2.RequestHandler):
                 c.put()
                 success = 1
 
-                
+
+
 
         else:
             error = cResponse.error_code
@@ -834,11 +850,15 @@ class GetComment(webapp2.RequestHandler):
         clist = []
 
         for c in q.fetch(limit=100) :
+            logging.warning('getMonthName!!!!!!!!!'+getMonthName(2))
             clist.append({'avatar_review_id':c.avatar_review_id ,'author':c.author ,'content':c.content ,'vote_count':c.vote_count,'comment_id':c.key().id(),'date':datetime_lctimezone_format(c.date).strftime("%B %d, %Y") ,'time_crate':datetime_lctimezone_format(c.date).strftime("%H:%M") })
 
         r = {'data':clist}
         self.response.out.write(json.dumps(r))
 
+def getMonthName(month):
+    arrMonthName = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"]
+    return arrMonthName[month]
 
 class AddRateMovie(webapp2.RequestHandler):
     def get(self):
@@ -875,6 +895,9 @@ class AddRateMovie(webapp2.RequestHandler):
             q.user_id = int(user_id)
             q.username = cgi.escape(username)
             q.rate_score = int(rate_score)
+
+            movie_object = MovieModel.get_by_key_name(movie_id)
+            db.run_in_transaction(increment_movie_rate_counter, movie_object.key())
 
             q.put()
         success = 1
@@ -965,6 +988,9 @@ class VoteComment(webapp2.RequestHandler):
                 q.vote_count = q.vote_count+1
             else :
                 q.vote_count = 1
+
+            movie_object = MovieModel.get_by_key_name(movie_id)
+            db.run_in_transaction(increment_movie_vote_comment_counter, movie_object.key())
             q.put()
 
             UserVoteCommentModel(user_id=int(user_id),
@@ -1035,7 +1061,10 @@ class UnvoteComment(webapp2.RequestHandler):
                 q.vote_count = q.vote_count-1
             else :
                 q.vote_count = -1
+            movie_object = MovieModel.get_by_key_name(movie_id)
+            db.run_in_transaction(decrease_movie_vote_comment_counter, movie_object.key())
             q.put()
+
 
             UserVoteCommentModel(user_id=int(user_id),
                 vote_state=vote_state,
