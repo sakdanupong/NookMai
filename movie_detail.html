@@ -350,7 +350,7 @@
 
 		var hc ='';
 		{% if comments %} 
-			hc += 'Comments : ' + {{comments_count}} + ' users';
+			hc += 'Comments : ' + {{movie_data.comment_count}} + ' users';
 		{% else %} 
 			hc += 'Comments : 0 users';
 		{% endif %}

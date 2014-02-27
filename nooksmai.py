@@ -95,6 +95,21 @@ def increment_movie_comment_counter(c_key):
     c.comment_count += 1
     c.put()
 
+def increment_movie_rate_counter(c_key):
+    c = db.get(c_key)
+    c.rate_count += 1
+    c.put()
+
+def increment_movie_vote_comment_counter(c_key):
+    c = db.get(c_key)
+    c.vote_comment_count += 1
+    c.put() 
+
+def decrease_movie_vote_comment_counter(c_key):
+    c = db.get(c_key)
+    c.vote_comment_count += -1
+    c.put()      
+
 def increment_movie_comment_avatar_counter(c_key, avatar_id):
     c = db.get(c_key)
 
@@ -670,18 +685,10 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
         q.filter('movie_id =', int(movie_id))
         q.order('-date')
         comments = []
-        comments_count = 0
 
         for c in q.fetch(limit=100) :
             comments.append(c)
-            comments_count = comments_count+1
 
-        logging.warning('#################')
-        # logging.warning('comments.count #################'+comments.count()) 
-        logging.warning('comments.count #################'+str(comments_count)) 
-
-
-        # comments_count = comments.count()
 
         # query user
         userdata = None
@@ -727,7 +734,6 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
             'captchahtml': chtml,
             'userdata': userdata,
             'rate_data': rate_data,
-            'comments_count': comments_count,
         }
 
         
@@ -804,7 +810,6 @@ class AddComment(webapp2.RequestHandler):
                 movie_object = MovieModel.get_by_key_name(movie_id)
                 db.run_in_transaction(increment_movie_comment_counter, movie_object.key())
 
-
                 db.run_in_transaction(increment_movie_comment_avatar_counter, movie_object.key(), c.avatar_review_id)
 
                 record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
@@ -812,7 +817,8 @@ class AddComment(webapp2.RequestHandler):
                 c.put()
                 success = 1
 
-                
+
+
 
         else:
             error = cResponse.error_code
@@ -880,6 +886,9 @@ class AddRateMovie(webapp2.RequestHandler):
             q.user_id = int(user_id)
             q.username = cgi.escape(username)
             q.rate_score = int(rate_score)
+
+            movie_object = MovieModel.get_by_key_name(movie_id)
+            db.run_in_transaction(increment_movie_rate_counter, movie_object.key())
 
             q.put()
         success = 1
@@ -970,6 +979,9 @@ class VoteComment(webapp2.RequestHandler):
                 q.vote_count = q.vote_count+1
             else :
                 q.vote_count = 1
+
+            movie_object = MovieModel.get_by_key_name(movie_id)
+            db.run_in_transaction(increment_movie_vote_comment_counter, movie_object.key())
             q.put()
 
             UserVoteCommentModel(user_id=int(user_id),
@@ -1040,7 +1052,10 @@ class UnvoteComment(webapp2.RequestHandler):
                 q.vote_count = q.vote_count-1
             else :
                 q.vote_count = -1
+            movie_object = MovieModel.get_by_key_name(movie_id)
+            db.run_in_transaction(decrease_movie_vote_comment_counter, movie_object.key())
             q.put()
+
 
             UserVoteCommentModel(user_id=int(user_id),
                 vote_state=vote_state,
