@@ -140,15 +140,20 @@ def datetime_lctimezone_format(dt):
     value = datetime.datetime.fromtimestamp(ans_time, tz)
     return value
 
+
+# def editMovieData(vote_count, rate_count, vote_comment_count):
+#     vote_result = (rate_count * vote_comment_count) + vote_count;
+#     return vote_result    
+
 def getNowShowing(userModel ,l_offset, data_per_page):
     movie_query = MovieModel.all().filter('is_coming_soon =', 0)
-    movie_query = movie_query.filter('release_time_timestamp !=', None)
-    movie_query = movie_query.order('-release_time_timestamp')
+    # movie_query = movie_query.filter('release_time_timestamp !=', None)
+    # movie_query = movie_query.order('-release_time_timestamp')
+    movie_query = movie_query.order('-vote_result')
     movie_list = movie_query.run(offset=l_offset, limit=data_per_page)
 
     list = []
     for movie in movie_list:
-
         user_id = 0
         username = ''
         vote_state = 0
@@ -323,7 +328,7 @@ class MainPage(webapp2.RequestHandler):
         userData = getUserModel(self.request)
 
         template_values = {
-             'random_movie' : random_movie,
+             # 'random_movie' : random_movie,
              'record_object' : record_object,
              'avatar_count' : AVATAR_COUNT,
              'nowshowing_per_page' : NOWSHOWING_DATA_PER_PAGE, 
