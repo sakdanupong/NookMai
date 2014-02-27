@@ -1,4 +1,5 @@
 from google.appengine.ext import db
+# from google.appengine.ext import ndb
 
 class MovieModel(db.Model):
     original_id = db.IntegerProperty(default=0)
@@ -47,3 +48,5 @@ class MovieModel(db.Model):
     rate_count = db.IntegerProperty(default=0)
     vote_count = db.IntegerProperty(default=0)
     vote_comment_count = db.IntegerProperty(default=0)
+    # vote_result = db.ComputedProperty(lambda self: ((self.rate_count * self.vote_comment_count) + self.vote_count))
+    vote_result = db.IntegerProperty(default=0)

@@ -26,6 +26,18 @@ indexes:
 - kind: MovieModel
   properties:
   - name: is_coming_soon
+  - name: avatar_1_count
+    direction: desc
+
+- kind: MovieModel
+  properties:
+  - name: is_coming_soon
+  - name: id
+    direction: desc
+
+- kind: MovieModel
+  properties:
+  - name: is_coming_soon
   - name: image
 
 - kind: MovieModel
@@ -37,6 +49,34 @@ indexes:
   properties:
   - name: is_coming_soon
   - name: release_time_timestamp
+    direction: desc
+
+- kind: MovieModel
+  properties:
+  - name: is_coming_soon
+  - name: release_time_timestamp
+    direction: desc
+  - name: vote_count
+    direction: desc
+
+- kind: MovieModel
+  properties:
+  - name: is_coming_soon
+  - name: release_time_timestamp
+    direction: desc
+  - name: vote_result
+    direction: desc
+
+- kind: MovieModel
+  properties:
+  - name: is_coming_soon
+  - name: vote_count
+    direction: desc
+
+- kind: MovieModel
+  properties:
+  - name: is_coming_soon
+  - name: vote_result
     direction: desc
 
 - kind: MovieModel
