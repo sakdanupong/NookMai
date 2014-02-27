@@ -532,6 +532,8 @@
 					alert('vote not complete')				
 				}
 			});
+		{% else %}
+			showLoginDialog()
 		{% endif %}
 	}
 
@@ -551,6 +553,8 @@
 				alert('unvote not complete')				
 				}
 			});
+		{% else %}
+			showLoginDialog()
 		{% endif %}
 	}
 
@@ -588,19 +592,13 @@
 			}
 			document.getElementById("rate-select").innerHTML = count_rate+'/10';
 		}
-
-		// for (var i=1; i <= alt ;i++)
-		// { 
-		// 	document.getElementById('star-'+[i]).src='/images/details/rate/black_star_40x38.png';
-		// }
-		// document.getElementById("rate-select").innerHTML = abc+'/10';
 	}
 
 	function hideRateStar() {
 		// alert('hideRateStar')
 		// if user vote 
 		// show rate vote 
-		// var rate_score = {{ rate_data.rate_score }};
+		
 		if (rate_score == 0) {
 			
 			for (var i=1; i <= 10 ;i++)

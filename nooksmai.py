@@ -845,11 +845,15 @@ class GetComment(webapp2.RequestHandler):
         clist = []
 
         for c in q.fetch(limit=100) :
+            logging.warning('getMonthName!!!!!!!!!'+getMonthName(2))
             clist.append({'avatar_review_id':c.avatar_review_id ,'author':c.author ,'content':c.content ,'vote_count':c.vote_count,'comment_id':c.key().id(),'date':datetime_lctimezone_format(c.date).strftime("%B %d, %Y") ,'time_crate':datetime_lctimezone_format(c.date).strftime("%H:%M") })
 
         r = {'data':clist}
         self.response.out.write(json.dumps(r))
 
+def getMonthName(month):
+    arrMonthName = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"]
+    return arrMonthName[month]
 
 class AddRateMovie(webapp2.RequestHandler):
     def get(self):
