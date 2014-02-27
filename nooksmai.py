@@ -670,9 +670,18 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
         q.filter('movie_id =', int(movie_id))
         q.order('-date')
         comments = []
+        comments_count = 0
+
         for c in q.fetch(limit=100) :
             comments.append(c)
+            comments_count = comments_count+1
 
+        logging.warning('#################')
+        # logging.warning('comments.count #################'+comments.count()) 
+        logging.warning('comments.count #################'+str(comments_count)) 
+
+
+        # comments_count = comments.count()
 
         # query user
         userdata = None
@@ -718,6 +727,7 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
             'captchahtml': chtml,
             'userdata': userdata,
             'rate_data': rate_data,
+            'comments_count': comments_count,
         }
 
         

@@ -69,11 +69,11 @@
 		<span id="rate-select">-/10</span>
 		
 		<div class="box-rate-detail">
-			Ratings : 5/10 from 5 users
+			<!-- Ratings : 0/10 from 0 users -->
 		</div>
 
 		<div class="box-comment-detail">
-			Comments : 5 users
+			<!-- Comments : 0 users -->
 		</div>
 
 		<div class="box-share">
@@ -249,10 +249,6 @@
 
 	<div class="comments-template-box">
 		<div class="comments-template-left">
-			<!-- <img id="img_avatar" src="/images/details/avatar.png" /> -->
-			<!-- <img alt="" src="/images/details/avatar.png" id="img_avatar" /> -->
-
-			<!-- <img id="img_avatar" src="/images/details/avatar-emotion{{comment.avatar_review_id}}.png" /> -->
 			<img id="img_avatar" width="60" height="60" src="/images/details/avatar/image_avatar{{comment.avatar_review_id}}.png" />
 			<div class="comments-template-name">{{ comment.author }}</div>
 		</div>
@@ -307,6 +303,7 @@
 	// var userdata;
 
 	function setupUser() {
+		// alert('setupUser')
 		{% if userdata %} 
 		    $('#comment_author').val('{{userdata.username}}')
       		$('#comment_author').attr({
@@ -339,11 +336,25 @@
 			};
 
 			// alert(avg);
-
 			var h ='';
 			h += avg
 			$('.movie-rate-total').html(h);
+
+
+			var hr ='';
+			hr += 'Ratings : ' + avg +'/10 from ' + clist.length + ' users';
+			$('.box-rate-detail').html(hr);
 		});
+
+
+
+		var hc ='';
+		{% if comments %} 
+			hc += 'Comments : ' + {{comments_count}} + ' users';
+		{% else %} 
+			hc += 'Comments : 0 users';
+		{% endif %}
+		$('.box-comment-detail').html(hc);
 
 	}
 
@@ -439,6 +450,10 @@
 
 			var clist = data['data'];
 			var h = '';
+
+
+
+
 			for (var i = 0; i < clist.length; i++) {
 				var c = clist[i];
 		    	var author = c['author'];
