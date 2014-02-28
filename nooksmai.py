@@ -198,7 +198,6 @@ def getNowShowing(userModel ,l_offset, data_per_page):
             'vote_state' : vote_state,
         }
 
-
         movie_vote = {
             'rate_count' : movie.rate_count,
             'vote_count' : movie.vote_count,
@@ -441,6 +440,7 @@ class RefreshData(webapp2.RequestHandler):
                 movie_time = m['avd_time']
                 e.adv_time_timestamp = movie_time['timestamp']
                 e.adv_time_text = movie_time['text']
+                e.is_coming_soon = 1
             movie_name = m['name']
             e.name_en = movie_name['en']
             e.name_th = movie_name['th']
@@ -853,38 +853,21 @@ class GetComment(webapp2.RequestHandler):
         self.process()
     def process(self):
         movie_id = self.request.get('movie_id')
-        q = CommentModel.all()
+        q = CommentModel.all();
         q.filter('movie_id =', int(movie_id)) 
         q.order('-date')
         clist = []
 
         for c in q.fetch(limit=100) :
-            logging.warning('!!!!!!!!!'+ getDateFormat(c.date))
-            # clist.append({'avatar_review_id':c.avatar_review_id ,'author':c.author ,'content':c.content ,'vote_count':c.vote_count,'comment_id':c.key().id(),'date':datetime_lctimezone_format(c.date).strftime("%B %d, %Y") ,'time_crate':datetime_lctimezone_format(c.date).strftime("%H:%M") })
-            clist.append({'avatar_review_id':c.avatar_review_id ,'author':c.author ,'content':c.content ,'vote_count':c.vote_count,'comment_id':c.key().id(),'date':getDateFormat(c.date) ,'time_crate':datetime_lctimezone_format(c.date).strftime("%H:%M") })
+            logging.warning('getMonthName!!!!!!!!!'+getMonthName(2))
+            clist.append({'avatar_review_id':c.avatar_review_id ,'author':c.author ,'content':c.content ,'vote_count':c.vote_count,'comment_id':c.key().id(),'date':datetime_lctimezone_format(c.date).strftime("%B %d, %Y") ,'time_crate':datetime_lctimezone_format(c.date).strftime("%H:%M") })
 
         r = {'data':clist}
         self.response.out.write(json.dumps(r))
-        
 
-def getDateFormat(date):
+def getMonthName(month):
     arrMonthName = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"]
-    
-    m = 0
-    m = datetime_lctimezone_format(date).strftime("%m")
-    m_str = ''
-    m_str = arrMonthName[int(m)-1]
-
-    d_str = datetime_lctimezone_format(date).strftime("%d")
-
-    y = 0
-    y = datetime_lctimezone_format(date).strftime("%Y")
-    y_str = ''
-    y_str = int(y)+543
-
-    date_str = str(d_str)+' '+str(m_str)+' '+str(y_str)
-    return date_str
-
+    return arrMonthName[month]
 
 class AddRateMovie(webapp2.RequestHandler):
     def get(self):
@@ -892,7 +875,7 @@ class AddRateMovie(webapp2.RequestHandler):
     def post(self):
         self.process()
     def process(self):
-        # logging.warning('AddRateMovie!!!!!!!!!')
+        logging.warning('AddRateMovie!!!!!!!!!')
 
         remoteip = self.request.remote_addr
         localhost = self.request.host
@@ -1287,16 +1270,64 @@ class GetComingSoon(webapp2.RequestHandler):
         self.response.out.write(r)
     # movie_list = movie_query.filter('is_coming_soon =', 0).fetch(limit=datape)
 class GetSeachMovie(webapp2.RequestHandler):
+
+    def tokenize_autocomplete(self, phrase):
+        a = []
+        for word in phrase.split():
+            j = 1
+            while True:
+                for i in range(len(word) - j + 1):
+                    a.append(word[i:i + j])
+                if j == len(word):
+                    break
+                j += 1
+        return a
+
     def get(self):
         self.process()
     def post(self):
         self.process()
     def process(self):
         word = self.request.get('word')
-        movie_query = MovieModel.all().filter('name_en >=', unicode(word)).filter('name_en <',  unicode(word) + u"\ufffd").fetch(10)
+        index = search.Index(name='item_search')
+        items = MovieModel.all()
+        for item in items:  # item = ndb.model
+            doc_id = str(item.key())
+            logging.warning('before #####################')
+            # name = ','.join(self.tokenize_autocomplete(item.name_en + ' ' + item.name_th))
+            logging.warning('after #####################')
+            document = search.Document(
+                doc_id=doc_id,
+                fields=[search.TextField(name='name', value=name)])
+            index.put(document)
 
-        movie = movie_query[0]
-        logging.warning(movie.name_en)
+        movie_query = search.Index(name="item_search").search("name:"+word)
+        arr = []
+        for movie in movie_query:
+            c_key = movie.doc_id
+            c = db.get(c_key)
+            name_th = c.name_th
+            name_en = c.name_en
+            movie_id = c.id
+
+            r = {
+                'id' : movie_id,
+                'name_th' : name_th,
+                'name_en' : name_en,
+            }
+            arr.append(r)
+
+        r = {
+            'success' : 1,
+            'data' : arr,
+        }
+
+        self.response.out.write(json.dumps(r))
+            # logging.warning(movie.doc_id + " ##############################")
+        # movie_query = MovieModel.all().search(word).fetch(10)
+        # movie_query = MovieModel.all().filter('name_en >=', unicode(word)).filter('name_en <',  unicode(word) + u"\ufffd").fetch(10)
+        # movie = movie_query[0]
+        # logging.warning(movie.name_en + " ##############################")
 
 
 class Register(webapp2.RequestHandler):

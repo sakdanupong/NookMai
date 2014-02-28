@@ -221,7 +221,7 @@
             {% if userData %}
               user_id = {{userData.user_id}};
             {% endif %}
-            div.appendChild(new MoviewListView(movie_data, user_id));
+            div.appendChild(new MoviewListView($('#nowshowing_wraper'), movie_data, user_id));
           }
         }
 

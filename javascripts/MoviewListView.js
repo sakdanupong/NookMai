@@ -1,6 +1,7 @@
 var vote_data_dict = {};
 var vote_score = 1;
-function MoviewListView(movie_data, user_id) {
+var divForSort;
+function MoviewListView(p_divForSort, movie_data, user_id) {
 	var $ = document;
 	var head  = $.getElementsByTagName('head')[0];
     var link  = $.createElement('link');
@@ -60,6 +61,8 @@ function MoviewListView(movie_data, user_id) {
         
     }, 0); 
     
+    divForSort = p_divForSort;
+
     return div;
 }
 
@@ -246,6 +249,8 @@ function voteMovie(movie_id, user_id) {
         processData: false
     });
     
+    //sortUsingNestedText(divForSort, "div", 'div.vote_count');
+
 }
 
 function unVoteMovie(movie_id, user_id) {
@@ -282,4 +287,19 @@ function unVoteMovie(movie_id, user_id) {
         processData: false
     });
 
+    //sortUsingNestedText(divForSort, "div", 'div.vote_count');
+
 }
+
+function sortUsingNestedText(parent, childSelector, keySelector) {
+    var items = parent.children(childSelector).sort(function(a, b) {
+        var vA = $(keySelector, a).text();
+        var vB = $(keySelector, b).text();
+        return (vB < vA) ? -1 : (vB > vA) ? 1 : 0;
+        // return vB - vA;
+        // return (vA < vB) ? -1 : (vA > vB) ? 1 : 0;
+    });
+    parent.append(items);
+}
+
+

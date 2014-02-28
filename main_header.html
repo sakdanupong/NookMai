@@ -56,16 +56,29 @@
     	search_input.autocomplete({
 	    	source: function (request, response) {
 		    	var word = $("#search_input").val();
-				var formData = new FormData();
-          		formData.append('word', word);	
+				  var formData = new FormData();
+          formData.append('word', word);	
 	    		$.ajax({
             		url: '/api_get_searchmovie',  //Server script to process data
             		type: 'POST',
             		mimeType:"multipart/form-data",
             		dataType: 'json',
             		success: function(json) {
-              			//response(data);
+              		  // response(json);
               			// alert('word');
+                    // var dict = json['data'];
+                    response($.map(json.data, function (item) {
+                       return {
+                           // label: "test",
+                           // value: 12
+                          label: item.name_en + ' ' + item.name_th,
+                          value: item.name_en + ' ' + item.name_th,
+                          id: item.id
+
+                       };
+                    }));
+
+
             		},
             		data: formData,
             		cache: false,
@@ -73,7 +86,7 @@
             		processData: false
          		 });
     		},
-    		minLength: 2
+    		minLength: 1
 		});
 	}
 
