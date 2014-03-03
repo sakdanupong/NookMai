@@ -41,7 +41,7 @@ from random import randint
 from google.appengine.api import search 
 
 DEFAULT_COMMENT_NAME = 'default_user'
-
+MOVIE_SEARCH_INDEX = 'MOVIE_SEARCH_INDEX'
 
 CAPTCHA_PUBLICE_KEY = '6LcDAO0SAAAAAIYP-BD0kxquYfqz71t1KeUbV1rp'
 CAPTCHA_PRIVATE_KEY = '6LcDAO0SAAAAAM4kxOsIOBKRz8oLjj2-dHcBcui5'
@@ -302,6 +302,61 @@ def getUserModel(request):
             userData = UserModel.get_by_key_name(str(sessionModel.user_id))
     return userData
 
+def tokenize_autocomplete(phrase):
+        a = []
+        for word in phrase.split():
+            j = 1
+            while True:
+                for i in range(len(word) - j + 1):
+                    a.append(word[i:i + j])
+                if j == len(word):
+                    break
+                j += 1
+        return a
+
+def createMovieTextSearchDoc(c_key, arr_text):
+    index = search.Index(name=MOVIE_SEARCH_INDEX)
+    doc_id = str(c_key)
+    name = ','.join(arr_text)
+    document = search.Document(
+            doc_id=doc_id,
+            fields=[search.TextField(name='name', value=name)])
+    index.put(document)
+
+def createMovieModel(c_key, new_id, movieData, is_coming_soon):
+    m = movieData
+    e = db.get(c_key)
+    e.original_id = m['id']
+    e.id = new_id
+    e.ribbon_type = m['ribbon_type']
+    if 'avd_time' in m or is_coming_soon:
+        e.is_coming_soon = 1
+    movie_name = m['name']
+    name_en = movie_name['en']
+    name_th = movie_name['th']
+    e.name_en = name_en
+    e.name_th = name_th
+    movie_detail = m['detail']
+    e.duration = movie_detail['duration']
+    e.rate = movie_detail['rate']
+    e.rateWarning = movie_detail['rateWarning']
+    e.image = movie_detail['image']
+    movie_release_date = movie_detail['releasedate']
+    e.release_time_timestamp = movie_release_date['timestamp']
+    e.release_time_text = movie_release_date['text']
+    movie_trailer = movie_detail['trailer']
+    e.yt_id = movie_trailer['yt_id']
+    e.rtsp = movie_trailer['rtsp']
+    e.thumbnail = movie_trailer['thumbnail']
+    e.types = m['types']
+    e.cinemas = m['cinemas']
+
+    tag = tokenize_autocomplete(name_en + ' ' + name_th)
+    e.search_tag = tag
+    createMovieTextSearchDoc(c_key, tag)
+
+    e.put()
+
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -383,14 +438,12 @@ class NowShowing(webapp2.RequestHandler):
 
 class RefreshData(webapp2.RequestHandler):
 
-
     def increment_record_movie_counter(self, c_key):
         c = db.get(c_key)
         c.movie_count += 1
         self.new_id = c.movie_count
         c.put()
-
-
+    
     def increment_record_nowshowing_counter(self, c_key):
         c = db.get(c_key)
         c.nowshowing_count += 1
@@ -433,32 +486,7 @@ class RefreshData(webapp2.RequestHandler):
             db.run_in_transaction(self.increment_record_movie_counter, record_object.key())
             movie_id = str(self.new_id)
             e = MovieModel.get_or_insert(key_name=movie_id)
-            e.original_id = m['id']
-            e.id = self.new_id
-            e.ribbon_type = m['ribbon_type']
-            if 'avd_time' in m:
-                movie_time = m['avd_time']
-                e.adv_time_timestamp = movie_time['timestamp']
-                e.adv_time_text = movie_time['text']
-                e.is_coming_soon = 1
-            movie_name = m['name']
-            e.name_en = movie_name['en']
-            e.name_th = movie_name['th']
-            movie_detail = m['detail']
-            e.duration = movie_detail['duration']
-            e.rate = movie_detail['rate']
-            e.rateWarning = movie_detail['rateWarning']
-            e.image = movie_detail['image']
-            movie_release_date = movie_detail['releasedate']
-            e.release_time_timestamp = movie_release_date['timestamp']
-            e.release_time_text = movie_release_date['text']
-            movie_trailer = movie_detail['trailer']
-            e.yt_id = movie_trailer['yt_id']
-            e.rtsp = movie_trailer['rtsp']
-            e.thumbnail = movie_trailer['thumbnail']
-            e.types = m['types']
-            e.cinemas = m['cinemas']
-            e.put()
+            db.run_in_transaction(createMovieModel, e.key(), self.new_id, m, 0)
 
         # coming_soon
 
@@ -483,34 +511,7 @@ class RefreshData(webapp2.RequestHandler):
                 db.run_in_transaction(self.increment_record_comingsoon_counter, record_object.key())
                 movie_id = str(self.new_id)
                 e = MovieModel.get_or_insert(key_name=movie_id)
-                e.coming_month_en = g_coming_month_en
-                e.coming_month_th = g_coming_month_th
-                e.is_coming_soon = 1
-                e.id = self.new_id
-                e.original_id = m['id']
-                e.ribbon_type = m['ribbon_type']
-                if 'avd_time' in m:
-                    movie_time = m['avd_time']
-                    e.adv_time_timestamp = movie_time['timestamp']
-                    e.adv_time_text = movie_time['text']
-                movie_name = m['name']
-                e.name_en = movie_name['en']
-                e.name_th = movie_name['th']
-                movie_detail = m['detail']
-                e.duration = movie_detail['duration']
-                e.rate = movie_detail['rate']
-                e.rateWarning = movie_detail['rateWarning']
-                e.image = movie_detail['image']
-                movie_release_date = movie_detail['releasedate']
-                e.release_time_timestamp = movie_release_date['timestamp']
-                e.release_time_text = movie_release_date['text']
-                movie_trailer = movie_detail['trailer']
-                e.yt_id = movie_trailer['yt_id']
-                e.rtsp = movie_trailer['rtsp']
-                e.thumbnail = movie_trailer['thumbnail']
-                e.types = m['types']
-                e.cinemas = m['cinemas']
-                e.put()
+                db.run_in_transaction(createMovieModel, e.key(), self.new_id, m, 1)
 
         data = memcache.get(REFRESH_DATA_CACHE)
         if data is not None:
@@ -521,6 +522,19 @@ class ResetCounter(webapp2.RequestHandler):
         record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
         if record_object is None:
             record_object = RecordCountModel.get_or_insert(key_name=ALL_RECORD_COUNTER_KEY)
+        # else:
+        #     db.delete(RecordCountModel.all())
+
+        # # delete
+        # db.delete(AboutModel.all())
+        # db.delete(CacheImageModel.all())
+        # db.delete(ComingSoonModel.all())
+        # db.delete(CommentModel.all())
+        # db.delete(MovieModel.all())
+        # db.delete(RateMovieModel.all())
+        # db.delete(SessionModel.all())
+        # db.delete(UserVoteCommentModel.all())
+        # db.delete(UserVoteModel.all())
 
 
 class ImageCache(webapp2.RequestHandler):
@@ -859,7 +873,7 @@ class GetComment(webapp2.RequestHandler):
         clist = []
 
         for c in q.fetch(limit=100) :
-            logging.warning('getMonthName!!!!!!!!!'+getMonthName(2))
+            # logging.warning('getMonthName!!!!!!!!!'+getMonthName(2))
             clist.append({'avatar_review_id':c.avatar_review_id ,'author':c.author ,'content':c.content ,'vote_count':c.vote_count,'comment_id':c.key().id(),'date':datetime_lctimezone_format(c.date).strftime("%B %d, %Y") ,'time_crate':datetime_lctimezone_format(c.date).strftime("%H:%M") })
 
         r = {'data':clist}
@@ -928,7 +942,7 @@ class GetRateMovie(webapp2.RequestHandler):
         q.filter('movie_id =', int(movie_id)) 
         clist = []
 
-        logging.warning('GetRateMovie #############')
+        # logging.warning('GetRateMovie #############')
 
         result = q.fetch(limit=10)
 
@@ -1269,39 +1283,19 @@ class GetComingSoon(webapp2.RequestHandler):
 
         self.response.out.write(r)
     # movie_list = movie_query.filter('is_coming_soon =', 0).fetch(limit=datape)
-class GetSeachMovie(webapp2.RequestHandler):
-
-    def tokenize_autocomplete(self, phrase):
-        a = []
-        for word in phrase.split():
-            j = 1
-            while True:
-                for i in range(len(word) - j + 1):
-                    a.append(word[i:i + j])
-                if j == len(word):
-                    break
-                j += 1
-        return a
-
+class GetSearchMovie(webapp2.RequestHandler):
     def get(self):
         self.process()
     def post(self):
         self.process()
     def process(self):
         word = self.request.get('word')
-        index = search.Index(name='item_search')
-        items = MovieModel.all()
-        for item in items:  # item = ndb.model
-            doc_id = str(item.key())
-            logging.warning('before #####################')
-            # name = ','.join(self.tokenize_autocomplete(item.name_en + ' ' + item.name_th))
-            logging.warning('after #####################')
-            document = search.Document(
-                doc_id=doc_id,
-                fields=[search.TextField(name='name', value=name)])
-            index.put(document)
+        data = memcache.get(word)
+        if data is not None:
+            self.response.out.write(json.dumps(data))
+            return
 
-        movie_query = search.Index(name="item_search").search("name:"+word)
+        movie_query = search.Index(name=MOVIE_SEARCH_INDEX).search("name:"+word)
         arr = []
         for movie in movie_query:
             c_key = movie.doc_id
@@ -1322,12 +1316,10 @@ class GetSeachMovie(webapp2.RequestHandler):
             'data' : arr,
         }
 
+
+        memcache.add(key=word, value=r, time=600)
+
         self.response.out.write(json.dumps(r))
-            # logging.warning(movie.doc_id + " ##############################")
-        # movie_query = MovieModel.all().search(word).fetch(10)
-        # movie_query = MovieModel.all().filter('name_en >=', unicode(word)).filter('name_en <',  unicode(word) + u"\ufffd").fetch(10)
-        # movie = movie_query[0]
-        # logging.warning(movie.name_en + " ##############################")
 
 
 class Register(webapp2.RequestHandler):
@@ -1553,7 +1545,7 @@ application = webapp2.WSGIApplication([
     ('/reset_counter', ResetCounter),
     ('/api_get_nowshowing', GetNowShowing),
     ('/api_get_comingsoon', GetComingSoon),
-    ('/api_get_searchmovie', GetSeachMovie),
+    ('/api_get_searchmovie', GetSearchMovie),
     ('/api_register', Register),
     ('/api_login', Login),
     ('/api_get_userdata', GetUserData),

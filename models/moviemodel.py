@@ -18,6 +18,7 @@ class MovieModel(db.Model):
     is_coming_soon = db.IntegerProperty(default=0)
     coming_month_th = db.StringProperty()
     coming_month_en = db.StringProperty()
+    search_tag = db.StringListProperty()
 
     detail_synopsis_en = db.TextProperty()
     detail_synopsis_th = db.TextProperty()

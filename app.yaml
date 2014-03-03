@@ -4,6 +4,9 @@ runtime: python27
 api_version: 1
 threadsafe: true
 
+builtins:
+- deferred: on
+
 handlers:
 - url: /fonts
   static_dir: fonts
@@ -23,6 +26,11 @@ handlers:
 - url: /textedit
   static_dir: textedit
 
+- url: /update_schema
+  script: update_schema_handler.app  # path to webapp2 application definition.
+  login: admin
+  secure: always
+
 - url: /back_office
   script: nooksmai.application
   login: admin
@@ -30,8 +38,6 @@ handlers:
 
 - url: /.*
   script: nooksmai.application
-
-
 
 libraries:
 - name: webapp2
