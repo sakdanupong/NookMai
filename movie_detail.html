@@ -266,7 +266,7 @@
 
 			function getUpArrowDivByData(comment_id) {
     			var up_id = 'up' + comment_id;
-    			alert(up_id)
+    			// alert(up_id)
 			    var arrow_up = document.getElementById(up_id);
 			    return arrow_up;
 			}
@@ -473,7 +473,7 @@
 
 	function updateComments() {
 		$.getJSON("/api_get_comment", {'movie_id':{{ movie_data.id }}}, function(data) {
-			alert(data['data']);
+			// alert(data['data']);
 
 			var clist = data['data'];
 			var h = '';
@@ -546,11 +546,6 @@
 	}
 
 	function voteComment(id) {
-		// $('.btn-up').css("background", "none repeat scroll 0 0 #666666");
-
-		// document.getElementById(id).style.cssText = 'background", "none repeat scroll 0 0 #666666;';
-		// document.getElementById(id).setAttribute('style', 'background", "none repeat scroll 0 0 #666666;');
-
 		// check user vote
 		{% if userdata %} 
 			var postData = {'comment_id':id,
@@ -573,7 +568,6 @@
 
 
 	function unvoteComment(id) {
-		// $('.btn-down').css("background", "none repeat scroll 0 0 #666666");
 		{% if userdata %} 
 			var postData = {'comment_id':id,
 						'user_id':{{userdata.user_id}},
