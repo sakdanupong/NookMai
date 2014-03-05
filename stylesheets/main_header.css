@@ -191,14 +191,6 @@ display: none;
 	margin-right: 15px;
 }
 
-/*#login_div {
-	display: none;
-}
-
-#username_div {
-	display: none;
-}*/
-
 #username_label {
 	color: #ffffff;
 	font-size: 12px;
@@ -206,4 +198,24 @@ display: none;
 	margin-right: 10px;
 }
 
+#search_result_div {
+	background-color: #323232;
+	width: 1200px;
+	margin: auto;
+}
 
+#search_result_inner_div {
+	font-size: 16px;
+	padding-top: 26px;
+	padding-bottom: 26px;
+	text-align: center;
+	margin: auto;
+	color: #ffffff;
+	font-family: montRegular;
+}
+
+#word_search {
+	font-size: 16px;
+	color: #ffb400;
+	font-family: montRegular;
+}

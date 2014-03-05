@@ -50,45 +50,6 @@
 	    form.submit();
 	}
 
-	function readyToSearchMovie() {
-		// var search_input = $("#search_input");
-  //   	search_input.autocomplete({
-	 //    	source: function (request, response) {
-		//     	var word = $("#search_input").val();
-		// 		  var formData = new FormData();
-  //         formData.append('word', word);	
-	 //    		$.ajax({
-  //           		url: '/api_get_searchmovie',  //Server script to process data
-  //           		type: 'POST',
-  //           		mimeType:"multipart/form-data",
-  //           		dataType: 'json',
-  //           		success: function(json) {
-  //             		  // response(json);
-  //             			// alert('word');
-  //                   // var dict = json['data'];
-  //                   response($.map(json.data, function (item) {
-  //                      return {
-  //                          // label: "test",
-  //                          // value: 12
-  //                         label: item.name_en + ' ' + item.name_th,
-  //                         value: item.name_en + ' ' + item.name_th,
-  //                         id: item.id
-
-  //                      };
-  //                   }));
-
-
-  //           		},
-  //           		data: formData,
-  //           		cache: false,
-  //           		contentType: false,
-  //           		processData: false
-  //        		 });
-  //   		},
-  //   		// minLength: 1
-		// });
-	}
-
 	function showLoginDialog() {
       LoginDialog(function(success, data, reason, logindialog) {
         if (success) {
@@ -119,10 +80,10 @@
       });
     }
 
-	function logout() {
-		removeCookie('session_token');
-		location.reload();	
-	}
+  	function logout() {
+  		removeCookie('session_token');
+  		location.reload();	
+  	}
 
 
     function hideAllUserDiv() {
@@ -143,83 +104,56 @@
        {% else %}
           login_div.show();
        {% endif %}
-
-
-  //   	var login_div = $('#login_div');
-  //   	var user_div = $('#user_div');
-  //   	var label = $('#username_label');
-  //   	var session_token = getCookie('session_token');
-  //   	if (session_token) {
-  //   		var formData = new FormData();
-  //   		formData.append('session_token', session_token);
-
-		// $.ajax({
-  //           url: '/api_get_userdata',  //Server script to process data
-  //           type: 'POST',
-  //           mimeType:"multipart/form-data",
-  //           dataType: 'json',
-  //           success: function(json) {
-  //             var success = json['success'];
-  //             var data = json['data'];
-  //             var reason = json['reason'];
-  //             if (success) {
-  //             	var username = data['username'];
-  //             	user_div.show();
-  //             	label.text(username);
-  //             } else {
-  //             	removeCookie('session_token');
-  //             	login_div.show();
-  //             }
-              	
-  //           },
-  //           data: formData,
-  //           cache: false,
-  //           contentType: false,
-  //           processData: false
-  //         });
-  //   	} else {
-  //   		login_div.show();
-  //   	}
     }
 
     function searchSuggestion() {
       var anExcitedSource = function(query, cb) {
-      var formData = new FormData();
-      formData.append('word', query); 
-      $.ajax({
-        url: '/api_get_searchmovie',  //Server script to process data
-        type: 'POST',
-        mimeType:"multipart/form-data",
-        dataType: 'json',
-        success: function(json) {
-          var results = $.map(json.data, function(item) {
-          var datum = { theValue: item.name_en + " " + item.name_th };
+        var formData = new FormData();
+        formData.append('word', query); 
+        $.ajax({
+          url: '/api_get_searchmovie',  //Server script to process data
+          type: 'POST',
+          mimeType:"multipart/form-data",
+          dataType: 'json',
+          success: function(json) {
+            var results = $.map(json.data, function(item) {
+            var datum = { theValue: item.name_en + " " + item.name_th,
+                          movie_id: item.movie_id,
+                        };
 
-          return datum;
-        });
+            return datum;
+          });
 
           cb(results);
 
-        },
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false
-      });
+          },
+          data: formData,
+          cache: false,
+          contentType: false,
+          processData: false
+        });
     };
 
-      $('#search_input').typeahead(null, {
-        displayKey: 'theValue',
-        source: anExcitedSource
-      });
+    $('#search_input').typeahead(null, {
+      displayKey: 'theValue',
+      source: anExcitedSource,
+    }).on('typeahead:selected', function (obj, datum) {
+      var movie_id = datum.movie_id;
+      window.location.href = '/detail/'+movie_id;
+    });
   }
 
+  function gotoSearchResult() {
+    var word = document.getElementById('search_input').value;
+    if (word.length == 0)
+      return;
+    window.location.href = '/search_result?word='+word;
+  }
 
 	$(document).ready(function() {
-    	readyToSearchMovie();
-    	checkSession();
-      searchSuggestion();
-    });
+  	checkSession();
+    searchSuggestion();
+  });
 
 </script>
 </head>
@@ -239,12 +173,12 @@
 	<div id="header_div">
 		<a href="/"><img id="img_header_logo" src="/images/headers/logo1.png" /></a>
 		<div class="round-corner" id="search_div">
-      <img id="img_search" src="/images/headers/icon_search.png"/>
+      <div><a href="#" onClick="gotoSearchResult()"><img id="img_search" src="/images/headers/icon_search.png"/></a></div>
 			<div class="ui-widget"><input id="search_input" placeholder="Search movies" onchange="readyToSearchMovie();"></div>
 			<!-- <input id="search_input" type="text" /> -->
 		</div>
 	</div>
-	<div id="nav_div">
+	<div id="nav_div" style='display: none;'>
 		<div id="inner_nav_div">
 			<ul><li><a id="nav_home" class="round-corner" href="/">Home</a></li>
 				<li><a id="nav_now_showing" class="round-corner" href="javascript:scrollToDiv('nowshowing_div')">Now Showing</a></li>
@@ -254,10 +188,22 @@
 			</ul>
 		</div>
 	</div>
+  <div id="search_result_div" style='display: none;'>
+    <div id="search_result_inner_div">SEARCH RESULT FOR : <label id="word_search">{{word}}</label></div>
+  </div>
+  <script>
+    {% if is_search_result_page %}
+      var count = {{result_count}};
+      if (count)
+        $('#search_result_div').show();
+    {% else %}
+      $('#nav_div').show();
+    {% endif %}
+  </script>
 	<div id="username_div">
 		<div class="username_inner_div" id="login_div" style="display:'none';"><input type="submit" onClick="showLoginDialog()" value="Login"></input></div>
 		<div class="username_inner_div" id="user_div" style="display:'none';"><label id="username_label"></label><input type="submit" onClick="logout()" value="Logout"></input></div>
-   	</div>
+  </div>
 	
 </body>
 </html>

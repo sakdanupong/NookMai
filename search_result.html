@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+    <head>
+      <script src="//code.jquery.com/jquery-1.9.1.js"></script>
+      <script src="/javascripts/NumberUtil.js"></script>
+      <script src="/javascripts/MoviePoster.js"></script>
+      <link rel="shortcut icon" href="images/favicon.ico"/>
+      <link type="text/css" rel="stylesheet" href="/stylesheets/font_family.css" />
+      <link type="text/css" rel="stylesheet" href="/stylesheets/base_document.css" />
+      <link type="text/css" rel="stylesheet" href="/stylesheets/poster.css" />
+      <link type="text/css" rel="stylesheet" href="/stylesheets/carousel.css" />
+      <script src="/javascripts/MoviewListView.js"></script>
+      <title>nookmai.com หนุกมั้ยดอทคอม</title>
+      <script>
+        $(document).ready(function() {
+          {% for movie_data in search_result %}
+            var movie_id = {{movie_data['movie_id']}};
+            var name_en = '{{movie_data['name_en']}}';
+            var name_th = '{{movie_data['name_th']}}';
+            var movie_data = {
+              'movie_id':movie_id,
+              'name_en':name_en,
+              'name_th':name_th
+            };
+            var search_content_div = document.getElementById('search_result_content');
+            search_content_div.appendChild(new MoviePoster(movie_data));
+          {% endfor %}
+        });
+      </script>
+    </head>
+    <body>
+      {% include "/main_header.html" with context %}
+      <div id="search_result_content">
+      </div>
+      {% include "/main_footer.html" with context %}
+    </body>
+</html>
+{% endautoescape %}

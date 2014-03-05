@@ -357,6 +357,24 @@ def createMovieModel(c_key, new_id, movieData, is_coming_soon):
 
     e.put()
 
+def getSearchMovieList(word):
+    movie_query = search.Index(name=MOVIE_SEARCH_INDEX).search("name:"+word)
+    arr = []
+    for movie in movie_query:
+        c_key = movie.doc_id
+        c = db.get(c_key)
+        name_th = c.name_th
+        name_en = c.name_en
+        movie_id = c.id
+        image = c.image
+        r = {
+            'movie_id' : movie_id,
+            'name_th' : name_th,
+            'name_en' : name_en,
+        }
+        arr.append(r)
+    return arr
+
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -435,6 +453,24 @@ class NowShowing(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
         # self.response.write(template.render(template_values))
         
+class SearchResult(webapp2.RequestHandler):
+    def get(self):
+        self.process()
+    def post(self):
+        self.process()
+    def process(self):
+        word = self.request.get('word')
+        isSerchResultPage = 1
+        result = getSearchMovieList(word)
+
+        template_values = {
+            'word' : word,
+            'search_result' : result,
+            'is_search_result_page' : isSerchResultPage,
+            'result_count' : len(result),
+        }
+        template = JINJA_ENVIRONMENT.get_template('search_result.html')
+        self.response.write(template.render(template_values))
 
 class RefreshData(webapp2.RequestHandler):
 
@@ -1291,25 +1327,11 @@ class GetSearchMovie(webapp2.RequestHandler):
     def process(self):
         word = self.request.get('word')
         # data = memcache.get(word)
-        # if data is not None:
+        # if not data is None:
         #     self.response.out.write(json.dumps(data))
         #     return
 
-        movie_query = search.Index(name=MOVIE_SEARCH_INDEX).search("name:"+word)
-        arr = []
-        for movie in movie_query:
-            c_key = movie.doc_id
-            c = db.get(c_key)
-            name_th = c.name_th
-            name_en = c.name_en
-            movie_id = c.id
-
-            r = {
-                'id' : movie_id,
-                'name_th' : name_th,
-                'name_en' : name_en,
-            }
-            arr.append(r)
+        arr = getSearchMovieList(word);
 
         r = {
             'success' : 1,
@@ -1527,6 +1549,7 @@ application = webapp2.WSGIApplication([
     ('/sign', NookMai),
     ('/detail/(.*)', NookMaiDetailMovie),
     ('/about', NookMaiAbout),
+    ('/search_result', SearchResult),
     ('/refresh_data', RefreshData),
     ('/image', ImageCache),
     ('/trailer', GetTrailer),
