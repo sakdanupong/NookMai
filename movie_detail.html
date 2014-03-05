@@ -242,40 +242,72 @@
     
 
     <div class="comments-template-vote">
-	    <a class="btn-up" type="submit" href="javascript:;" id="{{ comment.key().id() }}" onClick="voteComment(this.id)"></a>
-	    <div class="comments-vote-count">{{comment.vote_count}}</div>
-	    <a class="btn-down" type="submit" href="javascript:;" id="{{ comment.key().id() }}" onClick="unvoteComment(this.id)"></a>
+<!-- 	    <a class="btn-up" type="submit" href="javascript:;" id="{{ comment['comment'].key().id() }}" onClick="voteComment(this.id)"></a>
+	    <div class="comments-vote-count">{{comment['comment'].vote_count}}</div>
+	    <a class="btn-down" type="submit" href="javascript:;" id="{{ comment['comment'].key().id() }}" onClick="unvoteComment(this.id)"></a> -->
+	    
+	    <a class="btn-up" type="submit" href="javascript:;" id="up{{ comment['comment'].key().id() }}" onClick="voteComment({{ comment['comment'].key().id() }})"></a>
+	    <div class="comments-vote-count">{{comment['comment'].vote_count}}</div>
+	    <a class="btn-down" type="submit" href="javascript:;" id="down{{ comment['comment'].key().id() }}" onClick="unvoteComment({{ comment['comment'].key().id() }})"></a>
+
+	    <script type="text/javascript">
+			function checkStateVoteBtn(user_vote_state, user_voted, comment_id) {
+				// alert('user_vote_state'+user_vote_state+' user_voted'+user_voted+' comment_id'+comment_id)
+
+				if (user_vote_state == 1) {
+					var arrow_up = getUpArrowDivByData(comment_id);
+					arrow_up.className = 'btn-up-selected';
+				};
+				if (user_vote_state == -1) {
+					var arrow_down = getDownArrowDivByData(comment_id);
+    				arrow_down.className = 'btn-down-selected';
+				};
+			}
+
+			function getUpArrowDivByData(comment_id) {
+    			var up_id = 'up' + comment_id;
+    			alert(up_id)
+			    var arrow_up = document.getElementById(up_id);
+			    return arrow_up;
+			}
+
+			function getDownArrowDivByData(comment_id) {
+				var down_id = 'down' + comment_id;
+    			var arrow_down = document.getElementById(down_id);
+    			return arrow_down;
+			}
+			checkStateVoteBtn('{{ comment['user_vote_state'] }}', '{{comment['user_voted']}}', '{{ comment['comment'].key().id() }}');
+		</script>
     </div>
 
 
 	<div class="comments-template-box">
 		<div class="comments-template-left">
-			<img id="img_avatar" width="60" height="60" src="/images/details/avatar/image_avatar{{comment.avatar_review_id}}.png" />
-			<div class="comments-template-name">{{ comment.author }}</div>
+			<img id="img_avatar" width="60" height="60" src="/images/details/avatar/image_avatar{{comment['comment'].avatar_review_id}}.png" />
+			<div class="comments-template-name">{{ comment['comment'].author }}</div>
 		</div>
-
 
 
 		<div class="comments-template-right">
 			<div class="comments-template-count-comment">ความคิดเห็นที่ {{(movie_data.comment_count - loop.index)+1 }}</div>
-			<div class="comments-template-date-and-time" id="{{comment.date}}"></div>
+			<div class="comments-template-date-and-time" id="{{comment['comment'].date}}"></div>
 			<script type="text/javascript">
 
 				function arrMonthName(m) {
 					var arrMonthName = new Array("","มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม");
-					 var str_day = {{comment.date.day}};
-					 var str_year = {{comment.date.year}} + 543;
-					 var str_time = '{{ (comment.date | datetime_lctimezone_format).strftime("%H:%M") }}น.';
-					 var div = document.getElementById('{{comment.date}}');
+					 var str_day = {{comment['comment'].date.day}};
+					 var str_year = {{comment['comment'].date.year}} + 543;
+					 var str_time = '{{ (comment['comment'].date | datetime_lctimezone_format).strftime("%H:%M") }}น.';
+					 var div = document.getElementById('{{comment['comment'].date}}');
 					 div.innerHTML = str_day + ' ' + arrMonthName[m] + ' '+ str_year + ' ' +','+ ' ' + str_time;
 				}
 
-				arrMonthName({{ comment.date.month }});
+				arrMonthName({{ comment['comment'].date.month }});
 				
 			</script>
 
 
-			<div class="comments-template-content">{{ comment.content }}</div>
+			<div class="comments-template-content">{{ comment['comment'].content }}</div>
 
 
 
@@ -426,9 +458,6 @@
 				// nicE.setContent('');
 
 				Recaptcha.reload();
-				// $('#doc_title').val("");
-				// $('#doc_title').val("");
-
 			 	setTimeout(updateComments,100);
 			}else {
 				// alert(data);
@@ -438,22 +467,16 @@
 			}
 
 			setTimeout(resetBtnPost,0);
-
-			// $('.btn-post').css("background", "none repeat scroll 0 0 #999999");
-			// $('.btn-post').text("Post")
 		});
 
 	}
 
 	function updateComments() {
 		$.getJSON("/api_get_comment", {'movie_id':{{ movie_data.id }}}, function(data) {
-			// alert(data['data']);
+			alert(data['data']);
 
 			var clist = data['data'];
 			var h = '';
-
-
-
 
 			for (var i = 0; i < clist.length; i++) {
 				var c = clist[i];
@@ -465,20 +488,24 @@
 		    	var vote_count = c['vote_count'];
 		    	var comment_id = c['comment_id'];
 		    	var count_index = (clist.length)-i;
-		    		
-				h += '<div style="height:10px;"></div>';
 
+				h += '<div style="height:10px;"></div>'
     			h += '<div class="comments-template-vote">'
-				h += '<a class="btn-up" type="submit" href="javascript:;" id="'+comment_id+'" onClick="voteComment(this.id)"></a>';
-				h += '<div class="comments-vote-count">'+vote_count+'</div>';
-    			h += '<a class="btn-down" type="submit" href="javascript:;" id="'+comment_id+'" onClick="unvoteComment(this.id)"></a>';
+					h += '<a class="btn-up" type="submit" href="javascript:;" id="up'+comment_id+'" onClick="voteComment('+comment_id+')"></a>';
+					h += '<div class="comments-vote-count">'+vote_count+'</div>';
+    				h += '<a class="btn-down" type="submit" href="javascript:;" id="down'+comment_id+'" onClick="unvoteComment('+comment_id+')"></a>';
 				h += '</div>'
+
+    // 			h += '<div class="comments-template-vote">'
+				// h += '<a class="btn-up" type="submit" href="javascript:;" id="'+comment_id+'" onClick="voteComment(this.id)"></a>';
+				// h += '<div class="comments-vote-count">'+vote_count+'</div>';
+    // 			h += '<a class="btn-down" type="submit" href="javascript:;" id="'+comment_id+'" onClick="unvoteComment(this.id)"></a>';
+				// h += '</div>'
 
 		    	h += '<div class="comments-template-box">';
 		    		h += '<div class="comments-template-left">'; 
 		    			if (avatar_review_id != 0) {
 			    			h += '<img id="img_avatar" width="60" height="60" src="/images/details/avatar/image_avatar'+avatar_review_id+'.png" />';
-			    			// h += '<img id="img_avatar" src="/images/details/avatar-emotion'+avatar_review_id+'.png" />';
 		    			}else {h += '<img id="img_avatar" src="/images/details/avatar.png" />';};
 		    			h += '<div class="comments-template-name">'+author+'</div>';
 		    		h += '</div>';
@@ -491,7 +518,13 @@
 			}
 			$('#comments-template').html(h);
 
-			// $('#comments').html(h);
+			for (var i = 0; i < clist.length; i++) {
+				var c = clist[i];
+				var comment_id = c['comment_id'];
+		    	var user_voted = c['user_voted'];
+		    	var user_vote_state = c['user_vote_state'];
+				checkStateVoteBtn(user_vote_state, user_voted, comment_id)
+			}
 		});
 	}
 
