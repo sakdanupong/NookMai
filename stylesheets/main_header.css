@@ -102,6 +102,12 @@ li a:hover {
     color:    #f6ebeb;
 }
 
+/*auto-complete*/
+
+/*.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus { 
+	background: #4a4a4a;
+}
+
 .ui-autocomplete {
     background: #4a4a4a;
     border-radius: 0px;
@@ -109,15 +115,68 @@ li a:hover {
     height: auto;
     display: block;
 }
-.ui-autocomplete.source:hover {
-    background: #454545;
-}
 
 .ui-menu .ui-menu-item a{
-    color: #96f226;
+    color: #ffffff;
     border-radius: 0px;
-    border: 1px solid #454545;
+}*/
+
+.typeahead, .tt-hint {
+/*border: 2px solid #CCCCCC;
+border-radius: 8px 8px 8px 8px;
+font-size: 24px;
+height: 45px;
+line-height: 30px;
+outline: medium none;
+padding: 8px 12px;
+width: 400px;*/
+display: none;
 }
+
+
+/*<span class="tt-dropdown-menu">
+  {{#datasets}}
+    <div class="tt-dataset-{{name}}">
+      {{{header}}}
+      <span class="tt-suggestions">
+        {{#suggestions}}
+          <div class="tt-suggestion">{{{suggestion}}}</div>
+        {{/suggestions}}
+        {{^suggestions}}
+          {{{empty}}}
+        {{/suggestions}}
+      </span>
+      {{{footer}}}
+    </div>
+  {{/datasets}}
+</span>*/
+
+.tt-dropdown-menu {
+	width: 262px;
+	margin-top: 20px;
+	padding-left: 20px;
+	padding-right: 20px;
+	border: 1px solid #ccc;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	font-size: 16px;
+	background-color: #4a4a4a;
+	-webkit-border-radius: 8px 8px 8px 8px; 
+	-moz-border-radius: 8px 8px 8px 8px;
+	-o-border-radius: 8px 8px 8px 8px;
+	border-radius: 8px 8px 8px 8px;
+	font-family: montRegular;
+	color: #ffffff;
+}
+
+.tt-suggestion  {
+ 	color: #ffffff;
+}
+
+.tt-suggestion:hover {
+	color: #cc4d4d;
+}
+
+/*auto-complete*/
 
 #username_div {
 	margin: auto;
