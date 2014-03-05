@@ -240,6 +240,7 @@
 	{% for comment in comments %}
 	<div style="height:10px;"></div>
     
+
     <div class="comments-template-vote">
 	    <a class="btn-up" type="submit" href="javascript:;" id="{{ comment.key().id() }}" onClick="voteComment(this.id)"></a>
 	    <div class="comments-vote-count">{{comment.vote_count}}</div>

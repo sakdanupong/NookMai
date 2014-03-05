@@ -714,8 +714,22 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
         q.order('-date')
         comments = []
 
-        for c in q.fetch(limit=100) :
+        for c in q.fetch(limit=100):
+            # user_vote_state = 0
+            # user_voted = 0
+            # user_votes = c.user_comments.filter('movie_id =', int(movie_id))
+            # if user_votes.count():
+            #     user_vote = user_votes[0]
+            #     user_voted = 1
+            #     user_vote_state = user_vote.vote_state
+            # dict d = {
+            #     'comment' : c,
+            #     'user_vote_state' : user_vote_state,
+            #     'user_voted' : user_voted
+            # }
+            # comments.append(d)
             comments.append(c)
+
 
 
         # query user
@@ -739,6 +753,12 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
                 rate_data = result[0]
 
         # TODO query user vote comment
+        # u = UserVoteCommentModel.all()
+        # u.filter('movie_id =', int(movie_id))
+        # usercomments = []
+
+        # for c in q.fetch(limit=100) :
+        #     usercomments.append(c)
 
 
         localhost = self.request.host
@@ -762,6 +782,7 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
             'captchahtml': chtml,
             'userdata': userdata,
             'rate_data': rate_data,
+            # 'usercomments': usercomments,
         }
 
         
@@ -975,12 +996,54 @@ class VoteComment(webapp2.RequestHandler):
 
 
         vote_state = 0
+        # vote_state -1, 0, 1
+        # checker_vote_state 0 = user not vote
+        # checker_vote_state 1 = user vote again
+        # checker_vote_state 2 = user vote state old
+
         checker_vote_state = None
+
+
+        if r.count() > 0 :
+            # vote law
+            result = r.fetch(limit=10)
+            vote_data = result[0]
+
+            if vote_data.vote_state == -1:
+                vote_state = 0
+                checker_vote_state = 1
+            elif vote_data.vote_state == 0:
+                vote_state = 1
+                checker_vote_state = 1
+            else:
+                checker_vote_state = 2
+                # return
+
+
+        else : 
+            # no vote
+            vote_state = 1
+            checker_vote_state = 0
+            logging.warning('no vote')
+
+
+        if checker_vote_state is 0 and checker_vote_state is 1:
+        
+
+
+        r = {'success':success}
+        self.response.out.write(json.dumps(r))
+
+
+
+
+
+
 
         if r.count() > 0 :
             result = r.fetch(limit=10)
             vote_data = result[0]
-            # logging.warning('######vote_state########'+str(vote_data.vote_state))
+            logging.warning('######vote_state########'+str(vote_data.vote_state))
 
             if vote_data.vote_state == -1:
                 vote_state = 0
@@ -1001,8 +1064,10 @@ class VoteComment(webapp2.RequestHandler):
 
         # logging.warning('####################')
 
+        if checker_vote_state is True:
 
         if checker_vote_state is None:
+            logging.warning('####################checker_vote_state####None')
             q = CommentModel.all();
             q = CommentModel.get_by_id(long(comment_id))
             logging.warning(q)
@@ -1049,22 +1114,28 @@ class UnvoteComment(webapp2.RequestHandler):
         vote_state = 0
         checker_vote_state = None
 
+
         if r.count() > 0 :
             result = r.fetch(limit=10)
             vote_data = result[0]
-            # logging.warning('######vote_state########'+str(vote_data.vote_state))
+            logging.warning('######vote_state########'+str(vote_data.vote_state))
 
             if vote_data.vote_state == 1:
                 vote_state = 0
+                # vote_data.vote_state = int(vote_state)
+                # vote_data.put()
             elif vote_data.vote_state == 0:
                 vote_state = -1
+                # vote_data.vote_state = int(vote_state)
+                # vote_data.put()
             else:
                 checker_vote_state = True
                 # return
 
             if checker_vote_state is None:
                 vote_data.vote_state = int(vote_state)
-                vote_data.put()
+                # vote_data.put()
+            
 
             logging.warning('vote law')
         else :
@@ -1076,6 +1147,7 @@ class UnvoteComment(webapp2.RequestHandler):
 
 
         if checker_vote_state is None:
+            logging.warning('####################checker_vote_state####None')
             q = CommentModel.all();
             q = CommentModel.get_by_id(long(comment_id))
             logging.warning(q)
