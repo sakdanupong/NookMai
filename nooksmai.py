@@ -972,6 +972,9 @@ class GetRateMovie(webapp2.RequestHandler):
         r = {'data':clist}
         self.response.out.write(json.dumps(r))
 
+# VOTE_COMMENT_NEW = 0
+# VOTE_COMMENT_AGAIN = 1
+# VOTE_COMMENT_STATE_OLD = 2
 
 class VoteComment(webapp2.RequestHandler):
     def get(self):
@@ -1001,7 +1004,7 @@ class VoteComment(webapp2.RequestHandler):
         # checker_vote_state 1 = user vote again
         # checker_vote_state 2 = user vote state old
 
-        checker_vote_state = None
+        checker_vote_state = 0
 
 
         if r.count() > 0 :
@@ -1018,8 +1021,6 @@ class VoteComment(webapp2.RequestHandler):
             else:
                 checker_vote_state = 2
                 # return
-
-
         else : 
             # no vote
             vote_state = 1
@@ -1027,46 +1028,9 @@ class VoteComment(webapp2.RequestHandler):
             logging.warning('no vote')
 
 
+
+        # update comment count
         if checker_vote_state is 0 and checker_vote_state is 1:
-        
-
-
-        r = {'success':success}
-        self.response.out.write(json.dumps(r))
-
-
-
-
-
-
-
-        if r.count() > 0 :
-            result = r.fetch(limit=10)
-            vote_data = result[0]
-            logging.warning('######vote_state########'+str(vote_data.vote_state))
-
-            if vote_data.vote_state == -1:
-                vote_state = 0
-            elif vote_data.vote_state == 0:
-                vote_state = 1
-            else:
-                checker_vote_state = True
-                # return
-
-            if checker_vote_state is None:
-                vote_data.vote_state = int(vote_state)
-                vote_data.put()
-
-            logging.warning('vote law')
-        else :
-            vote_state = 1
-            logging.warning('no vote')
-
-        # logging.warning('####################')
-
-        if checker_vote_state is True:
-
-        if checker_vote_state is None:
             logging.warning('####################checker_vote_state####None')
             q = CommentModel.all();
             q = CommentModel.get_by_id(long(comment_id))
@@ -1081,14 +1045,75 @@ class VoteComment(webapp2.RequestHandler):
             db.run_in_transaction(increment_movie_vote_comment_counter, movie_object.key())
             q.put()
 
-            UserVoteCommentModel(user_id=int(user_id),
+            if checker_vote_state is 0 :
+                UserVoteCommentModel(user_id=int(user_id),
                 vote_state=vote_state,
                 comment_id=comment_id,
                 movie_id=int(movie_id)).put()
-            success = 1
- 
+                success = 1
+
+            if checker_vote_state is 1:
+                vote_data.vote_state = int(vote_state)
+                vote_data.put()
+                success = 1
+
         r = {'success':success}
         self.response.out.write(json.dumps(r))
+
+
+
+
+
+
+
+        # if r.count() > 0 :
+        #     result = r.fetch(limit=10)
+        #     vote_data = result[0]
+        #     logging.warning('######vote_state########'+str(vote_data.vote_state))
+
+        #     if vote_data.vote_state == -1:
+        #         vote_state = 0
+        #     elif vote_data.vote_state == 0:
+        #         vote_state = 1
+        #     else:
+        #         checker_vote_state = True
+        #         # return
+
+        #     if checker_vote_state is None:
+        #         vote_data.vote_state = int(vote_state)
+        #         vote_data.put()
+
+        #     logging.warning('vote law')
+        # else :
+        #     vote_state = 1
+        #     logging.warning('no vote')
+
+        # # logging.warning('####################')
+
+
+        # if checker_vote_state is None:
+        #     logging.warning('####################checker_vote_state####None')
+        #     q = CommentModel.all();
+        #     q = CommentModel.get_by_id(long(comment_id))
+        #     logging.warning(q)
+
+        #     if q.vote_count :
+        #         q.vote_count = q.vote_count+1
+        #     else :
+        #         q.vote_count = 1
+
+        #     movie_object = MovieModel.get_by_key_name(movie_id)
+        #     db.run_in_transaction(increment_movie_vote_comment_counter, movie_object.key())
+        #     q.put()
+
+        #     UserVoteCommentModel(user_id=int(user_id),
+        #         vote_state=vote_state,
+        #         comment_id=comment_id,
+        #         movie_id=int(movie_id)).put()
+        #     success = 1
+ 
+        # r = {'success':success}
+        # self.response.out.write(json.dumps(r))
 
 
 class UnvoteComment(webapp2.RequestHandler):
@@ -1112,41 +1137,57 @@ class UnvoteComment(webapp2.RequestHandler):
         r.filter('user_id =', int(user_id))
 
         vote_state = 0
-        checker_vote_state = None
+        checker_vote_state = 0
+
+        # if r.count() > 0 :
+        #     result = r.fetch(limit=10)
+        #     vote_data = result[0]
+        #     logging.warning('######vote_state########'+str(vote_data.vote_state))
+
+        #     if vote_data.vote_state == 1:
+        #         vote_state = 0
+        #     elif vote_data.vote_state == 0:
+        #         vote_state = -1
+        #     else:
+        #         checker_vote_state = True
+        #         # return
+
+        #     if checker_vote_state is None:
+        #         vote_data.vote_state = int(vote_state)
+        #         # vote_data.put()
+            
+
+        #     logging.warning('vote law')
+        # else :
+        #     vote_state = -1
+        #     logging.warning('no vote')
 
 
         if r.count() > 0 :
+            # vote law
             result = r.fetch(limit=10)
             vote_data = result[0]
-            logging.warning('######vote_state########'+str(vote_data.vote_state))
 
             if vote_data.vote_state == 1:
                 vote_state = 0
-                # vote_data.vote_state = int(vote_state)
-                # vote_data.put()
+                checker_vote_state = 1
             elif vote_data.vote_state == 0:
                 vote_state = -1
-                # vote_data.vote_state = int(vote_state)
-                # vote_data.put()
+                checker_vote_state = 1
             else:
-                checker_vote_state = True
+                checker_vote_state = 2
                 # return
-
-            if checker_vote_state is None:
-                vote_data.vote_state = int(vote_state)
-                # vote_data.put()
-            
-
-            logging.warning('vote law')
-        else :
+        else : 
+            # no vote
             vote_state = -1
+            checker_vote_state = 0
             logging.warning('no vote')
 
         # logging.warning('####################')
 
 
-
-        if checker_vote_state is None:
+        # update comment count
+        if checker_vote_state is 0 and checker_vote_state is 1:
             logging.warning('####################checker_vote_state####None')
             q = CommentModel.all();
             q = CommentModel.get_by_id(long(comment_id))
@@ -1156,19 +1197,85 @@ class UnvoteComment(webapp2.RequestHandler):
                 q.vote_count = q.vote_count-1
             else :
                 q.vote_count = -1
+
             movie_object = MovieModel.get_by_key_name(movie_id)
-            db.run_in_transaction(decrease_movie_vote_comment_counter, movie_object.key())
+            db.run_in_transaction(increment_movie_vote_comment_counter, movie_object.key())
             q.put()
 
-
-            UserVoteCommentModel(user_id=int(user_id),
+            if checker_vote_state is 0 :
+                UserVoteCommentModel(user_id=int(user_id),
                 vote_state=vote_state,
                 comment_id=comment_id,
                 movie_id=int(movie_id)).put()
-            success = 1
- 
+                success = 1
+
+            if checker_vote_state is 1:
+                vote_data.vote_state = int(vote_state)
+                vote_data.put()
+                success = 1
+
         r = {'success':success}
         self.response.out.write(json.dumps(r))
+
+
+
+
+
+
+        # if r.count() > 0 :
+        #     result = r.fetch(limit=10)
+        #     vote_data = result[0]
+        #     logging.warning('######vote_state########'+str(vote_data.vote_state))
+
+        #     if vote_data.vote_state == 1:
+        #         vote_state = 0
+        #         # vote_data.vote_state = int(vote_state)
+        #         # vote_data.put()
+        #     elif vote_data.vote_state == 0:
+        #         vote_state = -1
+        #         # vote_data.vote_state = int(vote_state)
+        #         # vote_data.put()
+        #     else:
+        #         checker_vote_state = True
+        #         # return
+
+        #     if checker_vote_state is None:
+        #         vote_data.vote_state = int(vote_state)
+        #         # vote_data.put()
+            
+
+        #     logging.warning('vote law')
+        # else :
+        #     vote_state = -1
+        #     logging.warning('no vote')
+
+        # # logging.warning('####################')
+
+
+
+        # if checker_vote_state is None:
+        #     logging.warning('####################checker_vote_state####None')
+        #     q = CommentModel.all();
+        #     q = CommentModel.get_by_id(long(comment_id))
+        #     logging.warning(q)
+
+        #     if q.vote_count :
+        #         q.vote_count = q.vote_count-1
+        #     else :
+        #         q.vote_count = -1
+        #     movie_object = MovieModel.get_by_key_name(movie_id)
+        #     db.run_in_transaction(decrease_movie_vote_comment_counter, movie_object.key())
+        #     q.put()
+
+
+        #     UserVoteCommentModel(user_id=int(user_id),
+        #         vote_state=vote_state,
+        #         comment_id=comment_id,
+        #         movie_id=int(movie_id)).put()
+        #     success = 1
+ 
+        # r = {'success':success}
+        # self.response.out.write(json.dumps(r))
 
 
 
