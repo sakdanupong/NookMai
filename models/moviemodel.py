@@ -46,7 +46,7 @@ class MovieModel(db.Model):
     avatar_13_count = db.IntegerProperty(default=0)
     avatar_14_count = db.IntegerProperty(default=0)
 
-    rate_count = db.IntegerProperty(default=0)
+    rate_count = db.IntegerProperty(default=10)
     vote_count = db.IntegerProperty(default=0)
     vote_comment_count = db.IntegerProperty(default=0)
     # vote_result = db.ComputedProperty(lambda self: ((self.rate_count * self.vote_comment_count) + self.vote_count))

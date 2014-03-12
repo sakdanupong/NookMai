@@ -18,6 +18,8 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>{{ movie_data.name_en|decodeHTML }}</title>
+	<meta name="description" content="{{ movie_data.detail_synopsis_en|decodeHTML }}"/>
+	<link rel="image_src" href="/detail/{{ movie_data.id }}" />
 	
 	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
 	<script type="text/JavaScript">
@@ -79,6 +81,9 @@
 		<div class="box-share">
 			<a href="#">want to see</a>
 			<a href="#">not interest</a>
+<!-- 			<a name="fb_share" type="button_count" href="http://www.facebook.com/sharer.php">want to see</a>
+			<script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
+			<a href="#">not interest</a> -->
 		</div>
 	</div>
 
@@ -172,6 +177,9 @@
 
 		<form id="form-comment" action="javascript:submitComment();" method="post">
 		<div class="movie-box-comment-emotion-avatar">
+<!-- 			<div class="movie-box-comment-avatar-title">
+				อารม
+			</div> -->
 			<ul class="tt-wrapper">
 				<li><a href="javascript:;" id="1" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar1.png" alt="1" width="57.5" height="57.5" border="0"><span>โหด มันส์ สะใจ</span></a></li>
 				<li><a href="javascript:;" id="2" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar2.png" alt="2" width="57.5" height="57.5" border="0"><span>กาก เสียดายตัง</span></a></li>
@@ -719,6 +727,7 @@
 			}
 		});
 	}
+
 
 
 </script>
