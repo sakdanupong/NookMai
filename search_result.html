@@ -10,9 +10,17 @@
       <link type="text/css" rel="stylesheet" href="/stylesheets/base_document.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/poster.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/carousel.css" />
+      <link type="text/css" rel="stylesheet" href="/stylesheets/search_result.css" />
       <script src="/javascripts/MoviewListView.js"></script>
       <title>nookmai.com หนุกมั้ยดอทคอม</title>
       <script>
+        function gotoSearchResultAgain() {
+          var word = document.getElementById('search_search_result_input').value;
+          if (word.length == 0)
+            return;
+          window.location.href = '/search_result?word='+word;
+        }
+
         $(document).ready(function() {
           {% for movie_data in search_result %}
             var movie_id = {{movie_data['movie_id']}};
@@ -23,7 +31,7 @@
               'name_en':name_en,
               'name_th':name_th
             };
-            var search_content_div = document.getElementById('search_result_content');
+            var search_content_div = document.getElementById('search_result_wrapper');
             search_content_div.appendChild(new MoviePoster(movie_data));
           {% endfor %}
         });
@@ -32,7 +40,25 @@
     <body>
       {% include "/main_header.html" with context %}
       <div id="search_result_content">
+        <div id="search_result_wrapper"></div>
       </div>
+      <div id="no_result_content">
+        <div id="no_result_found">NOTHING FOUNG</div>
+        <div id="it_seems">It seems we can't find what are you looking for. Please try again with some different keywords</div>
+        <div class="round-corner" id="search_search_result_div">
+          <div><a href="#" onClick="gotoSearchResultAgain()"><img id="img_search" src="/images/headers/icon_search.png"/></a></div>
+          <div class="ui-widget"><input id="search_search_result_input" placeholder="Search movies"></div>
+        </div>
+      </div>
+      <script>
+        {% if is_search_result_page %}
+          var count = {{result_count}};
+          if (count)
+            $('#search_result_content').show();
+          else
+            $('#no_result_content').show();
+        {% endif %}
+      </script>
       {% include "/main_footer.html" with context %}
     </body>
 </html>

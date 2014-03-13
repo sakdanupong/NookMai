@@ -82,13 +82,13 @@
 }
 
 #movie_listview_img_div {
-	margin-right: 658px;
+	margin-right: 720x;
 }
 
 
 #movie_listview_right_img_div {
 	float: right;
-	width: 658px;
+	width: 720px;
 }
 
 #movie_listview_detia_left {
@@ -101,15 +101,19 @@
 }
 
 .poster_image {
-	width:187px;
-	height: 280px;
+	width:142px;
+	height: 210px;
 }
 
 #movie_listview_movie_name {
-	font-size: 20pt;
+	font-size: 16pt;
 	text-align: center;
 	font-family: montRegular;
 	color: #ffffff;
-	margin-top: 10px;
 	text-align: left;
+}
+
+.pink {
+	color: #eee;
+	font-size: 48px;
 }

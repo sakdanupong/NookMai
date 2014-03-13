@@ -1,5 +1,5 @@
 .poster_div {
-    width:132px; 
+    width:132px;
 }
 
 .poster_image {
@@ -37,8 +37,17 @@
 	text-align: center;
 }
 
-.poster_title_white {
-    color: #FFFFFF;
+.poster_title_grey {
+    color: #2f3840;
     font-size: 14px;
     font-family: montRegular;
+}
+
+.poster_link {
+    text-decoration: none;
+    display: inline-block;
+}
+
+.inline_poster_div {
+
 }

@@ -13,10 +13,10 @@ function MoviePoster(movie_data) {
     var image_src =  '/image?movie_id='+movie_id;
     var name_en = data['name_en'];
 
-	var poster = "<div class='poster_div'>\
+	var poster = "<a class='poster_link' href=/detail/"+ movie_id +"><div class='poster_div inline_poster_div'>\
                     <img class='poster_image' src="+ image_src +">\
-                    <div class='poster_title poster_title_white'>"+ name_en +"</div> \
-                  </div>";
+                    <div class='poster_title poster_title_grey'>"+ name_en +"</div> \
+                  </div></a>";
 
 	var div = $.createElement('div');
     div.innerHTML = poster;

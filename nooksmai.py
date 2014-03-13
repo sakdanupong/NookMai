@@ -93,25 +93,25 @@ def splitStr(str_to_split, split):
 def increment_movie_comment_counter(c_key):
     c = db.get(c_key)
     c.comment_count += 1
-    c.vote_result = get_movie_result(c.vote_count, c.vote_comment_count, c.vote_count)
+    c.vote_result = get_movie_result(c.rate_count, c.vote_comment_count, c.vote_count)
     c.put()
 
 def increment_movie_rate_counter(c_key):
     c = db.get(c_key)
     c.rate_count += 1
-    c.vote_result = get_movie_result(c.vote_count, c.vote_comment_count, c.vote_count)
+    c.vote_result = get_movie_result(c.rate_count, c.vote_comment_count, c.vote_count)
     c.put()
 
 def increment_movie_vote_comment_counter(c_key):
     c = db.get(c_key)
     c.vote_comment_count += 1
-    c.vote_result = get_movie_result(c.vote_count, c.vote_comment_count, c.vote_count)
+    c.vote_result = get_movie_result(c.rate_count, c.vote_comment_count, c.vote_count)
     c.put() 
 
 def decrease_movie_vote_comment_counter(c_key):
     c = db.get(c_key)
     c.vote_comment_count += -1
-    c.vote_result = get_movie_result(c.vote_count, c.vote_comment_count, c.vote_count)
+    c.vote_result = get_movie_result(c.rate_count, c.vote_comment_count, c.vote_count)
     c.put()      
 
 def increment_movie_comment_avatar_counter(c_key, avatar_id):
@@ -174,7 +174,7 @@ def getNowShowing(userModel ,l_offset, data_per_page):
     movie_query = movie_query.order('-release_time_timestamp')
     movie_list = movie_query.run(offset=l_offset, limit=data_per_page)
 
-    movie_list = sorted(movie_list, key=lambda k: k.vote_result, reverse=True)
+    movie_list = sorted(movie_list, key=lambda k: k.vote_count, reverse=True)
 
     list = []
     for movie in movie_list:
@@ -208,6 +208,7 @@ def getNowShowing(userModel ,l_offset, data_per_page):
             'movie_id' : movie.id,
             'name_en' : movie.name_en,
             'name_th' : movie.name_th,
+            'movie_rate' : movie.rate_count,
             'avatar_1_count' : movie.avatar_1_count,
             'avatar_2_count' : movie.avatar_2_count,
             'avatar_3_count' : movie.avatar_3_count,

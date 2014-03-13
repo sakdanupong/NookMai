@@ -57,7 +57,7 @@
              var username = data['username'];
              var email = data['email'];
              var session_token = data['session_token'];
-             //setCookie('session_token', session_token, ExpireDayCookie(30));             
+             //setCookie('session_token', session_token, ExpireDayCookie(30));      
              logindialog.dismissLoginDialog(function() {
                 location.reload();
              });
@@ -180,7 +180,8 @@
 	</div>
 	<div id="nav_div" style='display: none;'>
 		<div id="inner_nav_div">
-			<ul><li><a id="nav_home" class="round-corner" href="/">Home</a></li>
+			<ul>
+        <li><a id="nav_home" class="round-corner" href="/">Home</a></li>
 				<li><a id="nav_now_showing" class="round-corner" href="javascript:scrollToDiv('nowshowing_div')">Now Showing</a></li>
 				<li><a id="nav_coming_soon" class="round-corner" href="javascript:scrollToDiv('comingsoon_div')">Coming Soon</a></li>
 				<li><a id="nav_about" class="round-corner" href="/about">About</a>
