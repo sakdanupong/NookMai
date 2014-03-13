@@ -188,6 +188,11 @@ body {
    border-radius: 10px;
    clear:both;
 }
+
+.movie-box-comment-avatar-title {
+  font-size: 10pt;
+}
+
 .movie-box-comment-emotion-avatar {
    width:860px; 
    height:60px; 
