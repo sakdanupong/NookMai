@@ -20,8 +20,6 @@ function MoviewListView(p_divForSort, movie_data, user_id) {
     down_id = getDownArrowId(movie_id);
     var count_id = getVoteCountId(movie_id);
 
-    var rate_count = data['']
-
 	var dialog = "<div id='movie_listview_content'>\
                     <div id='movie_listview_detail_div'>\
                         <div id='movie_listview_right_img_div'>\
@@ -29,7 +27,7 @@ function MoviewListView(p_divForSort, movie_data, user_id) {
                             </div>\
                             <div id='movie_listview_detia_left'>\
                                 <a href='"+ detail_link +"' style='text-decoration: none;'><div id='movie_listview_movie_name'>" + movie_name + "</div></a>\
-                                <div id='rate_div'><span class='glyphicon glyphicon-star pink'></span></div>\
+                                <div id='rate_div_"+ movie_id +"'></div>\
                             </div>\
                         </div>\
                         <div id='movie_listview_img_div'>\
@@ -61,11 +59,24 @@ function MoviewListView(p_divForSort, movie_data, user_id) {
         arrow_down.onclick = function() { 
             unVoteMovie(movie_id, user_id);
         };
+
+        var rate_count = data['movie_rate'];
+        addRate(rate_count, movie_id);
     }, 0); 
     
     divForSort = p_divForSort;
 
     return div;
+}
+
+function addRate(rate_count, movie_id) {
+    var innerHTML = "";
+    var rate_div_id = 'rate_div_'+ movie_id;
+    var rate_div = document.getElementById(rate_div_id);
+    for (var i =0; i < rate_count; i++) {
+        innerHTML += "<span class='glyphicon glyphicon-star pink'></span>";    
+    }
+    rate_div.innerHTML = innerHTML;
 }
 
 function getVoteCountId(movie_id) {
