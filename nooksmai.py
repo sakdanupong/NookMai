@@ -821,7 +821,7 @@ class NookMaiDetailMovie(webapp2.RequestHandler):
             'movie_data': movie_data,
             'comments':comments,
             'captchahtml': chtml,
-            'userdata': userdata,
+            'userData': userdata,
             'rate_data': rate_data,
             # 'usercomments': usercomments,
         }

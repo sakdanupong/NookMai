@@ -167,8 +167,8 @@ body {
    overflow: hidden;
    /*padding-bottom: 30px;*/
    width: 1200px;
-/*   clear:both;
-*/}
+ }
+
 .movie-box-comment-title {
    margin:  0 auto;
    width:860px; 
@@ -196,13 +196,46 @@ body {
 .movie-box-comment-emotion-avatar {
    width:860px; 
    height:60px; 
+   position: relative;
 }
 
 .movie-box-comment-left {
    width:78px;
    /*height:200px; */
-   float:left; 
+   float:left;
+   position: relative;
 }
+
+
+#img_avatar {
+/*  position:absolute;
+  left:0px*/
+/*  position:absolute;
+  left:0px*/
+}
+
+#img_avatar2 {
+/*  position:absolute;
+  left:0px*/
+}
+
+/*.img_avatar_selected1{
+  position: relative;
+}
+
+#img_avatar_selected1 {
+  position:absolute;
+  left:0px
+}
+
+.img_avatar_selected2{
+  position: relative;
+}
+
+#img_avatar_selected2 {
+  position:absolute;
+  left:61px
+}*/
 
 .movie-box-comment-right-top > img {
 

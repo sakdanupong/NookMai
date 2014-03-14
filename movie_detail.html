@@ -78,13 +78,13 @@
 			<!-- Comments : 0 users -->
 		</div>
 
-		<div class="box-share">
+<!-- 		<div class="box-share">
 			<a href="#">want to see</a>
-			<a href="#">not interest</a>
+			<a href="#">not interest</a> -->
 <!-- 			<a name="fb_share" type="button_count" href="http://www.facebook.com/sharer.php">want to see</a>
 			<script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
 			<a href="#">not interest</a> -->
-		</div>
+		<!-- </div> -->
 	</div>
 
 
@@ -181,6 +181,26 @@
 				อารม
 			</div> -->
 			<ul class="tt-wrapper">
+<!-- 				<div class="img_avatar_selected1">
+					<li><a href="javascript:;" id="1" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar1.png" alt="1" width="57.5" height="57.5" border="0"><span>โหด มันส์ สะใจ</span></a></li>
+					<img id="img_avatar_selected1" width="57.5" height="57.5" src="/images/details/avatar_selected1.png" />
+				</div>
+				
+				<div class="img_avatar_selected2">
+					<li><a href="javascript:;" id="2" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar2.png" alt="2" width="57.5" height="57.5" border="0"><span>กาก เสียดายตัง</span></a></li>
+					<img id="img_avatar_selected2" width="57.5" height="57.5" src="/images/details/avatar_selected2.png" />
+				</div> -->
+
+
+<!-- 				<div class="img_avatar_selected1">
+					<li><a href="javascript:;" id="1" onClick="clickAddAvatar(this.id)"><img id="img_avatar_1" src="/images/details/avatar/image_avatar1.png" alt="1" width="57.5" height="57.5" border="0"><span>โหด มันส์ สะใจ</span></a></li>
+				</div>
+				
+				<div class="img_avatar_selected2">
+					<li><a href="javascript:;" id="2" onClick="clickAddAvatar(this.id)"><img id="img_avatar_2" src="/images/details/avatar/image_avatar2.png" alt="2" width="57.5" height="57.5" border="0"><span>กาก เสียดายตัง</span></a></li>
+				</div> -->
+
+
 				<li><a href="javascript:;" id="1" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar1.png" alt="1" width="57.5" height="57.5" border="0"><span>โหด มันส์ สะใจ</span></a></li>
 				<li><a href="javascript:;" id="2" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar2.png" alt="2" width="57.5" height="57.5" border="0"><span>กาก เสียดายตัง</span></a></li>
 				<li><a href="javascript:;" id="3" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar3.png" alt="3" width="57.5" height="57.5" border="0"><span>น่ากลัวสยอง</span></a></li>
@@ -203,8 +223,12 @@
 
 
 		<div class="movie-box-comment-left">
-
+			<!-- <img id="img_avatar2" width="60" height="60" src="/images/details/avatar/image_avatar10.png" /> -->
 			<img id="img_avatar" width="60" height="60" src="/images/details/avatar.png" />
+			<!-- <img id="img_avatar2" width="60" height="60" src="/images/details/avatar/image_avatar10.png" /> -->
+
+			<!-- <img id="img_avatar_selected" width="60" height="60" src="/images/details/avatar_selected1.png" /> -->
+			
 
 <!-- 			<a href="javascript:;" id=":emo1_01:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/angry.gif" width="20" height="20" border="0"></a>
 			<a href="javascript:;" id=":emo1_02:" onClick="clickAddEmo(this.id)"><img src="/images/details/emotion/cry.gif" width="20" height="20" border="0"></a>
@@ -341,12 +365,12 @@
     });
 
 	var rate_score = 0;
-	// var userdata;
+	// var userData;
 
 	function setupUser() {
 		// alert('setupUser')
-		{% if userdata %} 
-		    $('#comment_author').val('{{userdata.username}}')
+		{% if userData %} 
+		    $('#comment_author').val('{{userData.username}}')
       		$('#comment_author').attr({
             	'disabled': 'disabled'
         	})
@@ -496,6 +520,7 @@
 		    	var vote_count = c['vote_count'];
 		    	var comment_id = c['comment_id'];
 		    	var count_index = (clist.length)-i;
+		    	// alert(avatar_review_id)
 
 				h += '<div style="height:10px;"></div>'
     			h += '<div class="comments-template-vote">'
@@ -549,15 +574,58 @@
 
 	function clickAddAvatar(id)	
 	{
+		// check old id and set image select
+		// <img id="img_avatar_selected" width="60" height="60" src="/images/details/avatar_selected1.png" />
+		
+		// img_avatar_selected1
+		// var p = document.getElementById('img_avatar_1');
+		// var rect = p.getBoundingClientRect();
+		// if (rect)
+		// 	rect.left + "px, " + rect.top
+		// alert($('#img_avatar').attr("alt"));
+
+
+		// var oldAvatar = $('#img_avatar').attr("alt");
+		// // alert(oldAvatar);
+
+		// if (oldAvatar == id) {
+		// 	alert('cancel');
+		// };
+
+		
+
 		$('#img_avatar').attr("src", "/images/details/avatar/image_avatar"+id+".png");
 		$('#img_avatar').attr("alt", id);
+
+		// setFadeAnimation(true ,true);
+		
+		// $('#img_avatar_selected1').attr("src", "/images/details/avatar/avatar_selected1.png");
+
 	}
+
+	function setFadeAnimation(firstime, state) {
+		// alert('setFadeAnimation');
+		// $("#img_avatar").fadeToggle();
+
+		if (firstime) {
+			$("#img_avatar").fadeToggle(1500, function() { setFadeAnimation(false ,false)});
+		}else{
+			if (state) {
+  				$("#img_avatar").fadeToggle(1500, function() { setFadeAnimation(false ,false)});
+  			}else{
+  				// $("#img_avatar").fadeToggle("slow");
+  				$("#img_avatar2").fadeOut(1500, function() { setFadeAnimation(false ,true)});
+  			}
+		}
+  		// $("#div3").fadeToggle(3000);
+	}
+
 
 	function voteComment(id) {
 		// check user vote
-		{% if userdata %} 
+		{% if userData %} 
 			var postData = {'comment_id':id,
-						'user_id':{{userdata.user_id}},
+						'user_id':{{userData.user_id}},
 						'movie_id':{{movie_data.id}}
 		  				};
 		  // user_id
@@ -576,9 +644,9 @@
 
 
 	function unvoteComment(id) {
-		{% if userdata %} 
+		{% if userData %} 
 			var postData = {'comment_id':id,
-						'user_id':{{userdata.user_id}},
+						'user_id':{{userData.user_id}},
 						'movie_id':{{movie_data.id}}
 		  				};
 		 	$.getJSON("/api_unvote_comment", postData, function(data) {
@@ -660,52 +728,71 @@
 	function clickRate(alt)	{
 		// alert(alt)
 
-		var session_token = getCookie('session_token');
-		if (session_token) {
-			var formData = new FormData();
-			formData.append('session_token', session_token);
+		{% if userData %}
+			alt+1;
+			var count_rate = alt;
+			for (var i=1; i <= alt ;i++)
+			{ 
+				document.getElementById('star-'+[i]).src='/images/details/rate/pink_star_40x38.png';
+			}
+			document.getElementById("rate-select").innerHTML = count_rate+'/10';
 
-			$.ajax({
-			    url: '/api_get_userdata',  //Server script to process data
-			    type: 'POST',
-			    mimeType:"multipart/form-data",
-			    dataType: 'json',
-			    success: function(json) {
-			      var success = json['success'];
-			      var data = json['data'];
-			      var reason = json['reason'];
-			      if (success) {
-			      	// alert('login law')
+			var user_id = {{userData.user_id}};
+	 		var username = '{{userData.username}}';
 
-			      	// TODO call api vote
-			      	alt+1;
-					var count_rate = alt;
-					for (var i=1; i <= alt ;i++)
-					{ 
-						document.getElementById('star-'+[i]).src='/images/details/rate/pink_star_40x38.png';
-					}
-					document.getElementById("rate-select").innerHTML = count_rate+'/10';
+			addRate(alt, user_id, username);
+		{% else %}
+			showLoginDialog()
+		{% endif %}
+
+
+
+		// var session_token = getCookie('session_token');
+		// if (session_token) {
+		// 	var formData = new FormData();
+		// 	formData.append('session_token', session_token);
+
+		// 	$.ajax({
+		// 	    url: '/api_get_userData',  //Server script to process data
+		// 	    type: 'POST',
+		// 	    mimeType:"multipart/form-data",
+		// 	    dataType: 'json',
+		// 	    success: function(json) {
+		// 	      var success = json['success'];
+		// 	      var data = json['data'];
+		// 	      var reason = json['reason'];
+		// 	      if (success) {
+		// 	      	// alert('login law')
+
+		// 	      	// TODO call api vote
+		// 	      	alt+1;
+		// 			var count_rate = alt;
+		// 			for (var i=1; i <= alt ;i++)
+		// 			{ 
+		// 				document.getElementById('star-'+[i]).src='/images/details/rate/pink_star_40x38.png';
+		// 			}
+		// 			document.getElementById("rate-select").innerHTML = count_rate+'/10';
 
 					
-					var user_id = data['user_id'];
-             		var username = data['username'];
+		// 			var user_id = data['user_id'];
+  //            		var username = data['username'];
 
-					addRate(alt, user_id, username);
+		// 			addRate(alt, user_id, username);
 
-			      } else {
-			      removeCookie('session_token');
-			    }
+		// 	      } else {
+		// 	      removeCookie('session_token');
+		// 	    }
 		      	
-		    	},
-			    data: formData,
-			    cache: false,
-			    contentType: false,
-			    processData: false
-		 	});
-		} else {
-			showLoginDialog()
-		    // show dialog login
-		}
+		//     	},
+		// 	    data: formData,
+		// 	    cache: false,
+		// 	    contentType: false,
+		// 	    processData: false
+		//  	});
+		// } else {
+		// 	showLoginDialog()
+		//     // show dialog login
+		// }
 	}
 
 
