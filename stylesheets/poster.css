@@ -20,14 +20,10 @@
     width: 30px;
     height: 30px;
     /*margin-left: 5px;*/
-    display: block;
-    margin: auto;
+    /*display: block;*/
 }
 
 .poster_avatar_count {
-	width: 44px;
-    height: 30px;
-    text-align: center;
     color: #FFFFFF;
 }
 

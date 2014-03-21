@@ -37,10 +37,8 @@ def UpdateSchema(cursor=None, num_updated=0):
         # In this example, the default values of 0 for num_votes and avg_rating
         # are acceptable, so we don't need this loop.  If we wanted to manually
         # manipulate property values, it might go something like this:
-        if p.search_tag is None:
-            tag = tokenize_autocomplete(name_en + ' ' + name_th)
-            p.search_tag = tag
-            createMovieTextSearchDoc(c_key, tag)
+        if p.rate_count is None or p.rate_count == 0:
+            p.rate_count = 10
             to_put.append(p)
 
     if to_put:

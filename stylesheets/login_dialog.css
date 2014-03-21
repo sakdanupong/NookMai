@@ -204,3 +204,7 @@ a.button:hover {
 	padding:0; 
 	height:50px;
 }
+
+input:not([type]), input[type="text"], input[type="password"] {
+	height: 20px;
+}

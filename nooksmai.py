@@ -204,11 +204,25 @@ def getNowShowing(userModel ,l_offset, data_per_page):
             'vote_comment_count' : movie.vote_comment_count,
         }
 
+        # xxxxxxxxx
+        rate_data = json.loads(getRateMovie(movie.id))
+        rate = rate_data['data']
+        rate_count = movie.rate_count
+        summary = 0
+        rate_length = len(rate)
+        if rate_length:
+            for rate_json in rate:
+                rate_score = rate_json['rate_score']
+                summary+=int(rate_score)
+
+            avg = float(summary)/rate_length
+            rate_count ="%.2f" % avg
+
         movie_json = {
             'movie_id' : movie.id,
             'name_en' : movie.name_en,
             'name_th' : movie.name_th,
-            'movie_rate' : movie.rate_count,
+            'movie_rate' : rate_count,
             'avatar_1_count' : movie.avatar_1_count,
             'avatar_2_count' : movie.avatar_2_count,
             'avatar_3_count' : movie.avatar_3_count,
@@ -1016,6 +1030,19 @@ class AddRateMovie(webapp2.RequestHandler):
         self.response.out.write(json.dumps(r))
 
 
+def getRateMovie(movie_id):
+    q = RateMovieModel.all();
+    q.filter('movie_id =', int(movie_id)) 
+    clist = []
+
+    result = q.fetch(limit=10)
+
+    for c in q.fetch(limit=100):
+        clist.append({ 'rate_score':c.rate_score })
+    r = {'data':clist}
+    return json.dumps(r)
+
+
 
 class GetRateMovie(webapp2.RequestHandler):
     def get(self):
@@ -1023,20 +1050,9 @@ class GetRateMovie(webapp2.RequestHandler):
     def post(self):
         self.process()
     def process(self):
-
         movie_id = self.request.get('movie_id')
-        q = RateMovieModel.all();
-        q.filter('movie_id =', int(movie_id)) 
-        clist = []
-
-        # logging.warning('GetRateMovie #############')
-
-        result = q.fetch(limit=10)
-
-        for c in q.fetch(limit=100) :
-            clist.append({ 'rate_score':c.rate_score })
-        r = {'data':clist}
-        self.response.out.write(json.dumps(r))
+        r = getRateMovie(movie_id)
+        self.response.out.write(r)
 
 # VOTE_COMMENT_NEW = 0
 # VOTE_COMMENT_AGAIN = 1
