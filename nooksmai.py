@@ -239,6 +239,7 @@ def getNowShowing(userModel ,l_offset, data_per_page):
             'avatar_14_count' : movie.avatar_14_count,
             'user_vote_data' : user_vote_data,
             'movie_vote' : movie_vote,
+            'comment_count' : movie.comment_count,
         }
 
 
