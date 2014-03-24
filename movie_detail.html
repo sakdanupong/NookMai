@@ -744,55 +744,6 @@
 		{% else %}
 			showLoginDialog()
 		{% endif %}
-
-
-
-		// var session_token = getCookie('session_token');
-		// if (session_token) {
-		// 	var formData = new FormData();
-		// 	formData.append('session_token', session_token);
-
-		// 	$.ajax({
-		// 	    url: '/api_get_userData',  //Server script to process data
-		// 	    type: 'POST',
-		// 	    mimeType:"multipart/form-data",
-		// 	    dataType: 'json',
-		// 	    success: function(json) {
-		// 	      var success = json['success'];
-		// 	      var data = json['data'];
-		// 	      var reason = json['reason'];
-		// 	      if (success) {
-		// 	      	// alert('login law')
-
-		// 	      	// TODO call api vote
-		// 	      	alt+1;
-		// 			var count_rate = alt;
-		// 			for (var i=1; i <= alt ;i++)
-		// 			{ 
-		// 				document.getElementById('star-'+[i]).src='/images/details/rate/pink_star_40x38.png';
-		// 			}
-		// 			document.getElementById("rate-select").innerHTML = count_rate+'/10';
-
-					
-		// 			var user_id = data['user_id'];
-  //            		var username = data['username'];
-
-		// 			addRate(alt, user_id, username);
-
-		// 	      } else {
-		// 	      removeCookie('session_token');
-		// 	    }
-		      	
-		//     	},
-		// 	    data: formData,
-		// 	    cache: false,
-		// 	    contentType: false,
-		// 	    processData: false
-		//  	});
-		// } else {
-		// 	showLoginDialog()
-		//     // show dialog login
-		// }
 	}
 
 
