@@ -11,6 +11,13 @@ function MoviewListView(p_divForSort, movie_data, user_id) {
     link.media = 'all';
     head.appendChild(link);
 
+    var link  = $.createElement('link');
+    link.rel  = 'stylesheet';
+    link.type = 'text/css';
+    link.href = '/stylesheets/poster.css';
+    link.media = 'all';
+    head.appendChild(link);
+
     var data = movie_data;
     var movie_id = data['movie_id'];
     var image_src =  '/image?movie_id='+movie_id;
@@ -28,6 +35,7 @@ function MoviewListView(p_divForSort, movie_data, user_id) {
                             <div id='movie_listview_detia_left'>\
                                 <a href='"+ detail_link +"' style='text-decoration: none;'><div id='movie_listview_movie_name'>" + movie_name + "</div></a>\
                                 <div id='rate_div_"+ movie_id +"'></div>\
+                                <div id='emotion_div_"+ movie_id +"'></div>\
                             </div>\
                         </div>\
                         <div id='movie_listview_img_div'>\
@@ -46,6 +54,8 @@ function MoviewListView(p_divForSort, movie_data, user_id) {
 	var div = $.createElement('div');
     div.innerHTML = dialog;
 
+    
+
     initVoteData(data);
 
     setTimeout(function() {
@@ -59,9 +69,10 @@ function MoviewListView(p_divForSort, movie_data, user_id) {
         arrow_down.onclick = function() { 
             unVoteMovie(movie_id, user_id);
         };
-
+        var emotion_list = getAvatarDict(movie_data);
         var rate_count = data['movie_rate'];
         addRate(rate_count, movie_id);
+        addEmotionList(emotion_list, movie_id);
     }, 0); 
     
     divForSort = p_divForSort;
@@ -69,13 +80,55 @@ function MoviewListView(p_divForSort, movie_data, user_id) {
     return div;
 }
 
+function getAvatarDict(data) {
+
+  var status = [];
+  for (var i = 1; i < avatar_count; i++) {
+    var key_value = 'avatar_'+i+'_count';
+    status.push({name: '/images/details/avatar/image_avatar' + i +'.png', value: data[key_value]});
+  }
+
+  status.sort(function(a, b){
+
+  if(a.value > b.value){
+    return -1;
+  }
+  else if(a.value < b.value){
+    return 1;
+  } 
+  return 0;
+  });
+
+  return status;
+}
+
+function addEmotionList(data_list, movie_id) {
+    var emotion_div_id = 'emotion_div_'+ movie_id;
+    var emotion_div = document.getElementById(emotion_div_id);
+    var innerHTML = "";
+    for (var j = 0; j<3; j++) {
+        var avatar_at_index = data_list[j];
+        var image_path = avatar_at_index.name;
+        var count = avatar_at_index.value;
+        innerHTML += "<div>\
+                        <img class='poster_avatar_image' src="+ image_path +"><img>\
+                        <label class='poster_avatar_count'>"+ count +"<label>\
+                      <div>";
+    }
+    emotion_div.innerHTML = innerHTML;
+}
+
 function addRate(rate_count, movie_id) {
     var innerHTML = "";
     var rate_div_id = 'rate_div_'+ movie_id;
     var rate_div = document.getElementById(rate_div_id);
-    for (var i =0; i < rate_count; i++) {
-        innerHTML += "<span class='glyphicon glyphicon-star pink'></span>";    
+    var ceilvalue = Math.ceil(rate_count);
+    var intvalue = Math.floor(rate_count);
+    for (var i =0; i < intvalue; i++) {
+        innerHTML += "<span class='glyphicon glyphicon-star pink'></span>";
     }
+    if (intvalue<ceilvalue)
+        innerHTML += "<span class='glyphicon glyphicon-star-empty pink star_small'></span>";
     rate_div.innerHTML = innerHTML;
 }
 
