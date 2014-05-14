@@ -889,6 +889,14 @@ class AddComment(webapp2.RequestHandler):
         if "localhost" in localhost.lower():
             cResponse.is_valid = True;
 
+
+        # check user login
+        userdata = None
+        userdata = getUserModel(self.request)
+
+        if userdata:
+            cResponse.is_valid = True;
+
         success = 0
 
         if cResponse.is_valid:
