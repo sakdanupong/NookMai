@@ -2,6 +2,7 @@
 	margin: auto;
 	width: 920px;
 	clear:both;
+	padding-top: 20px;
 }
 
 #movie_listview_detail_div {
@@ -120,4 +121,80 @@
 
 .star_small {
 	font-size: 16px;
+}
+
+.roll_over {
+	width: 142px;
+	height: 197px;
+	position:relative;
+}
+
+.description{
+    position:absolute;
+    top:0;
+    left:0;
+    display:block;
+    width:100%; /* as image */
+    height:100%; /* as image */
+    line-height:100%; /* as image */
+    background-color: black;
+	-webkit-opacity: 0.0;
+  	-moz-opacity: 0.0;
+  	opacity: 0.0;
+    transition:opacity 0.5s ease;
+}
+
+.roll_over:hover .description {
+	-webkit-opacity: 0.4;
+  	-moz-opacity: 0.4;
+  	opacity: 0.4;
+    transition:opacity 0.5s ease;
+}
+
+#movie_listview_detia_rigth {
+	width: 329px;
+	float: right;
+}
+
+#comment_count_link, #comment_count_link:hover {
+	color: white;
+	width: 100%;
+	text-decoration: none;
+}
+
+#top_comment_div {
+	width: 319px;
+	height: 149px;
+	margin: auto;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	color: #ffffff;
+	overflow:hidden;
+	font-size: 16pt;
+	text-overflow:ellipsis;
+
+	white-space: pre-wrap;      /* CSS3 */   
+	white-space: -moz-pre-wrap; /* Firefox */    
+	white-space: -pre-wrap;     /* Opera <7 */   
+	white-space: -o-pre-wrap;   /* Opera 7 */    
+	word-wrap: break-word;
+}
+
+.dummy {
+	width: 319px;
+	height: auto;
+	margin: auto;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	color: #ffffff;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	font-size: 16pt;
+
+    white-space: pre-wrap;      /* CSS3 */   
+    white-space: -moz-pre-wrap; /* Firefox */    
+    white-space: -pre-wrap;     /* Opera <7 */   
+    white-space: -o-pre-wrap;   /* Opera 7 */    
+    word-wrap: break-word;
+
 }

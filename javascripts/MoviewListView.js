@@ -27,10 +27,21 @@ function MoviewListView(p_divForSort, movie_data, user_id) {
     down_id = getDownArrowId(movie_id);
     var count_id = getVoteCountId(movie_id);
 
+    var comment_count = data['comment_count'];
+    var comment_unit = ' Comment';
+    if (comment_count > 1)
+        comment_unit = ' Comments';
+
+    var topComment = "dfdlgnjdfkghfdkjgfjdgkljfglkjglkdfjgkdfjgkjdflkgjdfgljdfklgjfglkjdflkgjdfkljglfjgldfgldkf;jgldf;gdfkdfgk;dfklkfgkdfkdfkl;fdfgkdflgfd;lkglk;gklgdfkl";
+// <div id='top_comment_div'>“" +topComment+ "”</div>\
 	var dialog = "<div id='movie_listview_content'>\
                     <div id='movie_listview_detail_div'>\
                         <div id='movie_listview_right_img_div'>\
                             <div id='movie_listview_detia_rigth'>\
+                                <div>\
+                                    <a id='comment_count_link' href='"+ detail_link +"' >"+ comment_count + comment_unit+"</a>\
+                                </div>\
+                                <div id='top_comment_div'></div>\
                             </div>\
                             <div id='movie_listview_detia_left'>\
                                 <a href='"+ detail_link +"' style='text-decoration: none;'><div id='movie_listview_movie_name'>" + movie_name + "</div></a>\
@@ -39,7 +50,10 @@ function MoviewListView(p_divForSort, movie_data, user_id) {
                             </div>\
                         </div>\
                         <div id='movie_listview_img_div'>\
-                            <a href='"+ detail_link +"' style='text-decoration: none;'><img class='poster_image' src="+ image_src +"></img></a>\
+                            <div class='roll_over'>\
+                                <img class='poster_image' src="+ image_src +"></img>\
+                                <a class='description' href='"+ detail_link +"' style='text-decoration: none;'></a>\
+                            </div>\
                         </div>\
                     </div>\
                     <div id='movie_listview_vote_div'>\
@@ -71,13 +85,64 @@ function MoviewListView(p_divForSort, movie_data, user_id) {
         };
         var emotion_list = getAvatarDict(movie_data);
         var rate_count = data['movie_rate'];
+        var avatarCountSummary = getSummaryAvatarCount(movie_data);
         addRate(rate_count, movie_id);
-        addEmotionList(emotion_list, movie_id);
+        addEmotionList(emotion_list, avatarCountSummary, movie_id);
+        checkTextHeight(topComment);
     }, 0); 
     
     divForSort = p_divForSort;
 
     return div;
+}
+
+function checkTextHeight(text) {
+//     $("#top_comment_div").dotdotdot({
+//         /*  The HTML to add as ellipsis. */
+//         ellipsis    : '... ',
+ 
+//         /*  How to cut off the text/html: 'word'/'letter'/'children' */
+//         wrap        : 'word',
+ 
+//         /*  Wrap-option fallback to 'letter' for long words */
+//         fallbackToLetter: true,
+ 
+//         /*  jQuery-selector for the element to keep and put after the ellipsis. */
+//         after       : null,
+ 
+//         /*  Whether to update the ellipsis: true/'window' */
+//         watch       : false,
+    
+//         /*  Optionally set a max-height, if null, the height will be measured. */
+//         height      : null,
+ 
+//         /*  Deviation for the height-option. */
+//         tolerance   : 0,
+ 
+//         /*  Callback function that is fired after the ellipsis is added,
+//             receives two parameters: isTruncated(boolean), orgContent(string). */
+//         callback    : function( isTruncated, orgContent ) {},
+ 
+//         lastCharacter   : {
+ 
+//             /*  Remove these characters from the end of the truncated text. */
+//             remove      : [ ' ', ',', ';', '.', '!', '?' ],
+ 
+//             /*  Don't add an ellipsis if this array contains 
+//                 the last character of the truncated text. */
+//             noEllipsis  : []
+//         }
+// });
+
+}
+
+function getSummaryAvatarCount(data) {
+    var allAvatarCount = 0;
+    for (var i = 1; i < avatar_count; i++) {
+        var key_value = 'avatar_'+i+'_count';
+        allAvatarCount+= data[key_value];
+    }
+    return allAvatarCount;
 }
 
 function getAvatarDict(data) {
@@ -102,20 +167,25 @@ function getAvatarDict(data) {
   return status;
 }
 
-function addEmotionList(data_list, movie_id) {
+function addEmotionList(data_list, avatar_summary, movie_id) {
     var emotion_div_id = 'emotion_div_'+ movie_id;
     var emotion_div = document.getElementById(emotion_div_id);
-    var innerHTML = "";
     for (var j = 0; j<3; j++) {
         var avatar_at_index = data_list[j];
         var image_path = avatar_at_index.name;
         var count = avatar_at_index.value;
-        innerHTML += "<div>\
-                        <img class='poster_avatar_image' src="+ image_path +"><img>\
-                        <label class='poster_avatar_count'>"+ count +"<label>\
-                      <div>";
+        var badge_count = ((count * 100) / avatar_summary) / 20;
+        if (badge_count) {
+            var div = document.createElement('div');
+            var innerHTML = "";
+            for (var i = 0; i < 3; i++) {
+                innerHTML += "<img class='poster_avatar_image' src="+ image_path +"><img>";    
+            }
+            div.innerHTML = innerHTML;
+            emotion_div.appendChild(div);
+        }
     }
-    emotion_div.innerHTML = innerHTML;
+    //emotion_div.innerHTML = innerHTML;
 }
 
 function addRate(rate_count, movie_id) {
