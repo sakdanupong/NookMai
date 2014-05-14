@@ -593,9 +593,7 @@
 
 	function checkActiveTextarea(){;
 
-		{% if userData %} 
-			// alert('login law');
-		{% else %}
+		{% if not userData %} 
 			$("#movie-box-comment-captcha").show();
 		{% endif %}
 
