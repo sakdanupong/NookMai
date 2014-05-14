@@ -167,7 +167,7 @@ def get_movie_result(rate_count, vote_comment_count, vote_count):
 
 # def editMovieData(vote_count, rate_count, vote_comment_count):
 #     vote_result = (rate_count * vote_comment_count) + vote_count;
-#     return vote_result    
+#     return vote_result
 
 def getNowShowing(userModel ,l_offset, data_per_page):
     movie_query = MovieModel.all().filter('is_coming_soon =', 0)

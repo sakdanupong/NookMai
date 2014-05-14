@@ -41,7 +41,7 @@ function MoviewListView(p_divForSort, movie_data, user_id) {
                                 <div>\
                                     <a id='comment_count_link' href='"+ detail_link +"' >"+ comment_count + comment_unit+"</a>\
                                 </div>\
-                                <div id='top_comment_div'></div>\
+                                <div class='top_comment_cls' id='top_comment_div'></div>\
                             </div>\
                             <div id='movie_listview_detia_left'>\
                                 <a href='"+ detail_link +"' style='text-decoration: none;'><div id='movie_listview_movie_name'>" + movie_name + "</div></a>\
@@ -96,44 +96,36 @@ function MoviewListView(p_divForSort, movie_data, user_id) {
     return div;
 }
 
-function checkTextHeight(text) {
-//     $("#top_comment_div").dotdotdot({
-//         /*  The HTML to add as ellipsis. */
-//         ellipsis    : '... ',
- 
-//         /*  How to cut off the text/html: 'word'/'letter'/'children' */
-//         wrap        : 'word',
- 
-//         /*  Wrap-option fallback to 'letter' for long words */
-//         fallbackToLetter: true,
- 
-//         /*  jQuery-selector for the element to keep and put after the ellipsis. */
-//         after       : null,
- 
-//         /*  Whether to update the ellipsis: true/'window' */
-//         watch       : false,
-    
-//         /*  Optionally set a max-height, if null, the height will be measured. */
-//         height      : null,
- 
-//         /*  Deviation for the height-option. */
-//         tolerance   : 0,
- 
-//         /*  Callback function that is fired after the ellipsis is added,
-//             receives two parameters: isTruncated(boolean), orgContent(string). */
-//         callback    : function( isTruncated, orgContent ) {},
- 
-//         lastCharacter   : {
- 
-//             /*  Remove these characters from the end of the truncated text. */
-//             remove      : [ ' ', ',', ';', '.', '!', '?' ],
- 
-//             /*  Don't add an ellipsis if this array contains 
-//                 the last character of the truncated text. */
-//             noEllipsis  : []
-//         }
-// });
+function short(length) {
+  var s = document.getElementsByClassName("top_comment_cls");
+  var len = s.length;
+    for(var i = 0; i < len; i++) {
+        
+        var g = s[i].innerHTML;
 
+        if (g.length > length - 5) {
+            var x = "“"
+            var y = ". . .”";
+            var leng = length-5;
+            var html = g.substring(0, leng)+"";
+            var allHTML = x+html+y;
+            s[i].innerHTML = allHTML;
+        } else {
+            if (s[i].innerHTML.length > 0) {
+                var g = s[i].innerHTML;
+                var leng = length-2;
+                var html = g.substring(0, leng)+"";
+                s[i].innerHTML = "“"+html+"”";
+            }
+
+        }
+    }
+}
+
+function checkTextHeight(text) {
+    document.getElementById('top_comment_div').innerHTML=text;
+    short(125);    
+    //var testDiv = document.getElementById('top_comment_div');
 }
 
 function getSummaryAvatarCount(data) {
