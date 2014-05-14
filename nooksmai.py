@@ -1400,12 +1400,9 @@ class GetSearchMovie(webapp2.RequestHandler):
         self.process()
     def process(self):
         word = self.request.get('word')
-        data = memcache.get(word)
-        if not data is None:
-            self.response.out.write(json.dumps(data))
-            return
-
-        arr = getSearchMovieList(word);
+        arr = memcache.get(word)
+        if arr is None:
+            arr = getSearchMovieList(word);
 
         r = {
             'success' : 1,
@@ -1413,7 +1410,7 @@ class GetSearchMovie(webapp2.RequestHandler):
         }
 
 
-        memcache.add(key=word, value=r, time=36000)
+        memcache.add(key=word, value=arr, time=36000)
 
         self.response.out.write(json.dumps(r))
 
