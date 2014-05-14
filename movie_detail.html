@@ -14,7 +14,7 @@
     <link type="text/css" rel="stylesheet" href="/stylesheets/style.css" />
     <script src="/javascripts/CookieUtils.js"></script>
 
-
+    <script src="/javascripts/LoginDialog.js"></script>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>{{ movie_data.name_en|decodeHTML }}</title>
@@ -156,6 +156,9 @@
 			$(".container").hide();
 		{% endif %}
 		</script>
+
+		<a class="btn-post" type="submit" href="javascript:showDialog()" >test</a>
+
 		<div style="height: 20px;"></div>
 </div>
 
@@ -337,12 +340,7 @@
 				arrMonthName({{ comment['comment'].date.month }});
 				
 			</script>
-
-
 			<div class="comments-template-content">{{ comment['comment'].content }}</div>
-
-
-
 		</div>
 	</div>
 
@@ -423,7 +421,27 @@
 
 	}
 
+	function showDialog(){
 
+		// alert('showDialog');
+      // LoginDialog(function(success, data, reason, logindialog) {
+      //   if (success) {
+      //        logindialog.dismissLoginDialog(function() {
+      //           location.reload();
+      //        });
+      //     } else {
+      //       alert(reason);
+      //     }
+      // } , function(success, data, reason, logindialog) {
+      //   if (success) {
+      //        logindialog.dismissLoginDialog(function() {
+      //           location.reload();
+      //        });
+      //     } else {
+      //       alert(reason);
+      //     }
+      // });
+	}
 
 
 	function resetBtnPost() {
@@ -465,13 +483,18 @@
  			return;
  		};
 
-
-		if (document.location.hostname != "localhost") {
+ 		{% if userData %} 
+ 			// login law
+ 		{% else %}
+			if (document.location.hostname != "localhost") {
 	 		if (!recaptcha_response_field) {
 	 			alertAndResetBtn("กรุณากรอกแคปท์ชา")
 	 			return;
 	 		};
 		}
+		{% endif %}
+
+
 
 
 		var postData = {'movie_id':{{ movie_data.id }},
@@ -569,7 +592,13 @@
 	}
 
 	function checkActiveTextarea(){;
-		$("#movie-box-comment-captcha").show();
+
+		{% if userData %} 
+			// alert('login law');
+		{% else %}
+			$("#movie-box-comment-captcha").show();
+		{% endif %}
+
 	}
 
 	function clickAddAvatar(id)	
