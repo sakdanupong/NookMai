@@ -1,33 +1,16 @@
+import os,sys
+sys.path.append(os.path.abspath('models'))
 import logging
 from moviemodel import *
 from google.appengine.ext import deferred
 from google.appengine.ext import db
+from search_util import *
+
 
 BATCH_SIZE = 100  # ideal batch size may vary based on entity size.
 
-def tokenize_autocomplete(phrase):
-        a = []
-        for word in phrase.split():
-            j = 1
-            while True:
-                for i in range(len(word) - j + 1):
-                    a.append(word[i:i + j])
-                if j == len(word):
-                    break
-                j += 1
-        return a
-
-def createMovieTextSearchDoc(c_key, arr_text):
-    index = search.Index(name=MOVIE_SEARCH_INDEX)
-    doc_id = str(c_key)
-    name = ','.join(arr_text)
-    document = search.Document(
-            doc_id=doc_id,
-            fields=[search.TextField(name='name', value=name)])
-    index.put(document)
-
-
 def UpdateSchema(cursor=None, num_updated=0):
+    # delete_all_in_index(MOVIE_SEARCH_INDEX)
     query = MovieModel.all()
     if cursor:
         query.with_cursor(cursor)
@@ -37,9 +20,11 @@ def UpdateSchema(cursor=None, num_updated=0):
         # In this example, the default values of 0 for num_votes and avg_rating
         # are acceptable, so we don't need this loop.  If we wanted to manually
         # manipulate property values, it might go something like this:
-        if p.rate_count is None or p.rate_count == 0:
-            p.rate_count = 10
-            to_put.append(p)
+        # if p.rate_count is None or p.rate_count == 0:
+        #     p.rate_count = 10
+        #     to_put.append(p)
+        createMovieTextSearchDoc(p.id, p.search_tag)
+
 
     if to_put:
         db.put(to_put)

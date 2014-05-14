@@ -116,12 +116,15 @@
           mimeType:"multipart/form-data",
           dataType: 'json',
           success: function(json) {
-            var results = $.map(json.data, function(item) {
-            var datum = { theValue: item.name_en + " " + item.name_th,
-                          movie_id: item.movie_id,
-                        };
-
-            return datum;
+            var word = document.getElementById('search_input').value;
+            if (word.length == 0)
+              return;
+            else 
+              var results = $.map(json.data, function(item) {
+              var datum = { theValue: item.name_en + " " + item.name_th,
+                            movie_id: item.movie_id,
+                          };
+              return datum;
           });
 
           cb(results);

@@ -34,11 +34,12 @@ from usermodel import *
 from sessionmodel import *
 from uservotemodel import *
 from userratemodel import *
+from search_util import *
 
 from os import environ
 from recaptcha.client import captcha
 from random import randint
-from google.appengine.api import search 
+# from google.appengine.api import search 
 
 DEFAULT_COMMENT_NAME = 'default_user'
 MOVIE_SEARCH_INDEX = 'MOVIE_SEARCH_INDEX'
@@ -318,27 +319,6 @@ def getUserModel(request):
             userData = UserModel.get_by_key_name(str(sessionModel.user_id))
     return userData
 
-def tokenize_autocomplete(phrase):
-        a = []
-        for word in phrase.split():
-            j = 1
-            while True:
-                for i in range(len(word) - j + 1):
-                    a.append(word[i:i + j])
-                if j == len(word):
-                    break
-                j += 1
-        return a
-
-def createMovieTextSearchDoc(c_key, arr_text):
-    index = search.Index(name=MOVIE_SEARCH_INDEX)
-    doc_id = str(c_key)
-    name = ','.join(arr_text)
-    document = search.Document(
-            doc_id=doc_id,
-            fields=[search.TextField(name='name', value=name)])
-    index.put(document)
-
 def createMovieModel(c_key, new_id, movieData, is_coming_soon):
     m = movieData
     e = db.get(c_key)
@@ -369,7 +349,7 @@ def createMovieModel(c_key, new_id, movieData, is_coming_soon):
 
     tag = tokenize_autocomplete(name_en + ' ' + name_th)
     e.search_tag = tag
-    createMovieTextSearchDoc(c_key, tag)
+    createMovieTextSearchDoc(e.id, tag)
 
     e.put()
 
@@ -378,7 +358,7 @@ def getSearchMovieList(word):
     arr = []
     for movie in movie_query:
         c_key = movie.doc_id
-        c = db.get(c_key)
+        c = MovieModel.get_by_key_name(c_key)
         name_th = c.name_th
         name_en = c.name_en
         movie_id = c.id
@@ -1420,10 +1400,10 @@ class GetSearchMovie(webapp2.RequestHandler):
         self.process()
     def process(self):
         word = self.request.get('word')
-        # data = memcache.get(word)
-        # if not data is None:
-        #     self.response.out.write(json.dumps(data))
-        #     return
+        data = memcache.get(word)
+        if not data is None:
+            self.response.out.write(json.dumps(data))
+            return
 
         arr = getSearchMovieList(word);
 
@@ -1433,7 +1413,7 @@ class GetSearchMovie(webapp2.RequestHandler):
         }
 
 
-        # memcache.add(key=word, value=r, time=600)
+        memcache.add(key=word, value=r, time=36000)
 
         self.response.out.write(json.dumps(r))
 
