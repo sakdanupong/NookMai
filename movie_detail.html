@@ -52,7 +52,13 @@
 
 		<img border="0" src="/image?movie_id={{ movie_data.id }}" width="288" float:left>
 		</a>
+
+		<div class="movie-trailer">
+			<a class="btn-trailer" type="submit" href="javascript:showDialog()" >Trailer</a>
+		</div>
 	</div>
+
+
 
 	<div class="movie-title">
 		<strong>{{ movie_data.name_en|decodeHTML }}</strong>	
@@ -121,6 +127,8 @@
 		<!-- <strong>Stars:{{ movie_data.detail_cast_en}}</strong> -->
 	</div>
 
+
+
 </div>
 <!-- </div> -->
 <div class="movie-spece-1"></div>
@@ -131,16 +139,16 @@
 		<div style="color:#666666;">{{ movie_data.detail_synopsis_th|decodeHTML }}</div>
 		</p>
 
-		<div style="height: 40px;"></div>
-		<iframe id="youtube_frame" src="{{ movie_data.youtube_url }}?autoplay=1&html5=1" frameborder="0" allowfullscreen style="display: none; width: 855px; height: 450px; margin: 0 auto; border: 0;"></iframe>
+		<!-- <div style="height: 40px;"></div> -->
+<!-- 		<iframe id="youtube_frame" src="{{ movie_data.youtube_url }}?autoplay=1&html5=1" frameborder="0" allowfullscreen style="display: none; width: 855px; height: 450px; margin: 0 auto; border: 0;"></iframe>
 		<div class="container" style="display: none; margin: 0 auto;">
 			<div class="content">
     			<div class="circle"></div>
    				 <div class="circle1"></div>
     		</div>
-		</div>
+		</div> -->
 
-		<script>
+	<!-- 			<script>
 		{% if not movie_data.youtube_url %}
 			$(".container").show();
 			$.getJSON( "/trailer?movie_id={{ movie_data.id }}", function(data) { 
@@ -155,9 +163,9 @@
 			$("#youtube_frame").show();
 			$(".container").hide();
 		{% endif %}
-		</script>
+		</script> -->
 
-		<a class="btn-post" type="submit" href="javascript:showDialog()" >test</a>
+		<!-- <a class="btn-trailer" type="submit" href="javascript:showDialog()" >Trailer</a> -->
 
 		<div style="height: 20px;"></div>
 </div>
@@ -421,27 +429,101 @@
 
 	}
 
+	var width = 900;
+	var height = 500;
+	var heightSpace = 50;
+	var gYoutubeDialog;
+
 	function showDialog(){
 
-		// alert('showDialog');
-      // LoginDialog(function(success, data, reason, logindialog) {
-      //   if (success) {
-      //        logindialog.dismissLoginDialog(function() {
-      //           location.reload();
-      //        });
-      //     } else {
-      //       alert(reason);
-      //     }
-      // } , function(success, data, reason, logindialog) {
-      //   if (success) {
-      //        logindialog.dismissLoginDialog(function() {
-      //           location.reload();
-      //        });
-      //     } else {
-      //       alert(reason);
-      //     }
-      // });
+		var youtubeDialog = "<div id='dialog-overlay'></div> \
+	   		<div id='dialog-box'> \
+			  	<div class='dialog-content'> \
+			  	<div style='height: 25px;'></div> \
+			  		<iframe id='youtube_frame' src='{{ movie_data.youtube_url }}?autoplay=1&html5=1' frameborder='0' allowfullscreen style='display: none; width: 855px; height: 450px; margin: 0 auto; border: 0;'></iframe>\
+					<div class='container' style='display: none; margin: 0 auto;'>\
+						<div class='content'>\
+							<div style='height: 200px;'></div> \
+    						<div class='circle'></div>\
+   				 			<div class='circle1'></div>\
+    					</div>\
+					</div>\
+			  	</div> \
+	   		</div>"
+
+
+		gYoutubeDialog = document.createElement('div');
+		gYoutubeDialog.innerHTML = youtubeDialog;
+
+		//var _body = document.getElementsByTagName('body') [0];
+		document.body.appendChild(gYoutubeDialog);
+
+		var maskHeight = $(document).height();  
+		var maskWidth = $(window).width();
+		var windowHeight = $(window).height();
+
+		// calculate the values for center alignment
+		var dialogTop =  (windowHeight - height  ) / 2; 
+		var dialogLeft = (maskWidth - width) / 2;
+
+		var beginDialogPost = -height;
+		// // assign values to the overlay and dialog box
+		$('#dialog-overlay').css({height:maskHeight, width:maskWidth});
+		$('#dialog-box').css({height:height, width:width});
+		$('#dialog-box').css({top:beginDialogPost, left:dialogLeft});
+
+		// var animateTop = dialogTop + height;
+		var animateTop = (dialogTop-heightSpace) + height;
+		$('#dialog-box').animate({top: '+='+animateTop}, 600, function () {
+			showYoutube();
+		});
+
+
+		$('#dialog-overlay, #close_this_window').click(function () {		
+			dismissLoginDialog();
+			return false;
+		});
+
 	}
+
+	function showYoutube() {
+		{% if not movie_data.youtube_url %}
+			$(".container").show();
+			$.getJSON( "/trailer?movie_id={{ movie_data.id }}", function(data) { 
+				var youtube_link = "//www.youtube.com/embed/"+data['videoId']+"?autoplay=1&html5=1";
+					$("#youtube_frame").get(0).contentWindow.location.replace(youtube_link);
+					document.getElementById("youtube_frame").onload = function() {
+					$("#youtube_frame").show();
+					$(".container").hide();
+				};
+			});
+		{% else %}
+			$("#youtube_frame").show();
+			$(".container").hide();
+		{% endif %}
+
+	}
+
+	function dismissLoginDialog(p_callBack) {
+
+	cancelAllRequest();
+
+	var windowHeight = $(window).height();
+
+	// calculate the values for center alignment
+	var dialogTop =  (windowHeight - height) / 2; 
+
+	var animateTop = (dialogTop-heightSpace) + height;
+	$('#dialog-box').animate({top: '-='+animateTop}, 600, function () {
+		setTimeout(function() {
+			if (gYoutubeDialog) {
+				gYoutubeDialog.remove();	
+			}
+		} ,100);
+	});
+
+
+};
 
 
 	function resetBtnPost() {
@@ -593,7 +675,7 @@
 
 	function checkActiveTextarea(){;
 
-		{% if not userData %} 
+		{% if not userData %}
 			$("#movie-box-comment-captcha").show();
 		{% endif %}
 
