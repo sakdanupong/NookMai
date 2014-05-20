@@ -171,6 +171,7 @@
 	color: #ffffff;
 	overflow:hidden;
 	font-size: 16pt;
+	text-align: center;
 	text-overflow:ellipsis;
 
 	white-space: pre-wrap;      /* CSS3 */   

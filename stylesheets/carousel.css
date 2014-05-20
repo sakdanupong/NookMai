@@ -1,3 +1,23 @@
+.carousel_div {
+    text-align: center;
+}
+
+.btn_carousel_div {
+	display: inline-block;
+}
+
+#page_btn_div {
+	display: inline-block;
+}
+
+#all_page_link {
+	background-color: #ffb400;
+} 
+
+#comingsoon_all_page_link {
+	background-color: #ffb400;
+}
+
 .btn_carousel {
 	line-height: 24px;
 	background-color: #ffb400;
@@ -13,6 +33,8 @@
 
 .btn_carousel:hover {
 	background-color: #cc4d4d;
+	text-decoration: none;
+	color: #403232;
 }
 
 .btn_carousel_select {
@@ -28,6 +50,12 @@
 	margin-right: 2.5px;
 }
 
+.btn_carousel_select:hover {
+	text-decoration: none;
+	color: #323232;
+}
+
+
 .btn_carousel_disable {
 	line-height: 24px;
 	background-color: #9F7000;
@@ -39,4 +67,10 @@
 	padding-right: 11px;
 	margin-left: 2.5px;
 	margin-right: 2.5px;
+}
+
+.btn_carousel_disable:hover {
+	background-color: #9F7000;
+	text-decoration: none;
+	color: #FFB400;
 }

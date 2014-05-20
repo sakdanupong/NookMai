@@ -11,8 +11,7 @@
       <link type="text/css" rel="stylesheet" href="/stylesheets/carousel.css" />
       <link type="text/css" rel="stylesheet" href="/stylesheets/main_body.css" />
       <script src="/javascripts/MoviewListView.js"></script>
-
-
+      <script src="/javascripts/Carousel.js"></script>
       <!-- <link type="text/css" rel="stylesheet" href="/stylesheets/login_dialog.css" /> -->
       <!-- <link rel="stylesheet" href="/bootstrap/js/bootstrap.min.js"> -->
       <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> -->
@@ -35,15 +34,27 @@
 
         var avatar_count = {{avatar_count}};
 
+        function initNowShowingHeight() {
+          var div = document.getElementById('nowshowing_wraper');
+          var nowShowingPerPage = {{nowshowing_per_page}};
+          var minH =  nowShowingPerPage * 220;
+          div.style.minHeight=minH+"px";
+        }
+        
+
+
         function nowShowingFadeIn() {
           setTimeout(function() {
-            $('#nowshowing_wraper').fadeIn();
-            $('#nowshowing_wraper').show();
+            $('#nowshowing_wraper').fadeTo(300, 1.0);
           }, 100);
         }
 
-        function nowShowingFadeOut() {
-          $('#nowshowing_wraper').hide();
+        function nowShowingFadeOut(callback) {
+          $('#nowshowing_wraper').fadeTo(300, 0.0, function() {
+            callback();
+          });
+          //$('#nowshowing_wraper').fadeOut();
+          //$('#nowshowing_wraper').css('visibility','hidden');
           // setTimeout(function() {
           //   $('#nowshowing_wraper').fadeOut();
           // }, 500);
@@ -51,13 +62,15 @@
 
         function comingSoonFadeIn() {
           setTimeout(function() {
-            $('#comingsoon_wraper').fadeIn();
-            $('#comingsoon_wraper').show();
+            $('#comingsoon_wraper').fadeTo(300, 1.0);
           }, 100);
         }
 
-        function comingSoonFadeOut() {
-          $('#comingsoon_wraper').hide();
+        function comingSoonFadeOut(callback) {
+          $('#comingsoon_wraper').fadeTo(300, 0.0, function() {
+            callback();
+          });
+          
         }
 
         function randomMovie() {
@@ -162,6 +175,63 @@
           return avatar_div;
         }
 
+        function updateNowShowingListView(json) {
+          var div = document.getElementById('nowshowing_wraper');
+          var movie_list = json['movie_list'];
+          removeAllChildInDiv(div);
+          for (var i = 0; i < movie_list.length; i++) {
+            var movie_data = movie_list[i];
+            var user_id = 0;
+            {% if userData %}
+              user_id = {{userData.user_id}};
+            {% endif %}
+            div.appendChild(new MoviewListView($('#nowshowing_wraper'), movie_data, user_id));
+          }
+          nowShowingFadeIn();
+        }
+
+      function updateComingSoonListView(json) {
+          var div = document.getElementById('comingsoon_wraper');
+          var movie_list = json['movie_list'];
+          removeAllChildInDiv(div);
+          for (var i = 0; i < movie_list.length; i++) {
+            var movie_data = movie_list[i];
+            var user_id = 0;
+            {% if userData %}
+              user_id = {{userData.user_id}};
+            {% endif %}
+            div.appendChild(new MoviewListView($('#comingsoon_wraper'), movie_data, user_id));
+          }
+          comingSoonFadeIn();
+        }
+
+
+        function getNowShowing(page_count) {
+          comingSoonFadeOut(function() {
+            current_page = page_count;
+            // updatePositionNowShowingcarousel();
+            var formData = new FormData();
+            formData.append('page', page_count);
+            formData.append('data_per_page', {{nowshowing_per_page}})
+            // formData.append('_ajax_nonce', importNonce);
+            $.ajax({
+              url: '/api_get_nowshowing',  //Server script to process data
+              type: 'POST',
+              mimeType:"multipart/form-data",
+              dataType: 'json',
+              success: function(json) {
+                updateNowShowingListView(json);
+                //updateMovieDataInDiv(json, 'nowshowing_wraper');
+              },
+              data: formData,
+              cache: false,
+              contentType: false,
+              processData: false
+            });
+          });
+         
+        }
+
         function updateMovieDataInDiv(data, str_div) {
           // 'nowshowing_wraper', 'comingsoon_wraper'
           var comingsoon_wraper_div = document.getElementById(str_div);
@@ -174,306 +244,66 @@
             var link = document.createElement('a');
             // link.href = '/detail?movie_id='+movie_id;
             link.href = '/detail/'+movie_id;
+            link.className = 'comingSoonA';
             var wrapper_div = document.createElement('div');
-            var poster_div_id = 'poster_div';
+            var poster_div_id = 'comingsoon_poster_div';
             if (i > 4) 
-              poster_div_id = 'poster_div_with_top_margin';
+              poster_div_id = 'comingsoon_poster_div_with_top_margin'; 
             wrapper_div.className = poster_div_id;
             link.appendChild(wrapper_div);
             var image_div = document.createElement('div');
+            image_div.className = 'comingSoonImageDiv'
             var image = document.createElement('img')
             image.src = '/image?movie_id='+movie_id;
-            image.className = 'poster_image';
+            image.className = 'comingsoon_poster_image';
+
+            var h = document.createElement('div');
+            h.className = 'comingSoonhilight';
+
+
             image_div.appendChild(image);
+            image_div.appendChild(h);
+
+
             var title_div = document.createElement('div');
 
-            var poster_title = 'poster_title';
-            if (str_div == 'comingsoon_wraper')
-              poster_title = 'comingsoon_poster_title';
+            var  poster_title = 'comingsoon_poster_title';
             title_div.className = poster_title;
 
             var title_link = document.createElement('a');
-            title_link.id = 'nowshowing_poster_link';
+            title_link.id = 'comingposter_link';
             // title_link.href = '/detail?movie_id='+movie_id;
             title_link.href = '/detail/'+movie_id;
             title_link.innerHTML = name_en;
             title_div.appendChild(title_link);
             wrapper_div.appendChild(image_div);
-
-            if (str_div == 'nowshowing_wraper') {
-              var avatar_div = getMovieAvatarDiv(movie_list[i]);
-              wrapper_div.appendChild(avatar_div);  
-            }
             
             wrapper_div.appendChild(title_div);
             comingsoon_wraper_div.appendChild(link);
           }
-          if (str_div == 'nowshowing_wraper') 
-            nowShowingFadeIn();
-          else if (str_div == 'comingsoon_wraper')
-            comingSoonFadeIn();
-        }
-
-        function updateNowShowingListView(json) {
-          var div = document.getElementById('nowshowing_wraper');
-          var movie_list = json['movie_list'];
-          for (var i = 0; i < movie_list.length; i++) {
-            var movie_data = movie_list[i];
-            var user_id = 0;
-            {% if userData %}
-              user_id = {{userData.user_id}};
-            {% endif %}
-            div.appendChild(new MoviewListView($('#nowshowing_wraper'), movie_data, user_id));
-          }
-        }
-
-
-        function getNowShowing(page_count) {
-          // nowShowingFadeOut();
-          current_page = page_count;
-          // updatePositionNowShowingcarousel();
-          var formData = new FormData();
-          formData.append('page', page_count);
-          formData.append('data_per_page', {{nowshowing_per_page}})
-          // formData.append('_ajax_nonce', importNonce);
-          $.ajax({
-            url: '/api_get_nowshowing',  //Server script to process data
-            type: 'POST',
-            mimeType:"multipart/form-data",
-            dataType: 'json',
-            success: function(json) {
-              updateNowShowingListView(json);
-              //updateMovieDataInDiv(json, 'nowshowing_wraper');
-            },
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false
-          });
+          comingSoonFadeIn();
         }
 
         function getComingSoon(page_count) {
-          comingSoonFadeOut();
-          comingsoon_current_page = page_count;
-          updatePositionComingSooncarousel();
-          var formData = new FormData();
-          formData.append('page', page_count);
-          $.ajax({
-            url: '/api_get_comingsoon',  //Server script to process data
-            type: 'POST',
-            mimeType:"multipart/form-data",
-            dataType: 'json',
-            success: function(json) {
-              updateMovieDataInDiv(json, 'comingsoon_wraper');
-            },
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false
+            comingSoonFadeOut(function() {
+            comingsoon_current_page = page_count;
+            var formData = new FormData();
+            formData.append('page', page_count);
+            $.ajax({
+              url: '/api_get_comingsoon',  //Server script to process data
+              type: 'POST',
+              mimeType:"multipart/form-data",
+              dataType: 'json',
+              success: function(json) {
+                updateMovieDataInDiv(json, 'comingsoon_wraper');
+              },
+              data: formData,
+              cache: false,
+              contentType: false,
+              processData: false
+            });
           });
-        }
-
-        function getNowShowingcarousel(index) {
-          var searchEles = document.getElementById("page_btn_div").children;
-          var btnDiv = searchEles[index];
-          var carousel = btnDiv.children[0];
-          return carousel;
-        }
-
-        function getComingSooncarousel(index) {
-          var searchEles = document.getElementById("comingsoon_page_btn_div").children;
-          var btnDiv = searchEles[index];
-          var carousel = btnDiv.children[0];
-          return carousel;
-        }
-
-        function removeAllNowShowingcarouselHiligh() {
-          var searchEles = document.getElementById("page_btn_div").children;
-          for(var i = 0; i < searchEles.length; i++) {
-            var carousel = getNowShowingcarousel(i);
-            carousel.className = "";
-            carousel.className = "btn_carousel";
-          }
-        }
-
-        function removeAllComingSooncarouselHiligh() {
-          var searchEles = document.getElementById("comingsoon_page_btn_div").children;
-          for(var i = 0; i < searchEles.length; i++) {
-            var carousel = getComingSooncarousel(i);
-            carousel.className = "";
-            carousel.className = "btn_carousel";
-          }
-        }
-
-        function disableCarousel(carousel_id) {
-          var carousel = document.getElementById(carousel_id);
-          carousel.className = 'btn_carousel_disable';
-          carousel.removeAttribute("href")
-        }
-
-        function enableCarousel(carousel_id) {
-          var carousel = document.getElementById(carousel_id);
-          carousel.className = 'btn_carousel';
-        }
-
-        function enableAllNowShowingCarousel() {
-          $("#prev_page_link").attr("href", "javascript:getNowShowing("+ (current_page - 1) +");");
-          $("#next_page_link").attr("href", "javascript:getNowShowing("+ (current_page + 1) +");");
-          $("#last_page_link").attr("href", "javascript:getNowShowing("+ all_nowshowing_page +");");
-          $("#first_page_link").attr("href", "javascript:getNowShowing(1);");
-          enableCarousel('prev_page_link');
-          enableCarousel('next_page_link');
-          enableCarousel('last_page_link');
-          enableCarousel('first_page_link');
-        }
-
-        function updatePositionNowShowingcarousel() {
-          enableAllNowShowingCarousel();
-          if (current_page <= 1) {
-            disableCarousel('prev_page_link');
-            disableCarousel('first_page_link');
-          }
-            
-          if (current_page == all_nowshowing_page) {
-              disableCarousel('next_page_link');
-              disableCarousel('last_page_link');            
-          }
-
-          var allPageLink = document.getElementById('all_page_link');
-          allPageLink.innerHTML = 'Page '+ current_page + ' of ' +  all_nowshowing_page;
-          removeAllNowShowingcarouselHiligh();
-          if (btn_nowshowing_count >= 5) {
-            var current_margin = all_nowshowing_page - current_page;
-            if (current_margin < 4) {
-              var startPage = all_nowshowing_page - 4;
-              renewNowShowingcarousel(startPage);
-            } else {
-              renewNowShowingcarousel(current_page);
-            }
-          } 
-
-          var searchEles = document.getElementById("page_btn_div").children;
-          for(var i = 0; i < searchEles.length; i++) {
-            var carousel = getNowShowingcarousel(i);
-            var a = parseInt(carousel.innerHTML);
-            if (a == current_page) {
-              carousel.className = "";
-              carousel.className = "btn_carousel_select";
-            }
-          }
-        }
-
-        function enableAllComingSoonCarousel() {
-          $("#comingsoon_prev_page_link").attr("href", "javascript:getComingSoon("+ (comingsoon_current_page - 1) +");");
-          $("#comingsoon_next_page_link").attr("href", "javascript:getComingSoon("+ (comingsoon_current_page + 1) +");");
-          $("#comingsoon_last_page_link").attr("href", "javascript:getComingSoon("+ all_comingsoon_page +");");
-          $("#comingsoon_first_page_link").attr("href", "javascript:getComingSoon(1);");
-          enableCarousel('comingsoon_prev_page_link');
-          enableCarousel('comingsoon_next_page_link');
-          enableCarousel('comingsoon_last_page_link');
-          enableCarousel('comingsoon_first_page_link');
-        }
-
-        function updatePositionComingSooncarousel() {
-          enableAllComingSoonCarousel();
-          if (comingsoon_current_page <= 1) {
-            disableCarousel('comingsoon_prev_page_link');
-            disableCarousel('comingsoon_first_page_link');
-          }
-            
-          if (comingsoon_current_page == all_comingsoon_page) {
-            disableCarousel('comingsoon_next_page_link');
-            disableCarousel('comingsoon_last_page_link');
-          } 
-
-          var allPageLink = document.getElementById('comingsoon_all_page_link');
-          allPageLink.innerHTML = 'Page '+ comingsoon_current_page + ' of ' +  all_comingsoon_page;
-          removeAllComingSooncarouselHiligh();
-          if (btn_comingsoon_count >= 5) {
-            var current_margin = all_comingsoon_page - comingsoon_current_page;
-            if (current_margin < 4) {
-              var startPage = all_comingsoon_page - 4;
-              renewComingSooncarousel(startPage);
-            } else {
-              renewComingSooncarousel(comingsoon_current_page);
-            }
-          } 
-
-          var searchEles = document.getElementById("comingsoon_page_btn_div").children;
-          for(var i = 0; i < searchEles.length; i++) {
-            var carousel = getComingSooncarousel(i);
-            var a = parseInt(carousel.innerHTML);
-            if (a == comingsoon_current_page) {
-              carousel.className = "";
-              carousel.className = "btn_carousel_select";
-            }
-          }
-        }
-
-        function renewNowShowingcarousel(first_index) {
-          var searchEles = document.getElementById("page_btn_div").children;
-          for(var i = 0; i < searchEles.length; i++) {
-            var carousel = getNowShowingcarousel(i);
-            var index = (first_index+i);
-            carousel.innerHTML = ""+ index;
-            carousel.href = "javascript:getNowShowing("+ index +");";
-          }
-        }
-
-        function renewComingSooncarousel(first_index) {
-          var searchEles = document.getElementById("comingsoon_page_btn_div").children;
-          for(var i = 0; i < searchEles.length; i++) {
-            var carousel = getComingSooncarousel(i);
-            var index = (first_index+i);
-            carousel.innerHTML = ""+ index;
-            carousel.href = "javascript:getComingSoon("+ index +");";
-          }
-        }
-
-        function initPaginationButton() {
-          all_nowshowing_count = {{record_object.nowshowing_count}};
-          all_nowshowing_page = all_nowshowing_count / {{nowshowing_per_page}};
-          all_nowshowing_page = Math.ceil(all_nowshowing_page);
-          btn_nowshowing_count = 5;
-          if (all_nowshowing_page < 5)
-            btn_nowshowing_count = all_nowshowing_page;
-          var btnParentDiv = document.getElementById('page_btn_div');
-          var allPageLink = document.getElementById('all_page_link');
-          allPageLink.innerHTML = 'Page '+ current_page + ' of ' +  all_nowshowing_page;
-          for (var i = 0; i < btn_nowshowing_count; i++) {
-            var btnWrapperDiv = document.createElement('div');
-            btnWrapperDiv.className = 'btn_carousel_div';
-            var btnDiv = document.createElement('a');
-            var pageIndex = (current_page + i);
-            btnDiv.innerHTML = ''+ pageIndex;
-            btnDiv.href = "javascript:getNowShowing("+ pageIndex +");";
-            btnWrapperDiv.appendChild(btnDiv);
-            btnParentDiv.appendChild(btnWrapperDiv);
-          }
-
-        }
-
-        function initComingsoonPaginationButton() {
-          all_comingsoon_count = {{record_object.comingsoon_count}};
-          all_comingsoon_page = all_comingsoon_count / {{comingsoon_per_page}};
-          all_comingsoon_page = Math.ceil(all_comingsoon_page);
-          btn_comingsoon_count = 5;
-          if (all_comingsoon_page < 5)
-            btn_comingsoon_count = all_comingsoon_page;
-
-          var btnParentDiv = document.getElementById('comingsoon_page_btn_div');
-          var allPageLink = document.getElementById('comingsoon_all_page_link');
-          allPageLink.innerHTML = 'Page '+ comingsoon_current_page + ' of ' +  all_comingsoon_page;
-          for (var i = 0; i < btn_comingsoon_count; i++) {
-            var btnWrapperDiv = document.createElement('div');
-            btnWrapperDiv.className = 'btn_carousel_div';
-            var btnDiv = document.createElement('a');
-            var pageIndex = (comingsoon_current_page + i);
-            btnDiv.innerHTML = ''+ pageIndex;
-            btnDiv.href = "javascript:getComingSoon("+ pageIndex +");";
-            btnWrapperDiv.appendChild(btnDiv);
-            btnParentDiv.appendChild(btnWrapperDiv);
-          }
+          
         }
 
         function checkScrollTo() {
@@ -487,7 +317,29 @@
           // initPaginationButton();
           // randomMovie();
           // initComingsoonPaginationButton();
+          //
+          var nowShowingCarouselDiv = document.getElementById("nowshowing_carousel_div");
+          var n = new Carousel("nowshowing", 5, {{nowshowing_per_page}}, {{record_object.nowshowing_count}}, 1, function(page) {
+            getNowShowing(page);
+            setTimeout(function() {
+              scrollToDiv('nowshowing_caption');
+            }, 300);
+            //c.currentPage = page;
+            //c.updatePositionCarousel();
+          });
+          n.addCarouselToDiv(nowShowingCarouselDiv);
+
+
+          var comingSoonCarousel = document.getElementById("comingsoon_carousel_div");
+          var c = new Carousel("comingsoon", 5, {{comingsoon_per_page}}, {{record_object.comingsoon_count}}, 1, function(page) {
+            getComingSoon(page);
+          });
+          c.addCarouselToDiv(comingSoonCarousel);
+          
+          initNowShowingHeight();
           getNowShowing(current_page);
+          getComingSoon(comingsoon_current_page);
+
           // getComingSoon(comingsoon_current_page);
           {% if scroll_to %}
             checkScrollTo();
@@ -529,32 +381,16 @@
             <div id="nowshowing_wraper">
             </div>
           </div>
-          
-          <!-- <div class="carousel_div">
-            <div class="btn_carousel_div"><a class="btn_carousel" id="all_page_link"></a></div>
-            <div class="btn_carousel_div"><a class="btn_carousel" id="first_page_link"><< First</a></div>
-            <div class="btn_carousel_div"><a class="btn_carousel" id="prev_page_link">< Prev</a></div>
-            <div id="page_btn_div"></div>
-            <div class="btn_carousel_div"><a class="btn_carousel" id="next_page_link">Next ></a></div>
-            <div class="btn_carousel_div"><a class="btn_carousel" id="last_page_link">Last >></a></div>
-          </div> -->
+          <div id="nowshowing_carousel_div"></div>
         </div>
-        <!-- <div id="comingsoon_div">
+        <div id="comingsoon_div">
           <div id="inner_comingsoon_div" class="round-corner">
             <div id="comingsoon_caption" class="main_page_caption">COMING SOON</div>
             <div id="comingsoon_wraper_div">
               <div id="comingsoon_wraper"></div>
-            </div>
-            <div class="carousel_div">
-              <div class="btn_carousel_div"><a class="btn_carousel" id="comingsoon_all_page_link"></a></div>
-              <div class="btn_carousel_div"><a class="btn_carousel" id="comingsoon_first_page_link"><< First</a></div>
-              <div class="btn_carousel_div"><a class="btn_carousel" id="comingsoon_prev_page_link">< Prev</a></div>
-              <div id="comingsoon_page_btn_div"></div>
-              <div class="btn_carousel_div"><a class="btn_carousel" id="comingsoon_next_page_link">Next ></a></div>
-              <div class="btn_carousel_div"><a class="btn_carousel" id="comingsoon_last_page_link">Last >></a></div> 
-            </div>
-            
-          </div> -->
+              <div id="comingsoon_carousel_div"></div>
+            </div>           
+          </div>
         </div>
         {% include "/main_footer.html" with context %}
       </div> 

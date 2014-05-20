@@ -25,7 +25,6 @@
 
 .main_page_caption {
 	font-size: 30pt;
-	text-align: center;
 	font-family: montRegular;
 	color: #ffb400;
 }
@@ -36,11 +35,11 @@
 
 #nowshowing_caption {
 	line-height: 98px;
+	text-align: center;
 }
 
 #nowshowing_wraper_div {
 	/*height: 806px;*/
-	/*min-height: 986px;*/
 	overflow: auto;
 	/*width: 892px;*/
 	margin: auto;
@@ -51,27 +50,7 @@
 	width: 100%;
 }
 
-.poster_div {
-    float:left;
-    margin-left:42px;
-    margin-right:-4px;
-}
-
-.poster_div_with_top_margin {
-    float:left;
-    margin-left:42px;
-    margin-right:-4px;
-    margin-top: 26px;
-}
-
-.poster_title a {
-	color: #FFFFFF;
-	font-size: 14px;
-	font-family: montRegular;
-	text-decoration: none;
-}
-
-.carousel_div {
+/*.carousel_div {
     text-align: center;
 }
 
@@ -89,22 +68,21 @@
 
 #comingsoon_all_page_link {
 	background-color: #ffb400;
-}
+}*/
 
 
 #comingsoon_div {
 	width: 1200px;
-	height: 690px;
+	height: 760px;
 	margin: auto;
-	background-color: #ecedef;
 	padding-top: 35px;
-	padding-bottom: 35px;
+	background-color: #ecedef;
 }
 
 #inner_comingsoon_div {
 	width: 900px;
 	height: 690px;
-	margin: auto;
+	margin:auto;
 	background-color: white;
 }
 
@@ -119,10 +97,83 @@
 	height: 100%;
 }
 
+
+
+
+
+
+
+
+
+/* CommingSoon Poster */
+
+
+
+.comingSoonImageDiv {
+	position:relative;
+	background-color: black;
+}
+
+.comingsoon_poster_image {
+	width: 132px;
+	height: 197px;
+}
+
+.comingSoonhilight {
+	position:absolute;
+    top:0;
+    left:0;
+    display:block;
+    width:132px; /* as image */
+    height:197px; /* as image */
+    background-color: black;
+	-webkit-opacity: 0.0;
+  	-moz-opacity: 0.0;
+  	opacity: 0.0;
+    transition:opacity 0.5s ease;
+}
+
+.comingSoonA:hover .comingSoonhilight {
+	-webkit-opacity: 0.4;
+  	-moz-opacity: 0.4;
+  	opacity: 0.4;
+    transition:opacity 0.5s ease;
+}
+
+
+.comingsoon_poster_div {
+    float:left;
+    margin-left:38px;
+}
+
+.comingsoon_poster_div_with_top_margin {
+    float:left; 
+    margin-left:38px;
+    margin-top: 26px;
+}
+
+.poster_title a {
+	color: #FFFFFF;
+	font-size: 14px;
+	font-family: montRegular;
+	text-decoration: none;
+}
+
 .comingsoon_poster_title {
 	width: 132px;
 	height: 41px;
 	text-align: center;
+	overflow:hidden;
+	font-size: 14px;
+	text-overflow:ellipsis;
+
+	white-space: pre-wrap;      /* CSS3 */   
+	white-space: -moz-pre-wrap; /* Firefox */    
+	white-space: -pre-wrap;     /* Opera <7 */   
+	white-space: -o-pre-wrap;   /* Opera 7 */    
+	word-wrap: break-word;
+
+
 }
 
 .comingsoon_poster_title a {

@@ -1,9 +1,11 @@
 html {
 	/*background-color: #282828;*/
-	background-color: #5b5b5b;
+	/*background-color: #5b5b5b !important;*/
 }
 
 body {
 	margin: 0;
 	padding: 0;
+	/*background-color: #5b5b5b !important;*/
+	background-color: #5b5b5b;
 }

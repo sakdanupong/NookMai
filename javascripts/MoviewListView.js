@@ -88,7 +88,7 @@ function MoviewListView(p_divForSort, movie_data, user_id) {
         var avatarCountSummary = getSummaryAvatarCount(movie_data);
         addRate(rate_count, movie_id);
         addEmotionList(emotion_list, avatarCountSummary, movie_id);
-        checkTextHeight(topComment);
+        //checkTextHeight(topComment);
     }, 0); 
     
     divForSort = p_divForSort;

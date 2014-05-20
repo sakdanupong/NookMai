@@ -109,7 +109,7 @@ function LoginDialog(p_registerCallback, p_loginCallback) {
 }
 
 function show() {
-	var _body = document.getElementsByTagName('body') [0];
+	//var _body = document.getElementsByTagName('body') [0];
 	// <body scroll="no"> 
     //_body.appendChild(this.gLoginDialog);
     document.body.appendChild(gLoginDialog);
