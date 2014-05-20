@@ -359,17 +359,17 @@ def getSearchMovieList(word):
     for movie in movie_query:
         c_key = movie.doc_id
         c = MovieModel.get_by_key_name(c_key)
-        logging.debug('doc_id = %s ###########', c_key)
-        name_th = c.name_th
-        name_en = c.name_en
-        movie_id = c.id
-        image = c.image
-        r = {
-            'movie_id' : movie_id,
-            'name_th' : name_th,
-            'name_en' : name_en,
-        }
-        arr.append(r)
+        if not c is None:
+            name_th = c.name_th
+            name_en = c.name_en
+            movie_id = c.id
+            image = c.image
+            r = {
+                'movie_id' : movie_id,
+                'name_th' : name_th,
+                'name_en' : name_en,
+            }
+            arr.append(r)
     return arr
 
 

@@ -53,22 +53,26 @@
         }
 
         function showNowShowingLoading() {
-          $('#nowshowing_loading_div').css('visibility','visible');
+          //$('#nowshowing_loading_div').css('visibility','visible');
+          $('#nowshowing_loading_div').show();
         }
 
         function hideNowShowingLoading() {
-          $('#nowshowing_loading_div').css('visibility','hidden');          
+          //$('#nowshowing_loading_div').css('visibility','hidden');          
+          $('#nowshowing_loading_div').hide();
         }
 
         function nowShowingFadeIn() {
-          hideNowShowingLoading();
+          $('#nowshowing_wraper').show();
           setTimeout(function() {
+            hideNowShowingLoading();
             $('#nowshowing_wraper').fadeTo(300, 1.0);
           }, 100);
         }
 
         function nowShowingFadeOut(callback) {
           $('#nowshowing_wraper').fadeTo(300, 0.0, function() {
+            $('#nowshowing_wraper').hide();
             callback();
           });
           //$('#nowshowing_wraper').fadeOut();
@@ -341,10 +345,10 @@
           //
           var nowShowingCarouselDiv = document.getElementById("nowshowing_carousel_div");
           var n = new Carousel("nowshowing", 5, {{nowshowing_per_page}}, {{record_object.nowshowing_count}}, 1, function(page) {
-            getNowShowing(page);
             setTimeout(function() {
               scrollToDiv('nowshowing_caption');
             }, 300);
+            getNowShowing(page);
             //c.currentPage = page;
             //c.updatePositionCarousel();
           });
@@ -402,7 +406,7 @@
           <div id="nowshowing_wraper_div">
             <div id="nowshowing_wraper"></div>
             <div id="nowshowing_loading_div">
-              <div class='container' style='width:90px; margin: 0 auto;'>
+              <div class='container' style='width:90px; margin:205px auto;'>
                 <div id="circularG">
                 <div id="circularG_1" class="circularG">
                 </div>
@@ -433,7 +437,7 @@
               <div id="comingsoon_wraper"></div>
               <div id="comingsoon_carousel_div"></div>
               <div id="comingsoon_loading_div">
-              <div class='container' style='width:90px; margin: 0 auto;'>
+              <div class='container' style='width:90px; margin:0 auto;'>
                 <div id="circularG">
                 <div id="circularG_1" class="circularG">
                 </div>
