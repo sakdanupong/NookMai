@@ -17,8 +17,42 @@
     <script src="/javascripts/LoginDialog.js"></script>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>{{ movie_data.name_en|decodeHTML }}</title>
-	<meta name="description" content="{{ movie_data.detail_synopsis_en|decodeHTML }}"/>
+
+	<title>{{ movie_data.name_en|decodeHTML }} - Nookmai : หนังสนุกมั๊ย</title>
+	<meta NAME="Keywords" CONTENT="{{ movie_data.name_en|decodeHTML }} สนุกมั๊ย">
+	<meta NAME="description" CONTENT="{{ movie_data.detail_synopsis_en|decodeHTML }}"/>
+	
+
+	<!-- <meta property="fb:app_id" content="200281796659561" />  -->
+	<meta property="og:title" content="{{ movie_data.name_en|decodeHTML }} - Nookmai : หนังสนุกมั๊ย" />
+	<meta property="og:description" content="{{ movie_data.detail_synopsis_en|decodeHTML }}" />
+	<!-- <meta property="og:site_name" content="MOLOME&trade; : Life is a journey" /> -->
+	<meta property="og:image" content="/image?movie_id={{ movie_data.id }}" />
+	<!-- <meta property="og:type" content="molomeapp:photo" /> -->
+	<!-- <meta property="molomeapp:photo_uploaded_by" content="amoreamore" /> -->
+		
+<!-- 	<meta name="twitter:card" content="photo"/>
+	<meta name="twitter:site" content="@MOLOME"/>
+	<meta name="twitter:creator" content="@"/>
+	<meta name="twitter:url" content="http://molo.me/p/5qEji4"/>
+	<meta name="twitter:title" content="#Molo #molome #me #my #Russia #girl #happy #smile "/>
+	<meta name="twitter:description" content=""/>
+	<meta name="twitter:image" content="http://p.molo.me/5qEji4"/>
+	<meta name="twitter:image:width" content="800"/>
+	<meta name="twitter:image:height" content="800"/>
+		
+	<meta name="twitter:app:id:iphone" content="577411997"/>
+	<meta name="twitter:app:id:ipad" content="577411997"/>
+	<meta name="twitter:app:id:googleplay" content="com.hlpth.molome"/>
+	<meta name="twitter:app:name:iphone" content="MOLOME for iOS"/>
+	<meta name="twitter:app:name:ipad" content="MOLOME for iOS"/>
+	<meta name="twitter:app:name:googleplay" content="MOLOME for Android"/> -->
+
+
+
+
+
+
 	<link rel="image_src" href="/detail/{{ movie_data.id }}" />
 	
 	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
@@ -38,9 +72,6 @@
 
 <div class="movie-spece-0"></div>
 
-	<!-- <div class="movie-title-image" style="width:900px; ">  -->
-		<!-- clear:both; -->
-		<!-- height:450px; -->
 
 <!-- start bg -->
 <div class="movie-bg">
@@ -100,7 +131,6 @@
 	</div>
 
 
-	<!-- <div class="movie-director" style="margin: auto; width:550px; height:86px; float:right; color:#666666;"> -->
 	<div class="movie-director-writers-stars">
 		<div class="movie-director-writers-stars-left">ผู้กำกับ:</div>
 		<div class="movie-director-writers-stars-right">{{ movie_data.detail_director_en|decodeHTML }}</div>
@@ -173,7 +203,6 @@
  -->
 
 <div style="height: 80px;"></div>
-
 <!-- end bg -->
 </div> 
 
@@ -182,10 +211,8 @@
 
 
 <div class="movie-comment">
-	
 	<div class="movie-box-comment-title"><h2>ความคิดเห็น</h2></div>
 	<div class="movie-box-comment">
-
 		<form id="form-comment" action="javascript:submitComment();" method="post">
 		<div class="movie-box-comment-emotion-avatar">
 <!-- 			<div class="movie-box-comment-avatar-title">
@@ -228,11 +255,7 @@
 				<li><a href="javascript:;" id="14" onClick="clickAddAvatar(this.id)"><img src="/images/details/avatar/image_avatar14.png" alt="14" width="57.5" height="57.5" border="0"><span>ซึ้งกินใจ</span></a></li>
 			</ul>
 		</div>
-
-
 		<div style="height: 10px;"></div>
-
-
 		<div class="movie-box-comment-left">
 			<!-- <img id="img_avatar2" width="60" height="60" src="/images/details/avatar/image_avatar10.png" /> -->
 			<img id="img_avatar" width="60" height="60" src="/images/details/avatar.png" />
@@ -275,15 +298,9 @@
 </div>
 
 
-
-  
-
-	
 <div id="comments-template">
 	{% for comment in comments %}
 	<div style="height:10px;"></div>
-    
-
     <div class="comments-template-vote">
 <!-- 	    <a class="btn-up" type="submit" href="javascript:;" id="{{ comment['comment'].key().id() }}" onClick="voteComment(this.id)"></a>
 	    <div class="comments-vote-count">{{comment['comment'].vote_count}}</div>
@@ -351,13 +368,8 @@
 			<div class="comments-template-content">{{ comment['comment'].content }}</div>
 		</div>
 	</div>
-
 	{% endfor %}
-
-
-
 </div>
-
 <div class="comments-template-box-footer"></div>
 
 
@@ -417,8 +429,6 @@
 			$('.box-rate-detail').html(hr);
 		});
 
-
-
 		var hc ='';
 		{% if comments %} 
 			hc += 'Comments : ' + {{movie_data.comment_count}} + ' users';
@@ -455,7 +465,6 @@
 		gYoutubeDialog = document.createElement('div');
 		gYoutubeDialog.innerHTML = youtubeDialog;
 
-		//var _body = document.getElementsByTagName('body') [0];
 		document.body.appendChild(gYoutubeDialog);
 
 		var maskHeight = $(document).height();  
@@ -506,24 +515,22 @@
 
 	function dismissYoutubeDialog(p_callBack) {
 
-	cancelAllRequest();
+		cancelAllRequest();
 
-	var windowHeight = $(window).height();
+		var windowHeight = $(window).height();
 
-	// calculate the values for center alignment
-	var dialogTop =  (windowHeight - height) / 2; 
+		// calculate the values for center alignment
+		var dialogTop =  (windowHeight - height) / 2; 
 
-	var animateTop = (dialogTop-heightSpace) + height;
-	$('#dialog-box').animate({top: '-='+animateTop}, 600, function () {
-		setTimeout(function() {
-			if (gYoutubeDialog) {
-				gYoutubeDialog.remove();	
-			}
-		} ,100);
-	});
-
-
-};
+		var animateTop = (dialogTop-heightSpace) + height;
+		$('#dialog-box').animate({top: '-='+animateTop}, 600, function () {
+			setTimeout(function() {
+				if (gYoutubeDialog) {
+					gYoutubeDialog.remove();	
+				}
+			} ,100);
+		});
+	};
 
 
 	function resetBtnPost() {
