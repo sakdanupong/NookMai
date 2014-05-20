@@ -20,7 +20,8 @@ body {
 .movie-image {
 	margin: 0 auto;
 	width:288px; 
-	height:450px; 
+	/*height:450px;*/
+  height:480px; 
 	float:left;
 }
 .movie-title {
@@ -101,6 +102,17 @@ body {
 .box-share {
   margin-top: 20px;
   clear:both
+}
+
+.movie-trailer {
+/*   margin-top: 20px;
+   width:550px; 
+   float:right;*/
+
+  /*margin: 0 auto;*/
+  width:288px; 
+  /*height:50px; */
+  float:left;
 }
 
 .movie-director-writers-stars {
@@ -347,6 +359,28 @@ iframe[src="about:blank"]{display:none;}
    font-family: montRegular;
    float: left;
    margin-left: 10px;
+}
+
+.btn-trailer {
+   background: none repeat scroll 0 0 #999999;
+   border-radius: 10px;
+   /*clear: both;*/
+   color: #FFFFFF;
+   display: block;
+
+   text-decoration: none;
+   height: 40px;
+   width: 145px;
+   padding-right: 28px;
+   padding-left: 115px;
+   line-height: 40px;
+   text-decoration: none;
+   font-size: 20px;
+   color: #FFFFFF;
+   margin-top: 10px;
+   font-family: montRegular;
+   float: left;
+   /*margin-left: 10px;*/
 }
 
 
@@ -614,8 +648,71 @@ h3 {
 
 
 
+/* dialog-overlay */
+#dialog-overlay {
+
+  /* set it to fill the whil screen */
+  width:100%; 
+  height:100%;
+  
+  /* transparency for different browsers */
+  filter:alpha(opacity=50); 
+  -moz-opacity:0.5; 
+  -khtml-opacity: 0.5; 
+  opacity: 0.5; 
+  background:#000; 
+
+  /* make sure it appear behind the dialog box but above everything else */
+  position:absolute; 
+  top:0; left:0; 
+  z-index:3000; 
+
+  /* hide it by default */
+  /*display:none;*/
+  /*display: block;*/
+}
 
 
+#dialog-box {
+  
+  /* css3 drop shadow */
+  -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  
+  /* css3 border radius */
+  -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+  
+  background:#eee;
+  /* styling of the dialog box, i have a fixed dimension for this demo */ 
+  /*width:328px; */
+  
+  /* make sure it has the highest z-index */
+  /*position:absolute; */
+  position: fixed !important;
+  z-index:5000; 
+
+/*  width:900px;
+  height:600px;*/
+
+  /* hide it by default */
+  /*display:none;*/
+}
+
+#dialog-box .dialog-content {
+  /* style the content */
+  text-align:left;
+  padding-left:10px;
+  padding-right:10px;
+  /*padding:10px; */
+  margin-left:13px;
+  margin-right:13px;
+  color:#666; 
+  font-family:arial;
+  font-size:11px; 
+}
+
+/* end dialog-overlay */
 
 
 

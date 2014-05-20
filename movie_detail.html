@@ -5,7 +5,7 @@
 
 
 <head>
-	<link rel="shortcut icon" href="images/favicon.ico" />
+	<link rel="shortcut icon" href="images/favicon.ico"/>
 	<link rel="stylesheet" type="text/css" href="/stylesheets/movie_detail_style.css?v=1">
 	<link type="text/css" rel="stylesheet" href="/stylesheets/font_family.css" />
 	<link type="text/css" rel="stylesheet" href="/stylesheets/main_header.css" />
@@ -52,7 +52,13 @@
 
 		<img border="0" src="/image?movie_id={{ movie_data.id }}" width="288" float:left>
 		</a>
+
+		<div class="movie-trailer">
+			<a class="btn-trailer" type="submit" href="javascript:showDialog()" >Trailer</a>
+		</div>
 	</div>
+
+
 
 	<div class="movie-title">
 		<strong>{{ movie_data.name_en|decodeHTML }}</strong>	
@@ -89,7 +95,8 @@
 
 
 	<div class="movie-synopsis-en">
-		<strong>{{ movie_data.detail_synopsis_en|decodeHTML }}</strong>
+		<!-- <strong>{{ movie_data.detail_synopsis_en|decodeHTML }}</strong> -->
+		<strong>{{ movie_data.detail_synopsis_th|decodeHTML }}</strong>
 	</div>
 
 
@@ -121,26 +128,28 @@
 		<!-- <strong>Stars:{{ movie_data.detail_cast_en}}</strong> -->
 	</div>
 
+
+
 </div>
 <!-- </div> -->
 <div class="movie-spece-1"></div>
 
-<div class="movie-synopsis-th"> 
+<!-- <div class="movie-synopsis-th"> 
 		<h2>เรื่องย่อ</h2>
 		<p>
 		<div style="color:#666666;">{{ movie_data.detail_synopsis_th|decodeHTML }}</div>
-		</p>
+		</p>-->
 
-		<div style="height: 40px;"></div>
-		<iframe id="youtube_frame" src="{{ movie_data.youtube_url }}?autoplay=1&html5=1" frameborder="0" allowfullscreen style="display: none; width: 855px; height: 450px; margin: 0 auto; border: 0;"></iframe>
+		<!-- <div style="height: 40px;"></div> -->
+<!-- 		<iframe id="youtube_frame" src="{{ movie_data.youtube_url }}?autoplay=1&html5=1" frameborder="0" allowfullscreen style="display: none; width: 855px; height: 450px; margin: 0 auto; border: 0;"></iframe>
 		<div class="container" style="display: none; margin: 0 auto;">
 			<div class="content">
     			<div class="circle"></div>
    				 <div class="circle1"></div>
     		</div>
-		</div>
+		</div> -->
 
-		<script>
+	<!-- 			<script>
 		{% if not movie_data.youtube_url %}
 			$(".container").show();
 			$.getJSON( "/trailer?movie_id={{ movie_data.id }}", function(data) { 
@@ -155,13 +164,13 @@
 			$("#youtube_frame").show();
 			$(".container").hide();
 		{% endif %}
-		</script>
+		</script> -->
 
-		<a class="btn-post" type="submit" href="javascript:showDialog()" >test</a>
+		<!-- <a class="btn-trailer" type="submit" href="javascript:showDialog()" >Trailer</a> -->
 
-		<div style="height: 20px;"></div>
-</div>
-
+<!-- 		<div style="height: 20px;"></div>
+</div> 
+ -->
 
 <div style="height: 80px;"></div>
 
@@ -175,7 +184,6 @@
 <div class="movie-comment">
 	
 	<div class="movie-box-comment-title"><h2>ความคิดเห็น</h2></div>
-	<!-- margin-top:20px; display:block; -->
 	<div class="movie-box-comment">
 
 		<form id="form-comment" action="javascript:submitComment();" method="post">
@@ -421,27 +429,101 @@
 
 	}
 
+	var width = 900;
+	var height = 500;
+	var heightSpace = 50;
+	var gYoutubeDialog;
+
 	function showDialog(){
 
-		// alert('showDialog');
-      // LoginDialog(function(success, data, reason, logindialog) {
-      //   if (success) {
-      //        logindialog.dismissLoginDialog(function() {
-      //           location.reload();
-      //        });
-      //     } else {
-      //       alert(reason);
-      //     }
-      // } , function(success, data, reason, logindialog) {
-      //   if (success) {
-      //        logindialog.dismissLoginDialog(function() {
-      //           location.reload();
-      //        });
-      //     } else {
-      //       alert(reason);
-      //     }
-      // });
+		var youtubeDialog = "<div id='dialog-overlay'></div> \
+	   		<div id='dialog-box'> \
+			  	<div class='dialog-content'> \
+			  	<div style='height: 25px;'></div> \
+			  		<iframe id='youtube_frame' src='{{ movie_data.youtube_url }}?autoplay=1&html5=1' frameborder='0' allowfullscreen style='display: none; width: 855px; height: 450px; margin: 0 auto; border: 0;'></iframe>\
+					<div class='container' style='display: none; margin: 0 auto;'>\
+						<div class='content'>\
+							<div style='height: 200px;'></div> \
+    						<div class='circle'></div>\
+   				 			<div class='circle1'></div>\
+    					</div>\
+					</div>\
+			  	</div> \
+	   		</div>"
+
+
+		gYoutubeDialog = document.createElement('div');
+		gYoutubeDialog.innerHTML = youtubeDialog;
+
+		//var _body = document.getElementsByTagName('body') [0];
+		document.body.appendChild(gYoutubeDialog);
+
+		var maskHeight = $(document).height();  
+		var maskWidth = $(window).width();
+		var windowHeight = $(window).height();
+
+		// calculate the values for center alignment
+		var dialogTop =  (windowHeight - height  ) / 2; 
+		var dialogLeft = (maskWidth - width) / 2;
+
+		var beginDialogPost = -height;
+		// // assign values to the overlay and dialog box
+		$('#dialog-overlay').css({height:maskHeight, width:maskWidth});
+		$('#dialog-box').css({height:height, width:width});
+		$('#dialog-box').css({top:beginDialogPost, left:dialogLeft});
+
+		// var animateTop = dialogTop + height;
+		var animateTop = (dialogTop-heightSpace) + height;
+		$('#dialog-box').animate({top: '+='+animateTop}, 600, function () {
+			showYoutube();
+		});
+
+
+		$('#dialog-overlay, #close_this_window').click(function () {		
+			dismissYoutubeDialog();
+			return false;
+		});
+
 	}
+
+	function showYoutube() {
+		{% if not movie_data.youtube_url %}
+			$(".container").show();
+			$.getJSON( "/trailer?movie_id={{ movie_data.id }}", function(data) { 
+				var youtube_link = "//www.youtube.com/embed/"+data['videoId']+"?autoplay=1&html5=1";
+					$("#youtube_frame").get(0).contentWindow.location.replace(youtube_link);
+					document.getElementById("youtube_frame").onload = function() {
+					$("#youtube_frame").show();
+					$(".container").hide();
+				};
+			});
+		{% else %}
+			$("#youtube_frame").show();
+			$(".container").hide();
+		{% endif %}
+
+	}
+
+	function dismissYoutubeDialog(p_callBack) {
+
+	cancelAllRequest();
+
+	var windowHeight = $(window).height();
+
+	// calculate the values for center alignment
+	var dialogTop =  (windowHeight - height) / 2; 
+
+	var animateTop = (dialogTop-heightSpace) + height;
+	$('#dialog-box').animate({top: '-='+animateTop}, 600, function () {
+		setTimeout(function() {
+			if (gYoutubeDialog) {
+				gYoutubeDialog.remove();	
+			}
+		} ,100);
+	});
+
+
+};
 
 
 	function resetBtnPost() {
@@ -593,9 +675,7 @@
 
 	function checkActiveTextarea(){;
 
-		{% if userData %} 
-			// alert('login law');
-		{% else %}
+		{% if not userData %}
 			$("#movie-box-comment-captcha").show();
 		{% endif %}
 
