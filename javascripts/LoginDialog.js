@@ -135,7 +135,8 @@ function show() {
 	});
 
 
-	$('#dialog-overlay, #close_this_window').click(function () {		
+	// $('#dialog-overlay, #close_this_window').click(function () {
+	$('#close_this_window').click(function () {		
 		dismissLoginDialog();
 		return false;
 	});

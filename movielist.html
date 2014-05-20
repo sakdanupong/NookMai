@@ -6,10 +6,11 @@
       <script src="//code.jquery.com/jquery-1.9.1.js"></script>
       <script src="/javascripts/NumberUtil.js"></script>
       <link rel="shortcut icon" href="images/favicon.ico"/>
-      <link type="text/css" rel="stylesheet" href="/stylesheets/font_family.css" />
-      <link type="text/css" rel="stylesheet" href="/stylesheets/base_document.css" />
-      <link type="text/css" rel="stylesheet" href="/stylesheets/carousel.css" />
-      <link type="text/css" rel="stylesheet" href="/stylesheets/main_body.css" />
+      <link type="text/css" rel="stylesheet" href="/stylesheets/font_family.css"/>
+      <link type="text/css" rel="stylesheet" href="/stylesheets/base_document.css"/>
+      <link type="text/css" rel="stylesheet" href="/stylesheets/carousel.css"/>
+      <link type="text/css" rel="stylesheet" href="/stylesheets/main_body.css"/>
+      <link type="text/css" rel="stylesheet" href="/stylesheets/spin_circle_loading.css"/>
       <script src="/javascripts/MoviewListView.js"></script>
       <script src="/javascripts/Carousel.js"></script>
       <!-- <link type="text/css" rel="stylesheet" href="/stylesheets/login_dialog.css" /> -->
@@ -37,13 +38,30 @@
         function initNowShowingHeight() {
           var div = document.getElementById('nowshowing_wraper');
           var nowShowingPerPage = {{nowshowing_per_page}};
-          var minH =  nowShowingPerPage * 220;
+          var minH = 500;//nowShowingPerPage * 220;
           div.style.minHeight=minH+"px";
         }
         
 
 
+        function showComingSoonLoading() {
+          $('#comingsoon_loading_div').css('visibility','visible');
+        }
+
+        function hideComingSoonLoading() {
+          $('#comingsoon_loading_div').css('visibility','hidden');          
+        }
+
+        function showNowShowingLoading() {
+          $('#nowshowing_loading_div').css('visibility','visible');
+        }
+
+        function hideNowShowingLoading() {
+          $('#nowshowing_loading_div').css('visibility','hidden');          
+        }
+
         function nowShowingFadeIn() {
+          hideNowShowingLoading();
           setTimeout(function() {
             $('#nowshowing_wraper').fadeTo(300, 1.0);
           }, 100);
@@ -61,6 +79,7 @@
         }
 
         function comingSoonFadeIn() {
+          hideComingSoonLoading();
           setTimeout(function() {
             $('#comingsoon_wraper').fadeTo(300, 1.0);
           }, 100);
@@ -207,7 +226,8 @@
 
 
         function getNowShowing(page_count) {
-          comingSoonFadeOut(function() {
+            nowShowingFadeOut(function() {
+            showNowShowingLoading();
             current_page = page_count;
             // updatePositionNowShowingcarousel();
             var formData = new FormData();
@@ -283,9 +303,10 @@
           }
           comingSoonFadeIn();
         }
-
+        
         function getComingSoon(page_count) {
             comingSoonFadeOut(function() {
+            showComingSoonLoading();
             comingsoon_current_page = page_count;
             var formData = new FormData();
             formData.append('page', page_count);
@@ -332,6 +353,7 @@
 
           var comingSoonCarousel = document.getElementById("comingsoon_carousel_div");
           var c = new Carousel("comingsoon", 5, {{comingsoon_per_page}}, {{record_object.comingsoon_count}}, 1, function(page) {
+            hideComingSoonLoading();
             getComingSoon(page);
           });
           c.addCarouselToDiv(comingSoonCarousel);
@@ -376,12 +398,33 @@
       <div id="main_body_div">
         <!-- <div id="youtube_div"><iframe id="feature_youtube_frame" frameborder="0" allowfullscreen></iframe></div> -->
         <div id="nowshowing_div">
-          <div id="nowshowing_caption" class="main_page_caption">NOW SHOWING</div>
+          <div ><label id="nowshowing_caption" class="main_page_caption">NOW SHOWING</label></div>
           <div id="nowshowing_wraper_div">
-            <div id="nowshowing_wraper">
+            <div id="nowshowing_wraper"></div>
+            <div id="nowshowing_loading_div">
+              <div class='container' style='width:90px; margin: 0 auto;'>
+                <div id="circularG">
+                <div id="circularG_1" class="circularG">
+                </div>
+                <div id="circularG_2" class="circularG">
+                </div>
+                <div id="circularG_3" class="circularG">
+                </div>
+                <div id="circularG_4" class="circularG">
+                </div>
+                <div id="circularG_5" class="circularG">
+                </div>
+                <div id="circularG_6" class="circularG">
+                </div>
+                <div id="circularG_7" class="circularG">
+                </div>
+                <div id="circularG_8" class="circularG">
+                </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div id="nowshowing_carousel_div"></div>
+          <div id="nowshowing_carousel_div" style='margin-top:10px'></div>
         </div>
         <div id="comingsoon_div">
           <div id="inner_comingsoon_div" class="round-corner">
@@ -389,6 +432,28 @@
             <div id="comingsoon_wraper_div">
               <div id="comingsoon_wraper"></div>
               <div id="comingsoon_carousel_div"></div>
+              <div id="comingsoon_loading_div">
+              <div class='container' style='width:90px; margin: 0 auto;'>
+                <div id="circularG">
+                <div id="circularG_1" class="circularG">
+                </div>
+                <div id="circularG_2" class="circularG">
+                </div>
+                <div id="circularG_3" class="circularG">
+                </div>
+                <div id="circularG_4" class="circularG">
+                </div>
+                <div id="circularG_5" class="circularG">
+                </div>
+                <div id="circularG_6" class="circularG">
+                </div>
+                <div id="circularG_7" class="circularG">
+                </div>
+                <div id="circularG_8" class="circularG">
+                </div>
+                </div>
+              </div>
+            </div>
             </div>           
           </div>
         </div>
