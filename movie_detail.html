@@ -5,7 +5,7 @@
 
 
 <head>
-	<link rel="shortcut icon" href="images/favicon.ico" />
+	<link rel="shortcut icon" href="images/favicon.ico"/>
 	<link rel="stylesheet" type="text/css" href="/stylesheets/movie_detail_style.css?v=1">
 	<link type="text/css" rel="stylesheet" href="/stylesheets/font_family.css" />
 	<link type="text/css" rel="stylesheet" href="/stylesheets/main_header.css" />
@@ -95,7 +95,8 @@
 
 
 	<div class="movie-synopsis-en">
-		<strong>{{ movie_data.detail_synopsis_en|decodeHTML }}</strong>
+		<!-- <strong>{{ movie_data.detail_synopsis_en|decodeHTML }}</strong> -->
+		<strong>{{ movie_data.detail_synopsis_th|decodeHTML }}</strong>
 	</div>
 
 
@@ -133,11 +134,11 @@
 <!-- </div> -->
 <div class="movie-spece-1"></div>
 
-<div class="movie-synopsis-th"> 
+<!-- <div class="movie-synopsis-th"> 
 		<h2>เรื่องย่อ</h2>
 		<p>
 		<div style="color:#666666;">{{ movie_data.detail_synopsis_th|decodeHTML }}</div>
-		</p>
+		</p>-->
 
 		<!-- <div style="height: 40px;"></div> -->
 <!-- 		<iframe id="youtube_frame" src="{{ movie_data.youtube_url }}?autoplay=1&html5=1" frameborder="0" allowfullscreen style="display: none; width: 855px; height: 450px; margin: 0 auto; border: 0;"></iframe>
@@ -167,9 +168,9 @@
 
 		<!-- <a class="btn-trailer" type="submit" href="javascript:showDialog()" >Trailer</a> -->
 
-		<div style="height: 20px;"></div>
-</div>
-
+<!-- 		<div style="height: 20px;"></div>
+</div> 
+ -->
 
 <div style="height: 80px;"></div>
 
@@ -183,7 +184,6 @@
 <div class="movie-comment">
 	
 	<div class="movie-box-comment-title"><h2>ความคิดเห็น</h2></div>
-	<!-- margin-top:20px; display:block; -->
 	<div class="movie-box-comment">
 
 		<form id="form-comment" action="javascript:submitComment();" method="post">
@@ -480,7 +480,7 @@
 
 
 		$('#dialog-overlay, #close_this_window').click(function () {		
-			dismissLoginDialog();
+			dismissYoutubeDialog();
 			return false;
 		});
 
@@ -504,7 +504,7 @@
 
 	}
 
-	function dismissLoginDialog(p_callBack) {
+	function dismissYoutubeDialog(p_callBack) {
 
 	cancelAllRequest();
 
