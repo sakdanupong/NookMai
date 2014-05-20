@@ -359,6 +359,7 @@ def getSearchMovieList(word):
     for movie in movie_query:
         c_key = movie.doc_id
         c = MovieModel.get_by_key_name(c_key)
+        logging.debug('doc_id = %s ###########', c_key)
         name_th = c.name_th
         name_en = c.name_en
         movie_id = c.id
@@ -409,8 +410,9 @@ class MainPage(webapp2.RequestHandler):
         # template = JINJA_ENVIRONMENT.get_template('test_responsive.html')
         self.response.write(template.render(template_values))
     def post(self):
+        userData = getUserModel(self.request)
         record_object = RecordCountModel.get_by_key_name(ALL_RECORD_COUNTER_KEY)
-        movie_list = getNowShowing(0, NOWSHOWING_DATA_PER_PAGE)
+        movie_list = getNowShowing(userData, 0, NOWSHOWING_DATA_PER_PAGE)
         movie_json = json.loads(movie_list)
         movie_list = movie_json['movie_list']
         magic_number = randint(0, len(movie_list) - 1)
@@ -420,7 +422,7 @@ class MainPage(webapp2.RequestHandler):
         userData = getUserModel(self.request)
 
         template_values = {
-             # 'random_movie' : random_movie,
+             'random_movie' : random_movie,
              'record_object' : record_object,
              'avatar_count' : AVATAR_COUNT,
              'nowshowing_per_page' : NOWSHOWING_DATA_PER_PAGE, 
@@ -429,7 +431,6 @@ class MainPage(webapp2.RequestHandler):
              'userData' : userData,
         }
         template = JINJA_ENVIRONMENT.get_template('movielist.html')
-        # template = JINJA_ENVIRONMENT.get_template('test_responsive.html')
         self.response.write(template.render(template_values))
         
 
@@ -1419,7 +1420,7 @@ class GetSearchMovie(webapp2.RequestHandler):
 
 
         memcache.add(key=word, value=arr, time=36000)
-
+        self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps(r))
 
 
