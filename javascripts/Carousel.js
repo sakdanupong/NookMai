@@ -167,12 +167,15 @@ function Carousel(id, carousel_count, itemPerPage, allMovie, currentPage, callba
     }
 
 	var gotoPage = function(page) {
+        if (page < 1 || page > gotoPage.allPage)
+            return;
 		callback(page);
 		gotoPage.calousel.currentPage = page;
 		gotoPage.calousel.updatePositionCarousel();
 		event.preventDefault();		
 	}
 	gotoPage.calousel = this;
+    gotoPage.allPage = this.allPage;
 }
 
 // Carousel.prototype.initPaginationButton = function() {

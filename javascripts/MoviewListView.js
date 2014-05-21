@@ -3,20 +3,20 @@ var vote_score = 1;
 var divForSort;
 function MoviewListView(p_divForSort, movie_data, user_id) {
 	var $ = document;
-	var head  = $.getElementsByTagName('head')[0];
-    var link  = $.createElement('link');
-    link.rel  = 'stylesheet';
-    link.type = 'text/css';
-    link.href = '/stylesheets/movie_listview.css';
-    link.media = 'all';
-    head.appendChild(link);
+	// var head  = $.getElementsByTagName('head')[0];
+ //    var link  = $.createElement('link');
+ //    link.rel  = 'stylesheet';
+ //    link.type = 'text/css';
+ //    link.href = '/stylesheets/movie_listview.css';
+ //    link.media = 'all';
+ //    head.appendChild(link);
 
-    var link  = $.createElement('link');
-    link.rel  = 'stylesheet';
-    link.type = 'text/css';
-    link.href = '/stylesheets/poster.css';
-    link.media = 'all';
-    head.appendChild(link);
+ //    var link  = $.createElement('link');
+ //    link.rel  = 'stylesheet';
+ //    link.type = 'text/css';
+ //    link.href = '/stylesheets/poster.css';
+ //    link.media = 'all';
+ //    head.appendChild(link);
 
     var data = movie_data;
     var movie_id = data['movie_id'];
