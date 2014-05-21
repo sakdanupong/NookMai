@@ -47,10 +47,10 @@
         var avatar_count = {{avatar_count}};
 
         function initNowShowingHeight() {
-          var div = document.getElementById('nowshowing_wraper');
-          var nowShowingPerPage = {{nowshowing_per_page}};
-          var minH = 500;//nowShowingPerPage * 220;
-          div.style.minHeight=minH+"px";
+          // var div = document.getElementById('nowshowing_wraper');
+          // var nowShowingPerPage = {{nowshowing_per_page}};
+          // var minH = nowShowingPerPage * 220;
+          // div.style.minHeight=minH+"px";
         }
         
 
@@ -211,6 +211,7 @@
 
         function updateNowShowingListView(json) {
           var div = document.getElementById('nowshowing_wraper');
+          div.style.height = '0px';
           var movie_list = json['movie_list'];
           removeAllChildInDiv(div);
           for (var i = 0; i < movie_list.length; i++) {
@@ -222,6 +223,9 @@
             div.appendChild(new MoviewListView($('#nowshowing_wraper'), movie_data, user_id));
           }
           nowShowingFadeIn();
+          var h = div.scrollHeight + 10;
+          div.style.height=h+"px";
+          // div.style.minHeight=h+"px";
         }
 
       function updateComingSoonListView(json) {
@@ -256,7 +260,6 @@
               dataType: 'json',
               success: function(json) {
                 updateNowShowingListView(json);
-                //updateMovieDataInDiv(json, 'nowshowing_wraper');
               },
               data: formData,
               cache: false,
@@ -439,7 +442,7 @@
               </div>
             </div>
           </div>
-          <div id="nowshowing_carousel_div" style='margin-top:10px'></div>
+          <div id="nowshowing_carousel_div"></div>
         </div>
         <div id="comingsoon_div">
           <div id="inner_comingsoon_div" class="round-corner">
